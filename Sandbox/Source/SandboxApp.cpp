@@ -68,11 +68,12 @@ public:
         Core::Renderer::SetBackgroundColor(0, 0, 0, 255);
         Core::LayerStack::PushLayer(new SandboxLayer());
 
-        Core::MaterialConfiguration config;
-        config.color.Set(0, 125, 255, 255);
-        config.name = "Material";
-        config.colorTextureName = "EngineResources/Images/crate.png";
-        Core::MaterialManager::Load(config);
+        // Core::MaterialConfiguration config;
+        // config.color.Set(0, 125, 255, 255);
+        // config.name = "Material";
+        // config.colorTextureName = "EngineResources/Images/crate.png";
+
+                Core::MaterialManager::Load("EngineResources/Materials/Default.ce_mat");
 
         mesh = new Core::Mesh();
         mesh->SetMaterialFromName("Material");

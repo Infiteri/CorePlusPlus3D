@@ -2,6 +2,8 @@
 #include "Core/Logger.h"
 #include "Platform/FileSystem.h"
 
+#include "Utils/StringUtils.h"
+
 #include <iostream>
 #include <sstream>
 #include <map>
@@ -10,19 +12,7 @@
 
 namespace Core
 {
-    std::string toLowerCase(const std::string &str)
-    {
-        std::string result = str;
-        for (char &c : result)
-        {
-            if (c >= 'A' && c <= 'Z')
-            {
-                // Convert uppercase letter to lowercase
-                c = c - 'A' + 'a';
-            }
-        }
-        return result;
-    }
+    Color StringToColor(const std::string &value);
 
     MaterialConfiguration MaterialLoader::GetConfigFromFile(const std::string &path)
     {
@@ -63,13 +53,45 @@ namespace Core
                 value.erase(0, value.find_first_not_of(" \t"));
                 value.erase(value.find_last_not_of(" \t") + 1);
 
-                // TODO: FILL PLS
-                key = toLowerCase(key);
-                value = toLowerCase(value);
+                // WIP: FILL PLS
+                key = StringUtils::ToLowerCase(key);
+
+                if (StringUtils::EqualI(key, "version"))
+                {
+                    // TODO: Version check
+                }
+                else if (StringUtils::EqualI(key, "name"))
+                {
+                    config.name = value;
+                }
+                else if (StringUtils::EqualI(key, "colorTextureName"))
+                {
+                    config.colorTextureName = value;
+                }
+                else if (StringUtils::EqualI(key, "color"))
+                {
+                    config.color = StringToColor(value);
+                }
             }
         }
 
         return config;
+    }
+
+    Color StringToColor(const std::string &value)
+    {
+        std::istringstream colorStream(value);
+        Color color;
+
+        float r, g, b, a;
+        colorStream >> r >> g >> b >> a;
+
+        color.r = r;
+        color.g = g;
+        color.b = b;
+        color.a = a;
+
+        return color;
     }
 
 }
