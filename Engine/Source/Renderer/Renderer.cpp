@@ -39,9 +39,6 @@ namespace Core
 
     struct RendererState
     {
-        Shader *ObjectShader;
-        Shader *ScreenShader;
-
         Viewport viewport;
         Color backgroundColor;
 
