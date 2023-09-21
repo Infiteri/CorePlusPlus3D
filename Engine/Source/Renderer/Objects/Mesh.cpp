@@ -7,8 +7,9 @@
 namespace Core
 {
     Mesh::Mesh()
-    {
+    { 
         material = MaterialManager::GetDefault();
+        transform = Transform();
         init = false;
     }
 

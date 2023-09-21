@@ -27,6 +27,7 @@ namespace Core
         inline Matrix4 GetTransformMatrix() { return transform.GetMatrix(); };
         inline Vector3 *GetPosition() { return transform.GetPosition(); };
         inline Vector3 *GetRotation() { return transform.GetRotation(); };
+        inline Transform *GetTransfrom() { return &transform; };
         inline bool GetInit() { return init; };
     };
 }

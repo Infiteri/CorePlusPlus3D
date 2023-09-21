@@ -8,6 +8,11 @@ static Core::DepthMode lastMode;
 static int lastWidth = 1;
 static int lastHeight = 1;
 static int lastDepth = 1;
+
+static float lastX = 1;
+static float lastY = 1;
+static float lastZ = 1;
+
 static Core::Mesh *mesh;
 
 class SandboxLayer : public Core::Layer
@@ -60,6 +65,15 @@ public:
         if (ImGui::DragInt("Width", &lastWidth, 0.1f, 1) || ImGui::DragInt("Height", &lastHeight, 0.1f, 1) || ImGui::DragInt("Depth", &lastDepth), 0.1f, 1)
         {
             mesh->SetGeometry(new Core::BoxGeometry(lastWidth, lastHeight, lastDepth));
+        }
+
+        float pos[3] = {mesh->GetTransfrom()->GetPosition()->x, mesh->GetTransfrom()->GetPosition()->y, mesh->GetTransfrom()->GetPosition()->z};
+
+        if (ImGui::DragFloat3("Position", pos))
+        {
+            mesh->GetTransfrom()->GetPosition()->x = pos[0];
+            mesh->GetTransfrom()->GetPosition()->y = pos[1];
+            mesh->GetTransfrom()->GetPosition()->z = pos[2];
         }
 
         ImGui::End();
