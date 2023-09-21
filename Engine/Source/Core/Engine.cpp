@@ -92,8 +92,6 @@ namespace Core
 
     void Engine::Shutdown()
     {
-        CE_DEBUG("Engine::Shutdown entered.");
-
         EventManager::Shutdown();
         Renderer::Shutdown();
         ImGuiLayer::Shutdown();

@@ -64,7 +64,7 @@ public:
 
         if (ImGui::DragInt("Width", &lastWidth, 0.1f, 1) || ImGui::DragInt("Height", &lastHeight, 0.1f, 1) || ImGui::DragInt("Depth", &lastDepth), 0.1f, 1)
         {
-            mesh->SetGeometry(new Core::BoxGeometry(lastWidth, lastHeight, lastDepth));
+            // mesh->SetGeometry(new Core::BoxGeometry(lastWidth, lastHeight, lastDepth));
         }
 
         float pos[3] = {mesh->GetTransfrom()->GetPosition()->x, mesh->GetTransfrom()->GetPosition()->y, mesh->GetTransfrom()->GetPosition()->z};
@@ -99,7 +99,7 @@ public:
 
         mesh = new Core::Mesh();
         mesh->SetMaterialFromName("Material");
-        mesh->SetGeometry(new Core::BoxGeometry(lastWidth, lastHeight, lastDepth));
+        mesh->SetGeometry(new Core::PlaneGeometry(lastWidth, lastHeight));
         mesh->Init();
 
         Core::CameraSystem::Generate("ActiveCamera", Core::Math::DegToRad(90), Core::Engine::GetWindowAspect(), 0.01, 1000);

@@ -18,5 +18,6 @@
 #include "Renderer/Objects/Mesh.h"
 #include "Renderer/Manager/MaterialManager.h"
 #include "Renderer/Geometry/BoxGeometry.h"
+#include "Renderer/Geometry/PlaneGeometry.h"
 
 #include "Renderer/Camera/CameraSystem.h"
