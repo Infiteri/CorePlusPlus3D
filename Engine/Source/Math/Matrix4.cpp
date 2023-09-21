@@ -2,7 +2,6 @@
 #include "Core/Memory/CeMemory.h"
 #include "Math.h"
 
-
 namespace Core
 {
     Matrix4::Matrix4()
@@ -407,8 +406,8 @@ namespace Core
     {
         Vector3 vec;
 
-        vec.x = mat.data[0];  // Change this line
-        vec.y = mat.data[1];  // Change this line
+        vec.x = mat.data[0]; // Change this line
+        vec.y = mat.data[1]; // Change this line
         vec.z = mat.data[2]; // Change this line
 
         return vec;
@@ -418,10 +417,26 @@ namespace Core
     {
         Vector3 vec;
 
-        vec.x = mat->data[0];  // Change this line
-        vec.y = mat->data[1];  // Change this line
+        vec.x = mat->data[0]; // Change this line
+        vec.y = mat->data[1]; // Change this line
         vec.z = mat->data[2]; // Change this line
 
         return vec;
+    }
+
+    Matrix4 Matrix4::Scale(Vector3 *vec)
+    {
+        return Scale(vec->x, vec->y, vec->z);
+    }
+
+    Matrix4 Matrix4::Scale(float x, float y, float z)
+    {
+        Matrix4 m;
+
+        m.data[0] = x;
+        m.data[5] = y;
+        m.data[10] = z;
+
+        return m;
     }
 }

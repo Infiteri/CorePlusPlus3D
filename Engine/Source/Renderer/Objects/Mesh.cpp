@@ -2,6 +2,7 @@
 
 #include "Renderer/Manager/MaterialManager.h"
 #include "Renderer/Geometry/BoxGeometry.h"
+#include "Renderer/ShaderSystem.h"
 
 namespace Core
 {
@@ -62,6 +63,9 @@ namespace Core
         // If no geometry then there is nothing to render
         if (!init || !geometry)
             return;
+
+        Shader *shd = ShaderSystem::Get("EngineResources/Shaders/Object");
+        shd->Mat4(GetTransformMatrix(), "uTransform");
 
         material->Use();
 

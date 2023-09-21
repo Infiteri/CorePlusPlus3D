@@ -3,6 +3,7 @@
 #include "Base.h"
 #include "Math/Vectors.h"
 #include "Math/Matrix4.h"
+#include "Math/Transform.h"
 
 namespace Core
 {
@@ -10,8 +11,7 @@ namespace Core
     class CE_API Object3D
     {
     protected:
-        Vector3 position;
-        Vector3 rotation;
+        Transform transform;
         bool init = false;
 
     public:
@@ -24,9 +24,9 @@ namespace Core
         virtual void Render();
         virtual void Update();
 
-        inline Matrix4 GetTransformMatrix() { return Matrix4::Multiply(Matrix4::Translate(&position), Matrix4::RotationZYX(position)); };
-        inline Vector3 *GetPosition() { return &position; };
-        inline Vector3 *GetRotation() { return &rotation; };
+        inline Matrix4 GetTransformMatrix() { return transform.GetMatrix(); };
+        inline Vector3 *GetPosition() { return transform.GetPosition(); };
+        inline Vector3 *GetRotation() { return transform.GetRotation(); };
         inline bool GetInit() { return init; };
     };
 }
