@@ -5,6 +5,11 @@
 
 static Core::DepthMode lastMode;
 
+static int lastWidth = 1;
+static int lastHeight = 1;
+static int lastDepth = 1;
+static Core::Mesh *mesh;
+
 class SandboxLayer : public Core::Layer
 {
 public:
@@ -52,11 +57,14 @@ public:
             ImGui::EndCombo();
         }
 
+        if (ImGui::DragInt("Width", &lastWidth, 0.1f, 1) || ImGui::DragInt("Height", &lastHeight, 0.1f, 1) || ImGui::DragInt("Depth", &lastDepth), 0.1f, 1)
+        {
+            mesh->SetGeometry(new Core::BoxGeometry(lastWidth, lastHeight, lastDepth));
+        }
+
         ImGui::End();
     };
 };
-
-static Core::Mesh *mesh;
 
 class Sandbox : public Core::Application
 {
@@ -73,11 +81,11 @@ public:
         // config.name = "Material";
         // config.colorTextureName = "EngineResources/Images/crate.png";
 
-                Core::MaterialManager::Load("EngineResources/Materials/Default.ce_mat");
+        Core::MaterialManager::Load("EngineResources/Materials/Default.ce_mat");
 
         mesh = new Core::Mesh();
         mesh->SetMaterialFromName("Material");
-        mesh->SetGeometry(new Core::BoxGeometry(1, 2, 1));
+        mesh->SetGeometry(new Core::BoxGeometry(lastWidth, lastHeight, lastDepth));
         mesh->Init();
 
         Core::CameraSystem::Generate("ActiveCamera", Core::Math::DegToRad(90), Core::Engine::GetWindowAspect(), 0.01, 1000);
