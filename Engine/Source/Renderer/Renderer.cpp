@@ -9,6 +9,7 @@
 #include "Objects/Mesh.h"
 #include "Buffer/FrameBuffer.h"
 #include "Buffer/VertexArray.h"
+#include "ShaderSystem.h"
 
 #include "Math/Matrix4.h"
 #include "Math/Math.h"
@@ -69,6 +70,7 @@ namespace Core
         TextureManager::Init();
         MaterialManager::Init();
         CameraSystem::Init();
+        ShaderSystem::Init();
 
         // Allocate the State
         state = (RendererState *)CeMemory::Allocate(sizeof(RendererState));
@@ -79,8 +81,8 @@ namespace Core
         state->viewport.height = Engine::GetWindowInstance()->GetHeight();
 
         // Load up shaders
-        state->ObjectShader = new Shader("EngineResources/Shaders/Object.vs.glsl", "EngineResources/Shaders/Object.fs.glsl");
-        state->ScreenShader = new Shader("EngineResources/Shaders/Screen.vs.glsl", "EngineResources/Shaders/Screen.fs.glsl");
+        ShaderSystem::Load("EngineResources/Shaders/Object");
+        ShaderSystem::Load("EngineResources/Shaders/Screen");
 
         FrameBufferSpecification spec;
         spec.width = state->viewport.width;
@@ -111,6 +113,8 @@ namespace Core
         MaterialManager::Shutdown();
         TextureManager::Shutdown();
         CameraSystem::Shutdown();
+        ShaderSystem::Shutdown();
+
         CeMemory::Free(state);
     }
 
@@ -130,7 +134,11 @@ namespace Core
 
     void Renderer::Render()
     {
-        state->ObjectShader->Use();
+        if (!ShaderSystem::UseShaderIfExists("EngineResources/Shaders/Object"))
+        {
+            CE_FATAL("Unable to use object shader.");
+            return;
+        }
 
         // TODO: Scene rendering
 
@@ -138,9 +146,8 @@ namespace Core
         if (camera)
         {
             state->movement->Update(camera);
-            state->ObjectShader->Mat4(camera->GetProjection(), "uProjection");
-            Matrix4 upload = camera->GetViewMatrix();
-            state->ObjectShader->Mat4(upload, "uView");
+            ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(camera->GetProjection(), "uProjection");
+            ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(camera->GetViewMatrix(), "uView");
         }
     }
 
@@ -166,7 +173,11 @@ namespace Core
 
     void Renderer::DrawImageToScreen()
     {
-        state->ScreenShader->Use();
+        if (!ShaderSystem::UseShaderIfExists("EngineResources/Shaders/Screen"))
+        {
+            CE_FATAL("Unable to use screen shader.");
+            return;
+        }
 
         state->ScreenVertexArray->Bind();
 
@@ -174,7 +185,7 @@ namespace Core
         RenderPassSpecification *renderPass = state->ScreenFramebuffer->GetRenderPass(0);
         glActiveTexture(GL_TEXTURE0 + renderPass->index);
         glBindTexture(GL_TEXTURE_2D, renderPass->id);
-        state->ScreenShader->Int(renderPass->index, "uScreenTexture");
+        ShaderSystem::Get("EngineResources/Shaders/Screen")->Int(renderPass->index, "uScreenTexture");
 
         state->ScreenVertexArray->GetVertexBuffer()->Bind();
         state->ScreenVertexArray->GetVertexBuffer()->Draw();
@@ -195,7 +206,7 @@ namespace Core
 
     Shader *Renderer::GetObjectShader()
     {
-        return state->ObjectShader;
+        return ShaderSystem::Get("EngineResources/Shaders/Object");
     }
 
     Color *Renderer::GetBackgroundColor()

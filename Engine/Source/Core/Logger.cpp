@@ -9,7 +9,6 @@
 namespace Core
 {
     static std::unordered_map<LoggingLevel, std::string> levelToStringMap;
-    
 
     Logger::Logger()
     {

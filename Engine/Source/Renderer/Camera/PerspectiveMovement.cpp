@@ -29,12 +29,12 @@ namespace Core
 
         if (Input::GetKey(Keys::Up))
         {
-            camera->GetRotation()->x -= rotation;
+            camera->GetRotation()->x += rotation;
         }
 
         if (Input::GetKey(Keys::Down))
         {
-            camera->GetRotation()->x += rotation;
+            camera->GetRotation()->x -= rotation;
         }
 
         // float deltaX = Input::GetMouseDeltaX();

@@ -11,6 +11,7 @@ namespace Core
     {
     private:
         CeU32 id;
+        bool valid = false;
 
     public:
         Shader(const std::string &vertex, const std::string &fragment);
@@ -33,6 +34,7 @@ namespace Core
         void Vec4(Vector4 m, const char *name);
 
         CeU32 GetID();
+        bool IsValid();
         CeU32 GetUniLoc(const char *name);
     };
 }

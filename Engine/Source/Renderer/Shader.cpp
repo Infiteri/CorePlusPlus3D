@@ -57,6 +57,7 @@ namespace Core
 
         GLint isLinked = 0;
         glGetProgramiv(id, GL_LINK_STATUS, (int *)&isLinked);
+        valid = true;
         if (isLinked == GL_FALSE)
         {
             GLint maxLength = 0;
@@ -69,6 +70,8 @@ namespace Core
             glDeleteShader(fragmentShader);
 
             CE_FATAL("ProgramError: %s", infoLog.data());
+
+            valid = false;
         }
 
         // Delete shaders
@@ -149,6 +152,11 @@ namespace Core
     CeU32 Shader::GetID()
     {
         return id;
+    }
+
+    bool Shader::IsValid()
+    {
+        return valid;
     }
 
     CeU32 Shader::GetUniLoc(const char *name)
