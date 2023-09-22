@@ -19,5 +19,7 @@
 #include "Renderer/Manager/MaterialManager.h"
 #include "Renderer/Geometry/BoxGeometry.h"
 #include "Renderer/Geometry/PlaneGeometry.h"
-
 #include "Renderer/Camera/CameraSystem.h"
+
+#include "Scene/Scene.h"
+#include "Scene/Actor.h"

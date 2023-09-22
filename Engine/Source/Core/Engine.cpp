@@ -74,8 +74,6 @@ namespace Core
 
     void Engine::Render()
     {
-        GApp->Render();
-
         // Render with renderer
         Renderer::BeginFrame();
         Renderer::Render();
