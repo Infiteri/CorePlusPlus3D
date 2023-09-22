@@ -39,14 +39,17 @@ namespace Core
 
         if (stream.is_open())
         {
-            // Get the size of the file
             stream.seekg(0, std::ios::end);
             fileContent.resize(stream.tellg());
             stream.seekg(0, std::ios::beg);
-
-            // Read the entire file into fileContent
             stream.read(&fileContent[0], fileContent.size());
-            stream.close();
+
+            // Remove any null characters or other unwanted characters at the end
+            size_t nullPos = fileContent.find('\0');
+            if (nullPos != std::string::npos)
+            {
+                fileContent.erase(nullPos);
+            }
         }
         else
         {
@@ -56,6 +59,7 @@ namespace Core
 
         return fileContent;
     }
+
     std::string FileHandle::ReadLine(int lineNumber)
     {
         if (lineNumber < 0 || !stream.is_open())

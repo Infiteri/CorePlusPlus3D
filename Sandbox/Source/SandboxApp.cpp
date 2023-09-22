@@ -25,55 +25,18 @@ public:
     {
         ImGui::Begin("Hello");
 
-        // List of depth modes
-        static const char *depthModes[] = {"Less", "Lequal", "Always"};
-        static int selectedDepthMode = static_cast<int>(lastMode); // Initialize with the current mode
-
-        // Create the dropdown menu
-        if (ImGui::BeginCombo("Depth Mode", depthModes[selectedDepthMode]))
-        {
-            for (int i = 0; i < IM_ARRAYSIZE(depthModes); i++)
-            {
-                bool isSelected = (selectedDepthMode == i);
-                if (ImGui::Selectable(depthModes[i], isSelected))
-                {
-                    selectedDepthMode = i;
-
-                    // Update the 'lastMode' enum based on the selected index
-                    switch (selectedDepthMode)
-                    {
-                    case 0:
-                        Core::Renderer::SetDepthMode(Core::DepthMode::Less);
-                        break;
-                    case 1:
-                        Core::Renderer::SetDepthMode(Core::DepthMode::Lequal);
-                        break;
-                    case 2:
-                        Core::Renderer::SetDepthMode(Core::DepthMode::Always);
-                        break;
-                        // Add more cases if you have additional depth modes
-                    }
-                }
-
-                if (isSelected)
-                    ImGui::SetItemDefaultFocus(); // Set the default selection
-            }
-
-            ImGui::EndCombo();
-        }
-
         if (ImGui::DragInt("Width", &lastWidth, 0.1f, 1) || ImGui::DragInt("Height", &lastHeight, 0.1f, 1) || ImGui::DragInt("Depth", &lastDepth), 0.1f, 1)
         {
             // mesh->SetGeometry(new Core::BoxGeometry(lastWidth, lastHeight, lastDepth));
         }
 
-        float pos[3] = {mesh->GetTransfrom()->GetPosition()->x, mesh->GetTransfrom()->GetPosition()->y, mesh->GetTransfrom()->GetPosition()->z};
+        float pos[3] = {mesh->GetTransform()->GetPosition()->x, mesh->GetTransform()->GetPosition()->y, mesh->GetTransform()->GetPosition()->z};
 
         if (ImGui::DragFloat3("Position", pos))
         {
-            mesh->GetTransfrom()->GetPosition()->x = pos[0];
-            mesh->GetTransfrom()->GetPosition()->y = pos[1];
-            mesh->GetTransfrom()->GetPosition()->z = pos[2];
+            mesh->GetTransform()->GetPosition()->x = pos[0];
+            mesh->GetTransform()->GetPosition()->y = pos[1];
+            mesh->GetTransform()->GetPosition()->z = pos[2];
         }
 
         ImGui::End();
@@ -87,7 +50,7 @@ public:
 
     void Init()
     {
-        Core::Renderer::SetBackgroundColor(0, 0, 0, 255);
+        Core::Renderer::SetBackgroundColor(255, 255, 255, 255);
         Core::LayerStack::PushLayer(new SandboxLayer());
 
         // Core::MaterialConfiguration config;
@@ -99,7 +62,7 @@ public:
 
         mesh = new Core::Mesh();
         mesh->SetMaterialFromName("Material");
-        mesh->SetGeometry(new Core::PlaneGeometry(lastWidth, lastHeight));
+        mesh->SetGeometry(new Core::BoxGeometry(lastWidth, lastHeight, lastDepth));
         mesh->Init();
 
         Core::CameraSystem::Generate("ActiveCamera", Core::Math::DegToRad(90), Core::Engine::GetWindowAspect(), 0.01, 1000);

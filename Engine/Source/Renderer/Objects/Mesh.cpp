@@ -7,7 +7,7 @@
 namespace Core
 {
     Mesh::Mesh()
-    { 
+    {
         material = MaterialManager::GetDefault();
         transform = Transform();
         init = false;
@@ -56,6 +56,7 @@ namespace Core
             array.GenIndexBuffer(geometry->GetIndices(), geometry->GetIndicesSize());
             array.GetVertexBuffer()->AddLayout(0, 0, 3);
             array.GetVertexBuffer()->AddLayout(1, 3, 2);
+            array.GetVertexBuffer()->AddLayout(2, 5, 3);
         }
     }
 

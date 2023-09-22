@@ -32,6 +32,7 @@ namespace Core
         void Vec4(float x, float y, float z, float w, const char *name);
         void Vec4(Vector4 *m, const char *name);
         void Vec4(Vector4 m, const char *name);
+        void Float(float f, const char *name);
 
         CeU32 GetID();
         bool IsValid();

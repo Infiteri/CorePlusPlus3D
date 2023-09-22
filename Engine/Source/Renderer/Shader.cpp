@@ -29,7 +29,7 @@ namespace Core
             glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
 
             CE_ERROR("Shader compilation failed.");
-            CE_ERROR("%s", infoLog.data());
+            CE_ERROR("(%s %s) %s", type == GL_VERTEX_SHADER ? "Vertex" : "Fragment", source, infoLog.data());
 
             glDeleteShader(shader);
             return (GLuint)0;
@@ -40,14 +40,8 @@ namespace Core
 
     Shader::Shader(const std::string &vertex, const std::string &fragment)
     {
-        FileHandle handle;
-        handle.Open(vertex);
-        CeU32 vertexShader = LoadShader(handle.Read().c_str(), GL_VERTEX_SHADER);
-
-        handle.Close();
-        handle.Open(fragment);
-        CeU32 fragmentShader = LoadShader(handle.Read().c_str(), GL_FRAGMENT_SHADER);
-        handle.Close();
+        CeU32 vertexShader = LoadShader(FileSystem::ReadFileContent(vertex).c_str(), GL_VERTEX_SHADER);
+        CeU32 fragmentShader = LoadShader(FileSystem::ReadFileContent(fragment).c_str(), GL_FRAGMENT_SHADER);
 
         // Compile program
         id = glCreateProgram();
@@ -147,6 +141,13 @@ namespace Core
     void Shader::Vec4(Vector4 v, const char *name)
     {
         Vec4(v.x, v.y, v.z, v.w, name);
+    }
+    
+    void Shader::Float(float f, const char *name)
+    {
+        
+        Use();
+        glUniform1f(GetUniLoc(name),f);
     }
 
     CeU32 Shader::GetID()

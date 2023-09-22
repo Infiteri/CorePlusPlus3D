@@ -1,27 +1,24 @@
 #pragma once
 
 #include "Base.h"
-#include "Math/Vectors.h"
-#include "Math/Matrix4.h"
+
+#include "Renderer/Color.h"
 #include "Math/Transform.h"
+#include "Math/Matrix4.h"
 
 namespace Core
 {
-    /// @brief Core object for most 3D objects (Camera, Meshes, etc...);
-    class CE_API Object3D
+    /// @brief A light isn't truly a 3D object, it has proprieties like color, position and strength. Also a init, Destroy and Update functions aren't necessary, extending of off Object3D would waste memory.
+    class Light
     {
     protected:
+        Color color;
         Transform transform;
-        bool init = false;
 
     public:
-        Object3D();
-        ~Object3D();
+        Light();
+        ~Light();
 
-        virtual void Destroy();
-
-        virtual void Init();
-        virtual void Render();
         virtual void Update();
 
         inline Matrix4 GetTransformMatrix() { return transform.GetMatrix(); };
@@ -29,6 +26,5 @@ namespace Core
         inline Vector3 *GetRotation() { return transform.GetRotation(); };
         inline Vector3 *GetScale() { return transform.GetScale(); };
         inline Transform *GetTransform() { return &transform; };
-        inline bool GetInit() { return init; };
     };
 }

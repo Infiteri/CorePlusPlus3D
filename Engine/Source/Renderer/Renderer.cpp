@@ -21,6 +21,8 @@
 #include "Manager/TextureManager.h"
 #include "Manager/MaterialManager.h"
 
+#include "Light/DirectionalLight.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -53,6 +55,8 @@ namespace Core
         PerspectiveMovement *movement;
 
         GLenum depthType = GL_LEQUAL;
+
+        DirectionalLight *light;
     };
 
     static RendererState *state;
@@ -97,9 +101,8 @@ namespace Core
         state->ScreenVertexArray->GetVertexBuffer()->AddLayout(0, 0, 2);
         state->ScreenVertexArray->GetVertexBuffer()->AddLayout(1, 2, 2);
 
-        state->backgroundColor.Set(0, 0, 0, 255);
-
         state->movement = new PerspectiveMovement();
+        state->light = new DirectionalLight();
 
         // After objects creation
         RegenerateObjectsWithNewViewport();
@@ -138,6 +141,7 @@ namespace Core
         }
 
         // TODO: Scene rendering
+        state->light->Update();
 
         PerspectiveCamera *camera = CameraSystem::GetActive();
         if (camera)
@@ -145,6 +149,7 @@ namespace Core
             state->movement->Update(camera);
             ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(camera->GetProjection(), "uProjection");
             ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(camera->GetViewMatrix(), "uView");
+            ShaderSystem::Get("EngineResources/Shaders/Object")->Vec3(camera->GetPosition(), "uCameraPosition");
         }
     }
 

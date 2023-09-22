@@ -2,6 +2,12 @@
 
 in vec2 vUV;
 
+struct DirectionalLight {
+    vec4 color;
+    vec3 direction;
+};
+uniform DirectionalLight directionalLight;
+
 uniform vec4 uColor;
 uniform sampler2D uColorTexture;
 
