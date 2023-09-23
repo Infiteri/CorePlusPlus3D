@@ -27,6 +27,7 @@ namespace Core
         handle = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
         glfwSetWindowPos(handle, config.x, config.y);
         glfwMakeContextCurrent(handle);
+        glfwSwapInterval(1);
 
         // Poll events
         glfwSetKeyCallback(handle, OnKeyEvent);
@@ -59,7 +60,6 @@ namespace Core
         return glfwWindowShouldClose(handle);
     }
 
-    
     int Window::GetWidth()
     {
         return config.width;
@@ -69,7 +69,6 @@ namespace Core
     {
         return config.height;
     }
-
 
     void OnKeyEvent(GLFWwindow *win, int key, int scancode, int action, int mods)
     {

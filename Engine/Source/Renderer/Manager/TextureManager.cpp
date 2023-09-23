@@ -10,12 +10,10 @@ namespace Core
     struct TextureRef
     {
         int count = 0;
-        std::string name;
         Texture *texture;
 
         ~TextureRef()
         {
-            CE_INFO(name.c_str());
             delete texture;
         };
     };
@@ -56,7 +54,6 @@ namespace Core
 
         references[path] = new TextureRef;
         references[path]->count = 0;
-        references[path]->name = path;
         references[path]->texture = new Texture();
         references[path]->texture->Load(path);
         CE_INFO("Loaded texture: '%s', reference count is 0.", path.c_str());
@@ -70,7 +67,6 @@ namespace Core
         }
 
         references[path]->count++;
-        references[path]->name = path;
         CE_INFO("Found texture: '%s', reference count is %i.", path.c_str(), references[path]->count);
 
         return references[path]->texture;
