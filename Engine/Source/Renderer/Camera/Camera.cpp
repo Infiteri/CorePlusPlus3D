@@ -10,10 +10,6 @@ namespace Core
     {
     }
 
-    void Camera::UpdateProjection()
-    {
-    }
-
     Matrix4 Camera::GetViewMatrix()
     {
         Matrix4 translation = Matrix4::Translate(transform.GetPosition());

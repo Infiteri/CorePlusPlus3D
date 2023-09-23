@@ -11,6 +11,7 @@ namespace Core
         this->FOV = Math::DegToRad(90);
         this->near = 0.01;
         this->far = 1000;
+        this->aspect = 1280 / 720;
 
         UpdateProjection((float)Engine::GetWindowInstance()->GetWidth() / (float)Engine::GetWindowInstance()->GetHeight());
     }
@@ -20,6 +21,7 @@ namespace Core
         this->FOV = fov;
         this->near = near;
         this->far = far;
+        this->aspect = aspect;
 
         UpdateProjection(aspect);
     }
@@ -29,6 +31,13 @@ namespace Core
     }
 
     void PerspectiveCamera::UpdateProjection(float aspect)
+    {
+        this->aspect = aspect;
+
+        projection = Matrix4::Perspective(FOV, aspect, near, far);
+    }
+
+    void PerspectiveCamera::UpdateProjection()
     {
         projection = Matrix4::Perspective(FOV, aspect, near, far);
     }

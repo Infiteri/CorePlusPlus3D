@@ -70,4 +70,9 @@ namespace Core
         if (activeCamera)
             activeCamera->UpdateProjection(aspect);
     }
+
+    bool CameraSystem::DoesCameraExist(const std::string &name)
+    {
+        return perspectives[name] != nullptr;
+    }
 }

@@ -10,6 +10,7 @@ namespace Core
         float FOV;
         float near;
         float far;
+        float aspect;
 
     public:
         PerspectiveCamera();
@@ -17,6 +18,9 @@ namespace Core
         ~PerspectiveCamera();
 
         void UpdateProjection(float aspect);
+
+        /// @brief Will use last aspect
+        void UpdateProjection();
 
         float GetFOV();
         void SetFOV(float val);

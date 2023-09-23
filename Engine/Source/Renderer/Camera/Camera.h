@@ -14,7 +14,7 @@ namespace Core
         Camera();
         ~Camera();
 
-        virtual void UpdateProjection();
+        virtual void UpdateProjection() = 0;
 
         Matrix4 GetViewMatrix();
 

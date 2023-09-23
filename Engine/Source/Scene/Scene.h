@@ -22,7 +22,8 @@ namespace Core
     {
     private:
         std::string name;
-        std::vector<Actor*> actors;
+        std::string sceneCameraName;
+        std::vector<Actor *> actors;
 
         SceneState state;
 
@@ -45,9 +46,16 @@ namespace Core
         /// @brief When the scene stops to play.
         void Stop();
 
-        void AddActor(Actor* a);
+        void AddActor(Actor *a);
+
+        void ActivateSceneCamera();
 
         inline std::string GetName() { return name; };
         void SetName(const char *_name);
+
+        void SetSceneCameraName(const std::string &cameraName);
+        std::string GetSceneCameraName() const;
+
+        void GenerateAndActivateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far);
     };
 }

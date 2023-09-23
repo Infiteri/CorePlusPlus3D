@@ -50,5 +50,10 @@ namespace Core
         /// @brief Updates the active camera's aspect if any active camera exists.
         /// @param aspect A float that represents the camera's new aspect. Use Engine::GetWindowAspect() to get the window aspect.
         static void UpdateProjectionForActiveCamera(float aspect);
+
+        /// @brief Checks and returns if a camera exists based on the name.
+        /// @param name The camera name. 
+        /// @return Bool, true if exists
+        static bool DoesCameraExist(const std::string &name);
     };
 }
