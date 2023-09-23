@@ -23,3 +23,4 @@
 
 #include "Scene/Scene.h"
 #include "Scene/Actor.h"
+#include "Scene/Components/Components.h"

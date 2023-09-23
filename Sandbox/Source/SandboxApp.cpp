@@ -23,17 +23,19 @@ public:
 
     void Init()
     {
-
         Core::Renderer::SetBackgroundColor(0, 0, 0.1 * 255, 255);
         Core::LayerStack::PushLayer(new SandboxLayer());
 
-        Core::MaterialManager::Load("EngineResources/Materials/Default.ce_mat");
+        Core::MaterialManager::Load("EngineResources/Materials/Default.ce_mat"); 
 
         scene = new Core::Scene();
         scene->Init();
         scene->Start();
 
-        scene->AddActor(new Core::Actor());
+        Core::Actor *a = new Core::Actor();
+        scene->AddActor(a);
+        auto mesh = a->AddComponent<Core::MeshComponent>();
+        mesh->SetGeometry(new Core::BoxGeometry(1, 1, 1));
 
         Core::CameraSystem::Generate("ActiveCamera", Core::Math::DegToRad(90), Core::Engine::GetWindowAspect(), 0.01, 1000);
         Core::CameraSystem::Activate("ActiveCamera");

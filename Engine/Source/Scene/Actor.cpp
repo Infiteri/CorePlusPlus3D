@@ -1,5 +1,7 @@
 #include "Actor.h"
 
+#include "Core/Logger.h"
+
 #include "Renderer/Objects/Mesh.h"
 #include "Renderer/Geometry/BoxGeometry.h"
 
@@ -7,38 +9,82 @@ namespace Core
 {
     Actor::Actor()
     {
-        mesh = new Mesh();
-        mesh->SetMaterialFromName("Material");
-        mesh->SetGeometry(new BoxGeometry(1, 1, 1));
-        mesh->Init();
+        state = ActorState::Created;
     }
 
     Actor::~Actor()
     {
+        Destroy();
     }
 
     void Actor::Init()
     {
+        state = ActorState::Init;
+
+        for (Component *component : components)
+        {
+            component->Init();
+        }
+
+        CE_TRACE("Actor::Init");
     }
 
     void Actor::Destroy()
     {
+        if (state != ActorState::Stopped)
+            Stop();
+
+        state = ActorState::Destroyed;
+
+        for (Component *component : components)
+        {
+            component->Destroy();
+            delete component;
+        }
+
+        components.clear();
+
+        CE_TRACE("Actor::Destroy");
     }
 
     void Actor::Update()
     {
+        if (state != ActorState::Started)
+            return;
     }
 
     void Actor::Render()
     {
-        mesh->Render();
+        if (state != ActorState::Started)
+            return;
+
+        for (Component *component : components)
+        {
+            component->Render();
+        }
     }
 
     void Actor::Start()
     {
+        state = ActorState::Started;
+
+        for (Component *component : components)
+        {
+            component->Start();
+        }
+
+        CE_TRACE("Actor::Start");
     }
 
     void Actor::Stop()
     {
+        state = ActorState::Stopped;
+
+        for (Component *component : components)
+        {
+            component->Stop();
+        }
+
+        CE_TRACE("Actor::Stop");
     }
 }
