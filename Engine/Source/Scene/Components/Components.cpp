@@ -29,6 +29,7 @@ namespace Core
     {
         CE_INFO("MeshComponent::Destroy");
 
+        mesh->Destroy();
         delete mesh;
     }
 

@@ -17,7 +17,6 @@ namespace Core
 
     Mesh::~Mesh()
     {
-        Destroy();
     }
 
     void Mesh::SetMaterialFromName(const std::string &name)

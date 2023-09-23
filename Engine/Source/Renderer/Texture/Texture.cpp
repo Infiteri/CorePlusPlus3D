@@ -54,6 +54,8 @@ namespace Core
 
     void Texture::Load()
     {
+        image = nullptr;
+
         glGenTextures(1, &id);
         Bind();
 

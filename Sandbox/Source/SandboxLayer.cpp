@@ -11,7 +11,7 @@ void SandboxLayer::OnImGuiRender()
     SandboxUserData *MyData = (SandboxUserData *)Core::Engine::GetUserData();
     if (ImGui::DragFloat("FOV", &MyData->lastCameraFov))
     {
-        auto camera = Core::CameraSystem::Get(MyData->scene->GetSceneCameraName());
+        auto camera = Core::CameraSystem::Get(Core::World::GetActive()->GetSceneCameraName());
 
         if (camera != nullptr)
         {

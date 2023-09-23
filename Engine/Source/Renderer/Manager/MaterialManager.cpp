@@ -42,8 +42,11 @@ namespace Core
         for (auto it = references.begin(); it != references.end(); it++)
         {
             auto ref = it->second;
-            ref->count = 0;
-            delete ref;
+            if (ref != nullptr)
+            {
+                ref->count = 0;
+                delete ref;
+            }
         }
 
         delete defaultMaterial;
@@ -103,6 +106,7 @@ namespace Core
             CE_INFO("Material: '%s' with reference count of %i is getting deleted.", name.c_str(), references[name]->count);
             references[name]->Destroy();
             delete references[name];
+            references[name] = nullptr;
         }
     }
 }

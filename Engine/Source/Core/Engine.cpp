@@ -13,6 +13,8 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/Manager/TextureManager.h"
 
+#include "Scene/World.h"
+
 #include <glfw/glfw3.h>
 
 namespace Core
@@ -39,6 +41,7 @@ namespace Core
         Logger::Init();
         EventManager::Init();
         LayerStack::Init();
+        World::Init();
 
         // Create window
         GWindowInstance = new Window(config->windowConfig);
@@ -57,11 +60,13 @@ namespace Core
 
     void Engine::Init()
     {
+        World::InitActive();
         CE_DEBUG("Engine::Init successful.");
     }
 
     void Engine::Start()
     {
+        World::StartActive();
         CE_DEBUG("Engine::Start successful.");
     }
 
@@ -72,6 +77,7 @@ namespace Core
 
         EventManager::Update();
         LayerStack::Update();
+        World::UpdateActive();
     }
 
     void Engine::Render()
@@ -80,6 +86,7 @@ namespace Core
         Renderer::BeginFrame();
         Renderer::Render();
         GApp->Render();
+        World::RenderActive();
         Renderer::EndFrame();
 
         // Draw everything to Screen Shader
@@ -93,9 +100,11 @@ namespace Core
     void Engine::Shutdown()
     {
         EventManager::Shutdown();
-        Renderer::Shutdown();
         ImGuiLayer::Shutdown();
         LayerStack::Destroy();
+        World::Shutdown();
+
+        Renderer::Shutdown();
 
         GApp->Shutdown();
         delete GWindowInstance;

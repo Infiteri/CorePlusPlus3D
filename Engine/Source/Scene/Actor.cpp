@@ -14,7 +14,6 @@ namespace Core
 
     Actor::~Actor()
     {
-        Destroy();
     }
 
     void Actor::Init()

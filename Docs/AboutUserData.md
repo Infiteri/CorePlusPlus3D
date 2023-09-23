@@ -62,4 +62,4 @@ Core::CeMemory::Free(data);
 
 If the data needs to be reset to another thing use "Engine::RegenerateUserData", this will reset the user data to the thing thats passed in.
 
-BTW: If the user data is read and written to, Engine::RegenerateUserData is not necessary, in fact is actually bad. As long as the structure stays the same (doesn't change from "MyGameData" to something else), then Engine::RegenerateUserData is pointless and slow/
+BTW: If the user data is read and written to, Engine::RegenerateUserData is not necessary, in fact is actually bad. As long as the structure stays the same (doesn't change from "MyGameData" to something else), then Engine::RegenerateUserData is pointless and slow

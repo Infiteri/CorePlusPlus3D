@@ -18,7 +18,6 @@ namespace Core
 
     Scene::~Scene()
     {
-        Destroy();
     }
 
     void Scene::Init()
@@ -37,8 +36,10 @@ namespace Core
         state = SceneState::Destroyed;
 
         for (Actor *a : actors)
+        {
+            a->Destroy();
             delete a;
-
+        }
         actors.clear();
     }
 

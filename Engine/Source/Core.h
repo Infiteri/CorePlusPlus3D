@@ -8,7 +8,6 @@
 #include "Core/Layer/Layer.h"
 #include "Core/Memory/CeMemory.h"
 
-
 #include "Event/EventManager.h"
 #include "Event/CeEvents.h"
 
@@ -25,4 +24,5 @@
 
 #include "Scene/Scene.h"
 #include "Scene/Actor.h"
+#include "Scene/World.h"
 #include "Scene/Components/Components.h"
