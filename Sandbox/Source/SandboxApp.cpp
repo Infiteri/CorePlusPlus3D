@@ -1,37 +1,12 @@
 #include "Core.h"
 #include "Core/Launch/Launch.h"
 
+#include "SandboxUserData.h"
+#include "SandboxLayer.h"
+
 #include <imgui.h>
 
-static Core::Scene *scene;
-
-static float lastFov = 90;
-
-class SandboxLayer : public Core::Layer
-{
-public:
-    SandboxLayer(){};
-    ~SandboxLayer(){};
-
-    void OnImGuiRender()
-    {
-        ImGui::Begin("Camera");
-
-        // Testing for camera values
-        if (ImGui::DragFloat("FOV", &lastFov))
-        {
-            auto camera = Core::CameraSystem::Get(scene->GetSceneCameraName());
-
-            if (camera != nullptr)
-            {
-                camera->SetFOV(Core::Math::DegToRad(lastFov));
-                camera->UpdateProjection();
-            }
-        }
-
-        ImGui::End();
-    };
-};
+static SandboxUserData *MyData;
 
 class Sandbox : public Core::Application
 {
@@ -40,33 +15,39 @@ public:
 
     void Init()
     {
+        SandboxUserData data;
+        data.lastCameraFov = 90;
+        Core::Engine::GenerateUserData(&data, sizeof(SandboxUserData));
+        MyData = (SandboxUserData *)Core::Engine::GetUserData();
+
         Core::Renderer::SetBackgroundColor(0, 0, 0.1 * 255, 255);
         Core::LayerStack::PushLayer(new SandboxLayer());
-
         Core::MaterialManager::Load("EngineResources/Materials/Default.ce_mat");
 
-        scene = new Core::Scene();  
-        scene->Init();
-        scene->Start();
+        MyData->scene = new Core::Scene();
+        MyData->scene->Init();
+        MyData->scene->Start();
 
-        scene->GenerateAndActivateSceneCamera("Scene1Camera", Core::Math::DegToRad(lastFov), Core::Engine::GetWindowAspect(), 0.01f, 1000.0f);
+        MyData->scene->GenerateAndActivateSceneCamera("Scene1Camera", Core::Math::DegToRad(data.lastCameraFov), Core::Engine::GetWindowAspect(), 0.01f, 1000.0f);
 
         Core::Actor *a = new Core::Actor();
-        scene->AddActor(a);
+        MyData->scene->AddActor(a);
         auto mesh = a->AddComponent<Core::MeshComponent>();
         mesh->SetGeometry(new Core::BoxGeometry(1, 1, 1));
+
+        Core::CeMemory::TracePrintSize("sizeof(SandboxUserData)", sizeof(SandboxUserData));
     };
 
     void Render()
     {
-        scene->Render();
+        MyData->scene->Render();
     }
 
     void Shutdown()
     {
-        scene->Stop();
+        MyData->scene->Stop();
 
-        delete scene;
+        Core::CeMemory::Free(MyData);
     };
 };
 

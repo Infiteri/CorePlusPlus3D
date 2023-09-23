@@ -7,6 +7,12 @@
 
 namespace Core
 {
+    struct CeUserDataStructure
+    {
+        void *Data;
+        CeU64 Size;
+    };
+
     class CE_API Engine
     {
     public:
@@ -32,5 +38,11 @@ namespace Core
         /// @brief Returns time in seconds.
         /// @return Float for time.
         static float GetTime();
+
+        static void GenerateUserData(void *data, CeU64 size);
+        static void RegenerateUserData(void *data, CeU64 size);
+        static void *GetUserData();
+        static CeU64 GetUserDataSize();
+        static void *GetCopyOfUserData();
     };
 }

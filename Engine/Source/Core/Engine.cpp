@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "Window.h"
 #include "Timer.h"
+#include "Memory/CeMemory.h"
 
 #include "Event/EventManager.h"
 
@@ -19,6 +20,7 @@ namespace Core
     static EngineConfiguration *GConfig;
     static Window *GWindowInstance;
     static Application *GApp;
+    static CeUserDataStructure GUserData;
 
     bool Engine::ShouldTick()
     {
@@ -115,5 +117,35 @@ namespace Core
     float Engine::GetTime()
     {
         return (float)glfwGetTime();
+    }
+
+    void Engine::GenerateUserData(void *data, CeU64 size)
+    {
+        GUserData.Data = CeMemory::Allocate(size);
+        CeMemory::Copy(GUserData.Data, data, size);
+        GUserData.Size = size;
+    }
+
+    void Engine::RegenerateUserData(void *data, CeU64 size)
+    {
+        CeMemory::Free(GUserData.Data);
+        GenerateUserData(data, size);
+    }
+
+    void *Engine::GetUserData()
+    {
+        return GUserData.Data;
+    }
+
+    CeU64 Engine::GetUserDataSize()
+    {
+        return GUserData.Size;
+    }
+
+    void *Engine::GetCopyOfUserData()
+    {
+        void *block = CeMemory::Allocate(GUserData.Size);
+        CeMemory::Copy(block, GUserData.Data, GUserData.Size);
+        return block;
     }
 }

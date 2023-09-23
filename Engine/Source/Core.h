@@ -6,6 +6,8 @@
 #include "Core/Engine.h"
 #include "Core/Layer/LayerStack.h"
 #include "Core/Layer/Layer.h"
+#include "Core/Memory/CeMemory.h"
+
 
 #include "Event/EventManager.h"
 #include "Event/CeEvents.h"
