@@ -82,6 +82,66 @@ namespace Core
     {
         return memcpy(dest, source, size);
     }
+
+    DynamicLibrary Platform::CreateLibrary(const std::string &_name)
+    {
+        DynamicLibrary out;
+        if (_name.empty())
+        {
+            out.valid = false;
+            CE_FATAL("Unable to create a library with no name.");
+            return out;
+        }
+
+        // Load to make sure its fine
+        HMODULE mod = LoadLibrary(_name.c_str());
+
+        if (mod == NULL)
+        {
+            out.valid = false;
+            CE_FATAL("Unable to create a library with name '%s'.", _name.c_str());
+            return out;
+        }
+
+        // Set
+        out.internal = mod;
+        out.valid = true;
+        out.name = _name;
+
+        return out;
+    }
+
+    bool Platform::LibraryLoadFunction(DynamicLibrary *library, const std::string &functionName)
+    {
+        if (!library || !library->valid)
+            return false;
+
+        FARPROC f_addr = GetProcAddress((HMODULE)library->internal, functionName.c_str());
+        if (!f_addr)
+            return false;
+
+        DynamicLibraryFunction *f = new DynamicLibraryFunction;
+        f->pfn = (void *)f_addr;
+        f->name = functionName;
+        library->functions[functionName] = f;
+
+        return true;
+    }
+
+    void Platform::DestroyLibrary(DynamicLibrary *library)
+    {
+        if (!library || !library->valid || library->name.empty())
+            return;
+
+        for (auto it = library->functions.begin(); it != library->functions.end(); it++)
+        {
+            delete it->second;
+        }
+
+        library->functions.clear();
+
+        FreeLibrary((HMODULE)library->internal);
+    }
 }
 
 #endif

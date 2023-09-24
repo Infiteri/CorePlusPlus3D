@@ -5,6 +5,8 @@
 #include "Timer.h"
 #include "Memory/CeMemory.h"
 
+#include "Platform/Platform.h"
+
 #include "Event/EventManager.h"
 
 #include "Layer/LayerStack.h"
@@ -25,6 +27,7 @@ namespace Core
     static Window *GWindowInstance;
     static Application *GApp;
     static CeUserDataStructure GUserData;
+    static DynamicLibrary testLibrary;
 
     bool Engine::ShouldTick()
     {
@@ -57,6 +60,12 @@ namespace Core
 
         // Starting application after starting subsystems
         GApp->Init();
+
+        testLibrary = Platform::CreateLibrary("GameLibrary.dll");
+        Platform::LibraryLoadFunction(&testLibrary, "GameInit");
+        typedef void (*GameInit)();
+        GameInit f = (GameInit)testLibrary.functions["GameInit"]->pfn;
+        f();
 
         CE_DEBUG("Engine::PreInit successful.");
     }
@@ -107,6 +116,8 @@ namespace Core
         LayerStack::Destroy();
         World::Shutdown();
         ScriptEngine::Shutdown();
+
+        Platform::DestroyLibrary(&testLibrary);
 
         Renderer::Shutdown();
 
