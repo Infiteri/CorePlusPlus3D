@@ -6,9 +6,9 @@ namespace Core
 {
     PerspectiveMovement::PerspectiveMovement()
     {
-        speed = 0.02f;
-        rotation = 0.01f;
-        sensitivity = 0.001f;
+        speed = 0.1f;
+        rotation = 0.05f;
+        sensitivity = 0.006f;
     }
 
     PerspectiveMovement::~PerspectiveMovement()

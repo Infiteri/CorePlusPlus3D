@@ -26,3 +26,5 @@
 #include "Scene/Actor.h"
 #include "Scene/World.h"
 #include "Scene/Components/Components.h"
+
+#include "Script/ActorScript.h"

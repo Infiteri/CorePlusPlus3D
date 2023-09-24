@@ -6,6 +6,8 @@
 
 #include "Renderer/Camera/CameraSystem.h"
 
+#include "Script/ScriptEngine.h"
+
 namespace Core
 {
     Scene::Scene()
@@ -50,6 +52,8 @@ namespace Core
 
         for (Actor *a : actors)
             a->Update();
+
+        ScriptEngine::UpdateRuntime();
     }
 
     void Scene::Render()
@@ -69,7 +73,18 @@ namespace Core
         ActivateSceneCamera();
 
         for (Actor *a : actors)
+        {
             a->Start();
+
+            // Register actor script
+            auto componentScript = a->GetComponent<ActorScriptComponent>();
+            if (componentScript != nullptr)
+            {
+                ScriptEngine::RegisterScript(a->GetName().c_str(), componentScript->script, a);
+            }
+        }
+
+        ScriptEngine::StartRuntime();
     }
 
     void Scene::Stop()
@@ -78,6 +93,8 @@ namespace Core
 
         for (Actor *a : actors)
             a->Stop();
+
+        ScriptEngine::StopRuntime();
     }
 
     void Scene::AddActor(Actor *a)

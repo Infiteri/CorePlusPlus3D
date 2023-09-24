@@ -3,6 +3,7 @@
 #include "Core/Logger.h"
 
 #include "Scene/Actor.h"
+#include "Script/ActorScript.h"
 
 namespace Core
 {
@@ -41,6 +42,14 @@ namespace Core
     void MeshComponent::SetMaterialFromName(const std::string &name)
     {
         mesh->SetMaterialFromName(name);
+    }
+
+    ActorScriptComponent::ActorScriptComponent()
+    {
+    }
+
+    ActorScriptComponent::~ActorScriptComponent()
+    {
     }
 
 }

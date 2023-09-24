@@ -15,6 +15,8 @@
 
 #include "Scene/World.h"
 
+#include "Script/ScriptEngine.h"
+
 #include <glfw/glfw3.h>
 
 namespace Core
@@ -42,6 +44,7 @@ namespace Core
         EventManager::Init();
         LayerStack::Init();
         World::Init();
+        ScriptEngine::Init();
 
         // Create window
         GWindowInstance = new Window(config->windowConfig);
@@ -103,6 +106,7 @@ namespace Core
         ImGuiLayer::Shutdown();
         LayerStack::Destroy();
         World::Shutdown();
+        ScriptEngine::Shutdown();
 
         Renderer::Shutdown();
 

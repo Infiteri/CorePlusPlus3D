@@ -38,6 +38,7 @@ namespace Core
 
         // List of components
         std::vector<Component *> components;
+        std::string name;
 
     public:
         Actor();
@@ -57,6 +58,9 @@ namespace Core
 
         /// @brief When the actor stops to play.
         void Stop();
+
+        void SetName(const std::string& name);
+        std::string GetName();
 
         // ---------- COMPONENTS ----------
 

@@ -10,6 +10,7 @@ namespace Core
     Actor::Actor()
     {
         state = ActorState::Created;
+        name = "Actor";
     }
 
     Actor::~Actor()
@@ -86,4 +87,15 @@ namespace Core
 
         CE_TRACE("Actor::Stop");
     }
+
+    void Actor::SetName(const std::string &name)
+    {
+        this->name = name;
+    }
+
+    std::string Actor::GetName()
+    {
+        return name;
+    }
+
 }

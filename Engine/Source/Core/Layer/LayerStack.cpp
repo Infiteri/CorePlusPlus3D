@@ -49,7 +49,7 @@ namespace Core
         auto it = std::find(layers.begin(), layers.end(), layer);
         if (it != layers.end())
         {
-            layers.erase(it);
+            layers.erase(it);   
             insert--;
         }
 

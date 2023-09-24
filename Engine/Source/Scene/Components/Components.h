@@ -4,9 +4,11 @@
 
 #include "Renderer/Objects/Mesh.h"
 
+
 namespace Core
 {
     class Actor;
+    class ActorScript;
 
     class Component
     {
@@ -39,5 +41,14 @@ namespace Core
 
         void SetGeometry(Geometry *geo);
         void SetMaterialFromName(const std::string &name);
+    };
+
+    class CE_API ActorScriptComponent : public Component
+    {
+    public:
+        ActorScript *script;
+
+        ActorScriptComponent();
+        ~ActorScriptComponent();
     };
 }
