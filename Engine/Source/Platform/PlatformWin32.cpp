@@ -1,7 +1,5 @@
 #include "Platform.h"
 
-#include "Core/Logger.h"
-
 #ifdef CE_WIN32
 
 #include <windows.h>

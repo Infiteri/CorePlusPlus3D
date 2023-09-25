@@ -5,5 +5,4 @@
 struct SandboxUserData
 {
     float lastCameraFov = 90;
-    Core::Scene *scene;
 };

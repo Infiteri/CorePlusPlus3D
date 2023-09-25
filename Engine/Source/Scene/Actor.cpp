@@ -25,8 +25,6 @@ namespace Core
         {
             component->Init();
         }
-
-        CE_TRACE("Actor::Init");
     }
 
     void Actor::Destroy()
@@ -43,8 +41,6 @@ namespace Core
         }
 
         components.clear();
-
-        CE_TRACE("Actor::Destroy");
     }
 
     void Actor::Update()
@@ -72,8 +68,6 @@ namespace Core
         {
             component->Start();
         }
-
-        CE_TRACE("Actor::Start");
     }
 
     void Actor::Stop()
@@ -84,8 +78,6 @@ namespace Core
         {
             component->Stop();
         }
-
-        CE_TRACE("Actor::Stop");
     }
 
     void Actor::SetName(const std::string &name)

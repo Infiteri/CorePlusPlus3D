@@ -8,6 +8,9 @@
 namespace Core
 {
     static std::unordered_map<std::string, ActorScript *> scripts;
+    static DynamicLibrary library;
+
+    typedef ActorScript *(*GetActorScriptPFN)();
 
     void ScriptEngine::Init()
     {
@@ -48,7 +51,7 @@ namespace Core
             CE_TRACE("Stopping script '%s'.", it->first.c_str());
         }
 
-    ClearScriptList();
+        ClearScriptList();
     }
 
     void ScriptEngine::RegisterScript(const std::string &name, ActorScript *script, Actor *parent)
@@ -57,6 +60,19 @@ namespace Core
         scripts[name] = script;
 
         CE_TRACE("Script registered '%s' to parent/owner '%s'.", name.c_str(), parent->GetName().c_str());
+    }
+
+    void ScriptEngine::RegisterScript(const std::string &name, const std::string &scriptLoadName, Actor *parent)
+    {
+        GetActorScriptPFN pfn = Platform::LibraryGetFunction<GetActorScriptPFN>(&library, scriptLoadName + "Create");
+
+        if (pfn == NULL)
+        {
+            CE_FATAL("Unable to Load PFN for creating actor script.");
+            return;
+        }
+
+        RegisterScript(name, pfn(), parent);
     }
 
     void ScriptEngine::DeleteScript(const std::string &name)
@@ -70,7 +86,6 @@ namespace Core
 
     void ScriptEngine::ClearScriptList()
     {
-
         for (auto it = scripts.begin(); it != scripts.end(); it++)
         {
             auto script = it->second;
@@ -81,5 +96,15 @@ namespace Core
         }
 
         scripts.clear();
+    }
+
+    DynamicLibrary *ScriptEngine::GetLibrary()
+    {
+        return &library;
+    }
+
+    void ScriptEngine::LoadGameLibrary(const std::string &name)
+    {
+        library = Platform::CreateLibrary(name);
     }
 }

@@ -8,18 +8,6 @@
 
 static SandboxUserData *MyData;
 
-class PlayerScript : public Core::ActorScript
-{
-public:
-    PlayerScript(){};
-    ~PlayerScript(){};
-
-    void OnStart()
-    {
-        CE_INFO(owner->GetName().c_str());
-    };
-};
-
 class Sandbox : public Core::Application
 {
 public:
@@ -49,10 +37,8 @@ public:
         auto mesh = a->AddComponent<Core::MeshComponent>();
         mesh->SetGeometry(new Core::BoxGeometry(1, 1, 1));
         mesh->SetMaterialFromName("Material");
-        a->AddComponent<Core::ActorScriptComponent>()->script = new PlayerScript();
+        a->AddComponent<Core::ActorScriptComponent>()->className = "PlayerScript";
         // End World Setup
-
-        Core::CeMemory::TracePrintSize("sizeof(SandboxUserData)", sizeof(SandboxUserData));
     };
 
     void Render()

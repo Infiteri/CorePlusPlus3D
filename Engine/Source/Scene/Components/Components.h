@@ -4,7 +4,6 @@
 
 #include "Renderer/Objects/Mesh.h"
 
-
 namespace Core
 {
     class Actor;
@@ -46,7 +45,7 @@ namespace Core
     class CE_API ActorScriptComponent : public Component
     {
     public:
-        ActorScript *script;
+        std::string className;
 
         ActorScriptComponent();
         ~ActorScriptComponent();
