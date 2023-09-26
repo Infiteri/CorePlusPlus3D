@@ -12,6 +12,7 @@ namespace Core
 
     void World::Init()
     {
+        activeScene = nullptr;
     }
 
     void World::Shutdown()

@@ -4,17 +4,24 @@
 
 #include "Renderer/Objects/Mesh.h"
 #include "Renderer/Geometry/BoxGeometry.h"
+#include "Renderer/ShaderSystem.h"
 
 namespace Core
 {
+    static CeU32 GID = 0;
     Actor::Actor()
     {
         state = ActorState::Created;
         name = "Actor";
+
+        id - GID;
+        GID++;
     }
 
     Actor::~Actor()
     {
+        id - 0;
+        GID--;
     }
 
     void Actor::Init()
@@ -53,6 +60,9 @@ namespace Core
     {
         if (state != ActorState::Started)
             return;
+
+        Shader *shd = ShaderSystem::Get("EngineResources/Shaders/Object");
+        shd->Mat4(transform.GetMatrix(), "uTransform");
 
         for (Component *component : components)
         {

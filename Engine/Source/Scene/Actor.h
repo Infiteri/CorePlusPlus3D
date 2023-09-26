@@ -35,6 +35,7 @@ namespace Core
     private:
         Transform transform;
         ActorState state;
+        CeU32 id;
 
         // List of components
         std::vector<Component *> components;
@@ -59,7 +60,7 @@ namespace Core
         /// @brief When the actor stops to play.
         void Stop();
 
-        void SetName(const std::string& name);
+        void SetName(const std::string &name);
         std::string GetName();
 
         // ---------- COMPONENTS ----------
@@ -106,5 +107,6 @@ namespace Core
         // -------------------------------
 
         inline Transform *GetTransform() { return &transform; };
+        inline CeU32 GetID() { return id; };
     };
 }

@@ -5,6 +5,7 @@
 
 namespace Core
 {
+    class FrameBuffer;
     class Shader;
 
     /// @brief Simple structure that defines a viewport.
@@ -55,5 +56,7 @@ namespace Core
         /// @param b The blue channel. (0 - 255)
         /// @param a The alpha channel. (0 - 255)
         static void SetBackgroundColor(float r, float g, float b, float a);
+
+        static FrameBuffer *GetFrameBuffer();
     };
 }

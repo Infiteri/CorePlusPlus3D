@@ -4,7 +4,7 @@
 
 #include <imgui.h>
 
-namespace Core
+namespace Core 
 {
     class Editor : public Application
     {
@@ -19,6 +19,8 @@ namespace Core
 
     Application *CreateApplication(EngineConfiguration *config)
     {
+        config->windowConfig.title = "Core Editor";
+        config->windowConfig.startMaximized = true;
         return new Editor();
     };
 }

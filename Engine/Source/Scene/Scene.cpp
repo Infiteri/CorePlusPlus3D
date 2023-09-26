@@ -158,4 +158,9 @@ namespace Core
         CameraSystem::Generate(cameraName, fov, aspect, near, far);
         ActivateSceneCamera();
     }
+
+    std::vector<Actor *> Scene::GetActors()
+    {
+        return actors;
+    }
 }

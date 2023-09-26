@@ -16,6 +16,7 @@
 #include "Math/Matrix4.h"
 
 #include "Renderer/Renderer.h"
+#include "Renderer/Buffer/FrameBuffer.h"
 #include "Renderer/Objects/Mesh.h"
 #include "Renderer/Manager/MaterialManager.h"
 #include "Renderer/Geometry/BoxGeometry.h"

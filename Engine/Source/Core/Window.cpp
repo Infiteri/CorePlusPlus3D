@@ -17,7 +17,7 @@ namespace Core
     void OnMouseMove(GLFWwindow *win, double x, double y);
     void Viewport(GLFWwindow *win, int w, int h);
 
-    Window::Window(WindowConfiguration config)
+    Window::Window(WindowConfiguration config) 
     {
         this->config = config;
 
@@ -28,6 +28,13 @@ namespace Core
         glfwSetWindowPos(handle, config.x, config.y);
         glfwMakeContextCurrent(handle);
         glfwSwapInterval(1);
+
+        if (config.startMaximized)
+        {
+            glfwMaximizeWindow(handle);
+            glfwGetWindowSize(handle, &this->config.width, &this->config.height);
+            Renderer::Resize(this->config.width, this->config.height);
+        }
 
         // Poll events
         glfwSetKeyCallback(handle, OnKeyEvent);

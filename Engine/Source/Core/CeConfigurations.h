@@ -10,7 +10,8 @@ namespace Core
         int y;
         int width;
         int height;
-        const char* title;
+        const char *title;
+        bool startMaximized = false;
     };
 
     struct EngineConfiguration

@@ -57,5 +57,7 @@ namespace Core
         std::string GetSceneCameraName() const;
 
         void GenerateAndActivateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far);
+
+        std::vector<Actor *> GetActors();
     };
 }

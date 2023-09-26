@@ -239,4 +239,9 @@ namespace Core
     {
         state->backgroundColor.Set(r, g, b, a);
     }
+
+    FrameBuffer *Renderer::GetFrameBuffer()
+    {
+        return state->ScreenFramebuffer;
+    }
 }

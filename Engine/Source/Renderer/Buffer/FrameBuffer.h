@@ -10,6 +10,7 @@ namespace Core
         Rgba8,
         Depth,
     };
+    
 
     struct RenderPassSpecification
     {
@@ -32,7 +33,7 @@ namespace Core
         ~FrameBufferSpecification(){};
     };
 
-    class FrameBuffer
+    class CE_API FrameBuffer
     {
     private:
         CeU32 id;
