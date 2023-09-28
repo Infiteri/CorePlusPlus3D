@@ -68,5 +68,38 @@ namespace Core
 
             ImGui::PopID();
         }
+
+        std::string GeometryTypeToString(GeometryType t)
+        {
+            switch (t)
+            {
+            case GeometryType::Box:
+                return "Box";
+                break;
+
+            case GeometryType::Plane:
+                return "Plane";
+                break;
+
+            default:
+            case GeometryType::None:
+                return "None";
+                break;
+            }
+
+            return "None";
+        }
+
+        GeometryType StringToGeometryType(const std::string &v)
+        {
+            if (v == "None")
+                return GeometryType::None;
+            else if (v == "Box")
+                return GeometryType::Box;
+            else if (v == "Plane")
+                return GeometryType::Plane;
+            else
+                return GeometryType::None;
+        }
     }
 }

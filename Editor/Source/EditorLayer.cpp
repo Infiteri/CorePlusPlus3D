@@ -14,6 +14,10 @@ namespace Core
 
     void EditorLayer::OnAttach()
     {
+        // Create editor camera
+        CameraSystem::Generate("__EditorCamera__", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
+        CameraSystem::Activate("__EditorCamera__");
+
         // TODO: From file
 
         Renderer::SetBackgroundColor(0, 0, 0.1 * 255, 255);
@@ -23,7 +27,7 @@ namespace Core
         World::Create("NewScene");
         World::Activate("NewScene");
 
-        World::GetActive()->GenerateAndActivateSceneCamera("DefaultCamera", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
+        // World::GetActive()->GenerateAndActivateSceneCamera("DefaultCamera", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
 
         Actor *a = new Actor();
         World::GetActive()->AddActor(a);
@@ -35,6 +39,7 @@ namespace Core
         // TODO: End from file
 
         sceneHierarchyPanel.UpdateContextToWorldActive();
+        sceneSettingsPanel.UpdateSceneToWorldActive();
     }
 
     void EditorLayer::OnRender()
@@ -50,6 +55,32 @@ namespace Core
         BeginDockspace();
 
         sceneHierarchyPanel.OnImGuiRender();
+        sceneSettingsPanel.OnImGuiRender();
+
+        ImGui::Begin("Test");
+        if (ImGui::Button("A"))
+        {
+            CameraSystem::Activate("__EditorCamera__");
+        }
+
+        if (ImGui::Button("B"))
+        {
+            if (World::GetActive()->GetSceneCameraName().empty() || World::GetActive()->GetSceneCameraName() == "__NONE__INVALID__")
+                CameraSystem::SetActiveCameraToNone();
+            else
+            {
+                CameraSystem::Activate(World::GetActive()->GetSceneCameraName().c_str());
+                Renderer::Resize(lastFrameViewportSize.x, lastFrameViewportSize.y);
+            }
+        }
+
+        if (ImGui::Button("Restart Runtime"))
+        {
+            World::StopActive();
+            World::StartActive();
+        }
+
+        ImGui::End();
 
         RenderSceneViewport();
 

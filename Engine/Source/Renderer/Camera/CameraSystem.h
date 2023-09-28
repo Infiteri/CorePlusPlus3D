@@ -55,5 +55,8 @@ namespace Core
         /// @param name The camera name. 
         /// @return Bool, true if exists
         static bool DoesCameraExist(const std::string &name);
+
+        /// @brief Sets the active camera to be none.
+        static void SetActiveCameraToNone();
     };
 }

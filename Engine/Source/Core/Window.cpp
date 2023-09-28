@@ -34,6 +34,7 @@ namespace Core
             glfwMaximizeWindow(handle);
             glfwGetWindowSize(handle, &this->config.width, &this->config.height);
             Renderer::Resize(this->config.width, this->config.height);
+            
         }
 
         // Poll events

@@ -3,6 +3,7 @@
 #include "Core/Layer/Layer.h"
 
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/SceneSettingsPanel.h"
 
 namespace Core
 {
@@ -10,6 +11,7 @@ namespace Core
     {
     public:
         SceneHierarchyPanel sceneHierarchyPanel;
+        SceneSettingsPanel sceneSettingsPanel;
 
         EditorLayer(){};
         ~EditorLayer(){};

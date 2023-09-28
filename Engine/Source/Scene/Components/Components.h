@@ -50,4 +50,5 @@ namespace Core
         ActorScriptComponent();
         ~ActorScriptComponent();
     };
+
 }

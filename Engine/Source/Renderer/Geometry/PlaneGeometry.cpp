@@ -6,6 +6,8 @@ namespace Core
         width = _width;
         height = _height;
 
+        type = GeometryType::Plane;
+
         const float vertexCount = 4 * 4; // 4 verts per segment
         vertices.resize(vertexCount);
         const float indexCount = 6 * 4; // 6 indices per segment

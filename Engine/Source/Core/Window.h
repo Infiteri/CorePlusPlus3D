@@ -7,7 +7,7 @@ typedef struct GLFWwindow GLFWwindow;
 
 namespace Core
 {
-    class Window
+    class CE_API Window
     {
     private:
         GLFWwindow *handle;

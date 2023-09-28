@@ -4,6 +4,7 @@ namespace Core
 {
     Geometry::Geometry()
     {
+        type = GeometryType::None;
     }
 
     Geometry::~Geometry()

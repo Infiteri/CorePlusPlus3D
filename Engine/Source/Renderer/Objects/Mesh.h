@@ -24,6 +24,9 @@ namespace Core
         void SetMaterialFromName(const std::string &name);
         void SetGeometry(Geometry *_geometry);
 
+        inline Material *GetMaterial() { return material; };
+        inline Geometry *GetGeometry() { return geometry; };
+
         void Init();
 
         void Render();

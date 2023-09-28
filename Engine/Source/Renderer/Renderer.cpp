@@ -151,6 +151,13 @@ namespace Core
             ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(camera->GetViewMatrix(), "uView");
             ShaderSystem::Get("EngineResources/Shaders/Object")->Vec3(camera->GetPosition(), "uCameraPosition");
         }
+        else
+        {
+            Vector3 vec;
+            ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(Matrix4::Empty(), "uProjection");
+            ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(Matrix4::Empty(), "uView");
+            ShaderSystem::Get("EngineResources/Shaders/Object")->Vec3(vec, "uCameraPosition");
+        }
     }
 
     void Renderer::EndFrame()

@@ -75,4 +75,9 @@ namespace Core
     {
         return perspectives[name] != nullptr;
     }
+
+    void CameraSystem::SetActiveCameraToNone()
+    {
+        activeCamera = nullptr;
+    }
 }

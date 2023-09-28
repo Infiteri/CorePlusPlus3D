@@ -80,7 +80,7 @@ namespace Core
             auto componentScript = a->GetComponent<ActorScriptComponent>();
             if (componentScript != nullptr)
             {
-                ScriptEngine::RegisterScript(a->GetName().c_str(), componentScript->className, a);
+                ScriptEngine::RegisterScript(componentScript->className, componentScript->className, a);
             }
         }
 

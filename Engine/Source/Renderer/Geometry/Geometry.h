@@ -14,11 +14,19 @@ namespace Core
         Vector3 normal;
     };
 
-    class Geometry
+    enum class GeometryType
+    {
+        None = 0,
+        Box,
+        Plane
+    };
+
+    class CE_API Geometry
     {
     protected:
         std::vector<Vertex3D> vertices;
         std::vector<CeU32> indices;
+        GeometryType type;
 
     public:
         Geometry();
@@ -26,6 +34,7 @@ namespace Core
 
         Vertex3D *GetVertices();
         inline int GetVerticesSize() { return vertices.size() * sizeof(Vertex3D); };
+        inline GeometryType GetType() { return type; };
 
         CeU32 *GetIndices();
         inline int GetIndicesSize() { return indices.size() * sizeof(CeU32); };

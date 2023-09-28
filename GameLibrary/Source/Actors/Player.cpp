@@ -8,3 +8,12 @@ PlayerScript::PlayerScript()
 PlayerScript::~PlayerScript()
 {
 }
+
+PlayerScript2::PlayerScript2()
+{
+    CE_TRACE("PlayerScript2::Create");
+}
+
+PlayerScript2::~PlayerScript2()
+{
+}
