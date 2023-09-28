@@ -11,6 +11,8 @@ namespace Core
     static CeU32 GID = 0;
     Actor::Actor()
     {
+
+        
         state = ActorState::Created;
         name = "Actor";
 

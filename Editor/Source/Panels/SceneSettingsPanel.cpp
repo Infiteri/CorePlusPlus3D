@@ -1,6 +1,7 @@
 #include "SceneSettingsPanel.h"
 
 #include "Core/Engine.h"
+#include "Core/Memory/CeMemory.h"
 
 #include "Math/Math.h"
 
@@ -39,10 +40,26 @@ namespace Core
             if (cameraClosed)
             {
                 float fov = Math::RadToDeg(sceneCamera->GetFOV());
-                ImGui::DragFloat("FOV", &fov, 1.0f, 1.0f, 179.0f);
+                float near = sceneCamera->GetNear();
+                float far = sceneCamera->GetFar();
 
-                sceneCamera->SetFOV(Math::DegToRad(fov));
-                sceneCamera->UpdateProjection();
+                if (ImGui::DragFloat("FOV", &fov, 1.0f, 1.0f, 179.0f))
+                {
+                    sceneCamera->SetFOV(Math::DegToRad(fov));
+                    sceneCamera->UpdateProjection();
+                }
+
+                if (ImGui::DragFloat("Near", &near, 0.1f, 0.01f))
+                {
+                    sceneCamera->SetNear(near);
+                    sceneCamera->UpdateProjection();
+                }
+
+                if (ImGui::DragFloat("Far", &far, 0.1f, 1.0f))
+                {
+                    sceneCamera->SetFar(far);
+                    sceneCamera->UpdateProjection();
+                }
 
                 ImGui::TreePop(); // Close the tree node when done
             }
@@ -57,10 +74,12 @@ namespace Core
 
                 ImGui::Text("Camera Settings");
 
-                static float fov = 90.0f;      // Default FOV value
-                static float nearClip = 0.1f;  // Default Near value
-                static float farClip = 100.0f; // Default Far value
+                static float fov = 90.0f;       // Default FOV value
+                static float nearClip = 0.1f;   // Default Near value
+                static float farClip = 1000.0f; // Default Far value
+
                 static char buffer[256];
+                CeMemory::Zero(buffer, 256);
 
                 ImGui::InputText("Name", buffer, 256);
                 ImGui::SliderFloat("FOV", &fov, 1.0f, 179.0f);

@@ -104,6 +104,22 @@ namespace Core
             return GetComponent<T>() != nullptr;
         };
 
+        template <typename T>
+        void RemoveComponent()
+        {
+            for (auto it = components.begin(); it != components.end(); ++it)
+            {
+                T *typedComponent = dynamic_cast<T *>(*it);
+                if (typedComponent)
+                {
+                    components.erase(it);
+                    typedComponent->Destroy();
+                    delete typedComponent;
+                    break;
+                }
+            }
+        };
+
         // -------------------------------
 
         inline Transform *GetTransform() { return &transform; };
