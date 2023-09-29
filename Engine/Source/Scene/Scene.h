@@ -47,6 +47,8 @@ namespace Core
         void Stop();
 
         void AddActor(Actor *a);
+        void RemoveActorByName(const std::string &name);
+        void RemoveActorByID(CeU32 id);
 
         void ActivateSceneCamera();
 

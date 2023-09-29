@@ -37,9 +37,13 @@ namespace Core
         ~Material();
 
         /// @brief Returns the material's name, either "DefaultMaterial" or the name passed in the 'config' param when constructing material or the value of key "name"
-        /// in file if loaded from a file.
+        /// in file if loaded from a file. can be set later.
         /// @return The materials name.
         std::string GetName();
+
+        /// @brief Sets the materials name. Keep in mind that if this is done randomly, things might break, best used when using the editor and changing a unique material.
+        /// @param name The new material name.
+        void SetName(const std::string &name);
 
         /// @brief Returns the color of the materials, could use "->Set" on the return value to set the color's values.
         /// @return A pointer to the material color.

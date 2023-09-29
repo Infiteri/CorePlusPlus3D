@@ -28,14 +28,25 @@ namespace Core
         World::Activate("NewScene");
 
         // World::GetActive()->GenerateAndActivateSceneCamera("DefaultCamera", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
+        {
+            Actor *a = new Actor();
+            World::GetActive()->AddActor(a);
+            auto mesh = a->AddComponent<MeshComponent>();
+            mesh->SetGeometry(new BoxGeometry(1, 1, 1));
+            mesh->mesh->MakeMaterialUnique();
+            mesh->mesh->GetMaterial()->GetColor()->Set(0, 0, 255, 255);
+        }
+        {
+            Actor *a = new Actor();
+            a->SetName("A2");
+            a->GetTransform()->GetPosition()->Set(-3, 0, 0);
 
-        Actor *a = new Actor();
-        World::GetActive()->AddActor(a);
-        auto mesh = a->AddComponent<MeshComponent>();
-        mesh->SetGeometry(new BoxGeometry(1, 1, 1));
-        mesh->SetMaterialFromName("Material");
-        a->AddComponent<ActorScriptComponent>()->className = "PlayerScript";
-
+            World::GetActive()->AddActor(a);
+            auto mesh = a->AddComponent<MeshComponent>();
+            mesh->SetGeometry(new BoxGeometry(1, 1, 1));
+            mesh->mesh->MakeMaterialUnique();
+            mesh->mesh->GetMaterial()->GetColor()->Set(0, 125, 255, 255);
+        }
         // TODO: End from file
 
         sceneHierarchyPanel.UpdateContextToWorldActive();

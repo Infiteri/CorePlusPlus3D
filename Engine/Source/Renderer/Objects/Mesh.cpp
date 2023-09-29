@@ -59,6 +59,16 @@ namespace Core
         }
     }
 
+    void Mesh::MakeMaterialUnique()
+    {
+
+        if (isMaterialUnique && material)
+            delete material;
+
+        isMaterialUnique = true;
+        material = new Material();
+    }
+
     void Mesh::Render()
     {
         // If no geometry then there is nothing to render
@@ -68,6 +78,7 @@ namespace Core
         material->Use();
 
         array.Bind();
+        array.GetIndexBuffer()->Bind();
         array.GetVertexBuffer()->Bind();
         array.GetIndexBuffer()->Draw();
     }

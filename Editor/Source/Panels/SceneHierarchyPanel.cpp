@@ -1,5 +1,7 @@
 #include "SceneHierarchyPanel.h"
 
+#include "Core/Logger.h"
+
 #include "Scene/World.h"
 #include "Scene/Actor.h"
 
@@ -36,8 +38,18 @@ namespace Core
 
         // Actor looping
         ImGui::Begin("Scene Hierarchy");
+
         for (Actor *actor : scene->GetActors())
             RenderActor(actor);
+
+        // Right-Click
+        if (ImGui::BeginPopupContextWindow(0, 1))
+        {
+            if (ImGui::MenuItem("Add New Actor"))
+                scene->AddActor(new Actor());
+
+            ImGui::EndPopup();
+        }
 
         ImGui::End();
 
@@ -81,8 +93,8 @@ namespace Core
             a->SetName(NameBuffer);
 
         // Transform edit
-        const ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_AllowItemOverlap;
-        bool transformOpen = ImGui::TreeNodeEx((void *)typeid(Transform).hash_code(), flags, "Transform");
+        const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_AllowItemOverlap;
+        bool transformOpen = ImGui::TreeNodeEx((void *)typeid(Transform).hash_code(), treeNodeFlags, "Transform");
         if (transformOpen)
         {
             EditorUtils::ImGuiVector3Edit("Position", a->GetTransform()->GetPosition(), 0.0f);
@@ -97,18 +109,76 @@ namespace Core
 
         EditorUtils::DrawComponentUI<ActorScriptComponent>("Actor Script", a, [&](ActorScriptComponent *comp)
                                                            { DrawActorScriptUI(comp, a); });
+
+        // Delete Entity
+        if (ImGui::Button("Destroy"))
+        {
+            if (selectionContext && a->GetID() == selectionContext->GetID())
+                selectionContext = nullptr;
+
+            scene->RemoveActorByID(a->GetID());
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Add Component"))
+        {
+            ImGui::OpenPopup("ComponentPopup");
+        }
+
+        if (ImGui::BeginPopupContextItem("ComponentPopup"))
+        {
+            if (ImGui::MenuItem("Mesh"))
+            {
+                selectionContext->AddComponent<MeshComponent>()->SetGeometry(new BoxGeometry(1, 1, 1));
+            }
+
+            if (ImGui::MenuItem("Script"))
+            {
+                selectionContext->AddComponent<ActorScriptComponent>();
+            }
+
+            ImGui::EndPopup();
+        }
     }
 
     // ---------- UI Methods ------------------
 
     void DrawMeshUI(MeshComponent *m, Actor *a)
     {
-        Color *color = m->mesh->GetMaterial()->GetColor();
-        static float colors[4] = {color->r, color->g, color->b, color->a};
-        if (ImGui::ColorEdit4("Color", colors, colorEditFlags))
-            color->Set(colors[0] * 255, colors[1] * 255, colors[2] * 255, colors[3] * 255);
+        float colors[4] = {m->mesh->GetMaterial()->GetColor()->r / 255, m->mesh->GetMaterial()->GetColor()->g / 255, m->mesh->GetMaterial()->GetColor()->b / 255, m->mesh->GetMaterial()->GetColor()->a / 255};
+
+        // -- Material --
+        if (m->mesh->IsMaterialUnique())
+        {
+            static char NameBuffer[256];
+            CeMemory::Zero(&NameBuffer, 256);
+            CeMemory::Copy(&NameBuffer, m->mesh->GetMaterial()->GetName().c_str(), 256);
+
+            if (ImGui::InputText("Name", NameBuffer, 256))
+            {
+                m->mesh->GetMaterial()->SetName(NameBuffer);
+            }
+
+            Color *color = m->mesh->GetMaterial()->GetColor();
+            if (ImGui::ColorEdit4("Color", colors, colorEditFlags))
+            {
+                // Update the material's color when the UI color is edited
+                Color *color = m->mesh->GetMaterial()->GetColor();
+                color->Set(colors[0] * 255, colors[1] * 255, colors[2] * 255, colors[3] * 255);
+            }
+        }
+        else
+        {
+            if (ImGui::Button("Make Unique"))
+            {
+                m->mesh->MakeMaterialUnique();
+            }
+        }
 
         ImGui::Separator();
+
+        // -- Geometry --
 
         const char *geometryTypeStrings[] = {"None", "Box", "Plane"};
         const char *geometryTypeCurrent = geometryTypeStrings[(int)m->mesh->GetGeometry()->GetType()];

@@ -112,6 +112,32 @@ namespace Core
         actors.push_back(a);
     }
 
+    void Scene::RemoveActorByName(const std::string &name)
+    {
+        for (Actor *a : actors)
+        {
+            if (a->GetName() == name)
+                RemoveActorByID(a->GetID());
+        }
+    }
+
+    void Scene::RemoveActorByID(CeU32 id)
+    {
+        auto it = actors.begin();
+
+        // Iterate over the vector
+        while (it != actors.end())
+        {
+            if ((*it)->GetID() == id)
+            {
+                delete *it;
+                it = actors.erase(it);
+            }
+            else
+                ++it;
+        }
+    }
+
     void Scene::ActivateSceneCamera()
     {
         if (sceneCameraName.compare("__NONE__INVALID__") == 0)

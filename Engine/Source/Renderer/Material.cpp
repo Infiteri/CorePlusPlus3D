@@ -32,6 +32,11 @@ namespace Core
     {
         return name;
     }
+    
+    void Material::SetName(const std::string &name)
+    {
+        this->name = name;
+    }
 
     Color *Material::GetColor()
     {
