@@ -61,6 +61,8 @@ namespace Core
         if (state != SceneState::Running)
             return;
 
+        environment.Raw()->directionalLight.Update();
+
         for (Actor *a : actors)
             a->Render();
     }
@@ -183,6 +185,16 @@ namespace Core
         SetSceneCameraName(cameraName);
         CameraSystem::Generate(cameraName, fov, aspect, near, far);
         ActivateSceneCamera();
+    }
+
+    SceneEnvironment *Scene::GetEnvironment()
+    {
+        return environment.Raw();
+    }
+
+    DirectionalLight *Scene::GetEnvironmentDirectionalLight()
+    {
+        return &environment.Raw()->directionalLight;
     }
 
     std::vector<Actor *> Scene::GetActors()

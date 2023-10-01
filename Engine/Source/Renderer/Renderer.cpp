@@ -55,8 +55,6 @@ namespace Core
         PerspectiveMovement *movement;
 
         GLenum depthType = GL_LEQUAL;
-
-        DirectionalLight *light;
     };
 
     static RendererState *state;
@@ -102,7 +100,6 @@ namespace Core
         state->ScreenVertexArray->GetVertexBuffer()->AddLayout(1, 2, 2);
 
         state->movement = new PerspectiveMovement();
-        state->light = new DirectionalLight();
 
         // After objects creation
         RegenerateObjectsWithNewViewport();
@@ -158,9 +155,6 @@ namespace Core
             ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(Matrix4::Empty(), "uView");
             ShaderSystem::Get("EngineResources/Shaders/Object")->Vec3(vec, "uCameraPosition");
         }
-
-        // TODO: Scene rendering
-        state->light->Update();
     }
 
     void Renderer::EndFrame()

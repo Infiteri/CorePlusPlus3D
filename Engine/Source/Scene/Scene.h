@@ -1,14 +1,22 @@
 #pragma once
 
 #include "Base.h"
-
 #include "Actor.h"
+
+#include "Core/Scope.h"
+
+#include "Renderer/Light/DirectionalLight.h"
 
 #include <string>
 #include <vector>
 
 namespace Core
 {
+    struct SceneEnvironment
+    {
+        DirectionalLight directionalLight;
+    };
+
     enum class SceneState
     {
         Created,
@@ -26,6 +34,7 @@ namespace Core
         std::vector<Actor *> actors;
 
         SceneState state;
+        Scope<SceneEnvironment> environment;
 
     public:
         Scene();
@@ -61,5 +70,8 @@ namespace Core
         void GenerateAndActivateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far);
 
         std::vector<Actor *> GetActors();
+
+        SceneEnvironment* GetEnvironment();
+        DirectionalLight* GetEnvironmentDirectionalLight();
     };
 }

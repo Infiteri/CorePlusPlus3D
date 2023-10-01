@@ -14,6 +14,8 @@
 namespace Core
 {
     static bool renderCreateCameraDisplay = false;
+    static char createCameraNameBuffer[256];
+
     SceneSettingsPanel::SceneSettingsPanel()
     {
         this->scene = nullptr;
@@ -78,20 +80,17 @@ namespace Core
                 static float nearClip = 0.1f;   // Default Near value
                 static float farClip = 1000.0f; // Default Far value
 
-                static char buffer[256];
-                CeMemory::Zero(buffer, 256);
-
-                ImGui::InputText("Name", buffer, 256);
+                ImGui::InputText("Name", createCameraNameBuffer, 256);
                 ImGui::SliderFloat("FOV", &fov, 1.0f, 179.0f);
-                ImGui::SliderFloat("Near", &nearClip, 0.1f, 100.0f);
-                ImGui::DragFloat("Far", &farClip, 1.0f, 0.01f);
+                ImGui::SliderFloat("Near", &nearClip, 0.01f, 100.0f);
+                ImGui::DragFloat("Far", &farClip, 1.0f, 0.001f);
 
                 if (ImGui::Button("Done"))
                 {
-                    CameraSystem::Generate(buffer, Math::DegToRad(fov), Engine::GetWindowAspect(), nearClip, farClip);
-                    scene->SetSceneCameraName(buffer);
-
+                    CameraSystem::Generate(createCameraNameBuffer, Math::DegToRad(fov), Engine::GetWindowAspect(), nearClip, farClip);
+                    scene->SetSceneCameraName(createCameraNameBuffer);
                     renderCreateCameraDisplay = false;
+                    CeMemory::Zero(&createCameraNameBuffer, 256);
                 }
 
                 ImGui::End();
