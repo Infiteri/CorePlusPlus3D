@@ -12,7 +12,6 @@ namespace Core
     Actor::Actor()
     {
 
-        
         state = ActorState::Created;
         name = "Actor";
 
@@ -64,6 +63,7 @@ namespace Core
             return;
 
         Shader *shd = ShaderSystem::Get("EngineResources/Shaders/Object");
+        transform.GetRotation()->y += 0.01;
         shd->Mat4(transform.GetMatrix(), "uTransform");
 
         for (Component *component : components)

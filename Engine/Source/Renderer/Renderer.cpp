@@ -106,6 +106,7 @@ namespace Core
 
         // After objects creation
         RegenerateObjectsWithNewViewport();
+        SetDepthMode(DepthMode::Lequal);
     }
 
     void Renderer::Shutdown()
@@ -140,8 +141,7 @@ namespace Core
             return;
         }
 
-        // TODO: Scene rendering
-        state->light->Update();
+        glDepthMask(true);
 
         PerspectiveCamera *camera = CameraSystem::GetActive();
         if (camera)
@@ -158,6 +158,9 @@ namespace Core
             ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(Matrix4::Empty(), "uView");
             ShaderSystem::Get("EngineResources/Shaders/Object")->Vec3(vec, "uCameraPosition");
         }
+
+        // TODO: Scene rendering
+        state->light->Update();
     }
 
     void Renderer::EndFrame()

@@ -7,8 +7,8 @@ namespace Core
     DirectionalLight::DirectionalLight()
     {
         transform = Transform();
-        color = Color(0, 125, 255, 255);
-        direction = Vector3(0, 0, 1);
+        color = Color(255, 255, 255, 255);
+        direction = Vector3(0, 0, -1);
     }
 
     DirectionalLight::~DirectionalLight()

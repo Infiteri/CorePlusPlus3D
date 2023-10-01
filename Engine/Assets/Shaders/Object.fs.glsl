@@ -27,7 +27,7 @@ vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir) {
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
 
     vec3 diffuse = diff * light.color.rgb * light.intensity; // DONE: Strength
-    vec3 specular = 0.52 * spec * light.specular;//* vec3(texture(uNormalTexture, vUVs));
+    vec3 specular = spec * light.specular;//* vec3(texture(uNormalTexture, vUVs));
 
     return diffuse + specular;
 }
@@ -39,11 +39,10 @@ void main() {
 
     vec3 directionalLightResult = CalcDirLight(directionalLight, normal, viewDirection);
 
-    directionalLightResult += vec3(1.0, 1.0, 1.0);
-
     // Combine the lighting result with object color
     vec4 objectColor = texture(uColorTexture, vUV) * uColor;
-    vec4 result = vec4(directionalLightResult, 1.0) * objectColor;
+    vec4 result = vec4(1.0, 1.0, 1.0, 1.0) + vec4(directionalLightResult, 1.0);
+    result *= objectColor;
 
     outColor = result;
 }
