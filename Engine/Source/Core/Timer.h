@@ -16,7 +16,7 @@ namespace Core
         Timer(const char *_name);
         ~Timer();
 
-        /// @brief Call this to calculate the time differences.
+        /// @brief Call this to calculate the time differences. Stops the timer
         void Stop();
 
         /// @brief Return the time differences, has to call stop if it hasn't been called.

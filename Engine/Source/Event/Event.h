@@ -34,7 +34,7 @@ namespace Core
         void Clear();
         CeU64 GetContextSize();
 
-	/// @bried Returns the context of the event.
+        /// @brief Returns the context of the event.
         void *GetContext();
 
         /// @brief Use this and then call "delete context" after done using, this will do a call to memory copy and will allocate memory. Needs to be freed after. Also keep in mind that is uses the "contextSize" and not "sizeof(Context)", should be set.

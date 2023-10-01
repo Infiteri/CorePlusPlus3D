@@ -153,22 +153,46 @@ namespace Core
         static void Init();
         static void Shutdown();
 
+        /// @brief If true, the passed in key is being held down.
+        /// @param key A key from the Core::Keys enum to check for.
+        /// @return True or False.
         static bool GetKey(Keys key);
+
+        /// @brief If true, the passed in button is being held down.
+        /// @param button A button from the Core::Buttons enum to check for.
+        /// @return True or False.
         static bool GetButton(Buttons button);
 
+        /// @brief Returns the mouse X position.
+        /// @return Integer.
         static int GetMouseX();
+
+        /// @brief Returns the mouse Y position.
+        /// @return Integer.
         static int GetMouseY();
+
+        /// @brief Returns the mouse last X position.
+        /// @return Integer.
         static int GetMouseLastX();
+
+        /// @brief Returns the mouse last Y position.
+        /// @return Integer.
         static int GetMouseLastY();
+
+        /// @brief Returns the mouse delta X, which is the current X position - the last X position.
+        /// @return Integer.
         static int GetMouseDeltaX();
+
+        /// @brief Returns the mouse delta Y, which is the current Y position - the last Y position.
+        /// @return Integer.
         static int GetMouseDeltaY();
 
-        /// @brief -1 to 1
-        /// @return Int
+        /// @brief Returns the mouse movement direction on the X axis, from -1 to 1.
+        /// @return Integer.
         static int GetMouseMovementDirectionX();
 
-        /// @brief -1 to 1
-        /// @return Int
+        /// @brief Returns the mouse movement direction on the Y axis, from -1 to 1.
+        /// @return Integer.
         static int GetMouseMovementDirectionY();
     };
 
