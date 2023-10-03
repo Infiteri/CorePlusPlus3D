@@ -43,17 +43,14 @@ namespace Core
     {
         Viewport viewport;
         Color backgroundColor;
+        Sky *sky;
 
         // Screen related
-
         FrameBuffer *ScreenFramebuffer;
         VertexArray *ScreenVertexArray;
-
         // End screen related
 
-        // TODO: User defined
         PerspectiveMovement *movement;
-
         GLenum depthType = GL_LEQUAL;
     };
 
@@ -82,6 +79,7 @@ namespace Core
         // Load up shaders
         ShaderSystem::Load("EngineResources/Shaders/Object");
         ShaderSystem::Load("EngineResources/Shaders/Screen");
+        ShaderSystem::Load("EngineResources/Shaders/SkyBox");
 
         FrameBufferSpecification spec;
         spec.width = state->viewport.width;
@@ -100,6 +98,9 @@ namespace Core
         state->ScreenVertexArray->GetVertexBuffer()->AddLayout(1, 2, 2);
 
         state->movement = new PerspectiveMovement();
+
+        state->sky = new Sky();
+        state->sky->SetMode(SkyMode::Color);
 
         // After objects creation
         RegenerateObjectsWithNewViewport();
@@ -122,11 +123,7 @@ namespace Core
 
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(state->depthType);
-
-        Color *bg = &state->backgroundColor;
-
-        // TODO: User Color / Sky rendering
-        glClearColor(bg->r / 255, bg->g / 255, bg->b / 255, bg->a / 255);
+        glClearColor(1, 1, 1, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
@@ -137,6 +134,9 @@ namespace Core
             CE_FATAL("Unable to use object shader.");
             return;
         }
+
+        glDepthMask(false);
+        state->sky->Render();
 
         glDepthMask(true);
 
@@ -242,6 +242,11 @@ namespace Core
     void Renderer::SetBackgroundColor(float r, float g, float b, float a)
     {
         state->backgroundColor.Set(r, g, b, a);
+    }
+
+    Sky *Renderer::GetSky()
+    {
+        return state->sky;
     }
 
     FrameBuffer *Renderer::GetFrameBuffer()

@@ -9,7 +9,7 @@ namespace Core
 {
     Mesh::Mesh()
     {
-        material = MaterialManager::GetDefault();
+        material = MaterialManager::GetNew();
         init = false;
     }
 

@@ -32,6 +32,11 @@ namespace Core
         /// @return A pointer to a Material or nullptr if not created.
         static Material *GetDefault();
 
+        /// @brief Returns a new material.
+        /// @return A pointer to a material  
+        static Material *GetNew();
+
+
         /// @brief Releases a material if it's no longer used.
         /// @param name The name of material.
         static void Release(const std::string &name);

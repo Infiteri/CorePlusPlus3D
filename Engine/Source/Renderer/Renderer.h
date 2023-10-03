@@ -2,6 +2,7 @@
 
 #include "Base.h"
 #include "Color.h"
+#include "Sky/Sky.h"
 
 namespace Core
 {
@@ -56,6 +57,8 @@ namespace Core
         /// @param b The blue channel. (0 - 255)
         /// @param a The alpha channel. (0 - 255)
         static void SetBackgroundColor(float r, float g, float b, float a);
+
+        static Sky *GetSky();
 
         static FrameBuffer *GetFrameBuffer();
     };

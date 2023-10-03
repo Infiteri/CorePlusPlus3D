@@ -1,5 +1,7 @@
 #include "Texture.h"
 
+#include "Core/Logger.h"
+
 #include <glad/glad.h>
 
 namespace Core
@@ -41,8 +43,6 @@ namespace Core
 
     Texture::Texture()
     {
-        image = nullptr;
-        id = 0;
         generation = globalGens;
         globalGens++;
     }
@@ -69,6 +69,8 @@ namespace Core
     {
         image = new Image(_filepath);
 
+        CE_INFO("%s, %i", _filepath.c_str(), isDefault);
+
         glGenTextures(1, &id);
         Bind();
         LoadUtil(image->GetWidth(), image->GetHeight(), image->GetData(), ChannelToGL(image->GetChannels()), {});
@@ -78,6 +80,8 @@ namespace Core
     void Texture::Load(const std::string &_filepath, TextureConfiguration config)
     {
         image = new Image(_filepath);
+
+        CE_INFO("%s, %i", _filepath.c_str(), isDefault);
 
         glGenTextures(1, &id);
         Bind();
@@ -120,31 +124,8 @@ namespace Core
         isDefault = flag;
     }
 
-    bool Texture::HasImage()
-    {
-        return image != nullptr;
-    }
-
     bool Texture::IsMarkedAsDefault()
     {
         return isDefault;
-    }
-
-    std::string Texture::GetImagePath()
-    {
-        if (!image)
-            return "";
-
-        return image->GetPath();
-    }
-
-    CeU32 Texture::GetID()
-    {
-        return id;
-    }
-
-    CeU32 Texture::GetGeneration()
-    {
-        return generation;
     }
 }

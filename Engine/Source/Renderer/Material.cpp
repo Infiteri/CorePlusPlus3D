@@ -11,7 +11,7 @@ namespace Core
     {
         name = "DefaultMaterial";
         color.Set(255, 255, 255, 255);
-        texture = TextureManager::GetDefault();
+        texture = TextureManager::GetNewEmpty();
     }
 
     Material::Material(MaterialConfiguration config)
@@ -20,7 +20,15 @@ namespace Core
 
         name = config.name;
 
-        config.colorTextureName.empty() ? texture = TextureManager::GetDefault() : texture = TextureManager::Get(config.colorTextureName);
+        if (config.colorTextureName.empty())
+        {
+            texture = new Texture();
+            texture->Load();
+        }
+        else
+        {
+            texture = TextureManager::Get(config.colorTextureName);
+        }
     }
 
     Material::~Material()
@@ -32,7 +40,7 @@ namespace Core
     {
         return name;
     }
-    
+
     void Material::SetName(const std::string &name)
     {
         this->name = name;

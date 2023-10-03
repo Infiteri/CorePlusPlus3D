@@ -93,6 +93,11 @@ namespace Core
         return defaultMaterial;
     }
 
+    Material *MaterialManager::GetNew()
+    {
+        return new Material();
+    }
+
     void MaterialManager::Release(const std::string &name)
     {
         if (!references[name])

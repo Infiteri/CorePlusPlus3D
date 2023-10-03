@@ -71,9 +71,6 @@ namespace Core
     {
         state = SceneState::Running;
 
-        //? Set active camera
-        ActivateSceneCamera();
-
         for (Actor *a : actors)
         {
             a->Start();
@@ -142,15 +139,8 @@ namespace Core
 
     void Scene::ActivateSceneCamera()
     {
-        if (sceneCameraName.compare("__NONE__INVALID__") == 0)
+        if (sceneCameraName.compare("__NONE__INVALID__") == 0 || sceneCameraName.empty())
             return;
-
-        bool cameraExists = CameraSystem::DoesCameraExist(sceneCameraName);
-        if (!cameraExists)
-        {
-            CE_WARN("Camera '%s' doesn't exist. Creating it now.", sceneCameraName.c_str());
-            CameraSystem::Generate(sceneCameraName, Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
-        }
 
         CameraSystem::Activate(sceneCameraName);
     }
@@ -175,7 +165,12 @@ namespace Core
 
     void Scene::GenerateAndActivateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far)
     {
+        GenerateSceneCamera(cameraName, fov, aspect, near, far);
+        ActivateSceneCamera();
+    }
 
+    void Scene::GenerateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far)
+    {
         if (CameraSystem::DoesCameraExist(cameraName))
         {
             CE_ERROR("Camera '%s' exists already.", cameraName.c_str());
@@ -184,7 +179,6 @@ namespace Core
 
         SetSceneCameraName(cameraName);
         CameraSystem::Generate(cameraName, fov, aspect, near, far);
-        ActivateSceneCamera();
     }
 
     SceneEnvironment *Scene::GetEnvironment()

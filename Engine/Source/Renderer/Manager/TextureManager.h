@@ -16,6 +16,7 @@ namespace Core
         static void Load(const std::string &path);
         static Texture *Get(const std::string &path);
         static Texture *GetDefault();
+        static Texture *GetNewEmpty();
         static void Release(const std::string &path);
     };
 }

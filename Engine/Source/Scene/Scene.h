@@ -68,10 +68,11 @@ namespace Core
         std::string GetSceneCameraName() const;
 
         void GenerateAndActivateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far);
+        void GenerateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far);
 
         std::vector<Actor *> GetActors();
 
-        SceneEnvironment* GetEnvironment();
-        DirectionalLight* GetEnvironmentDirectionalLight();
+        SceneEnvironment *GetEnvironment();
+        DirectionalLight *GetEnvironmentDirectionalLight();
     };
 }

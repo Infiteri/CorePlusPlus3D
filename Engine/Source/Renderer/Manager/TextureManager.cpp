@@ -77,6 +77,13 @@ namespace Core
         return defaultTexture;
     }
 
+    Texture *TextureManager::GetNewEmpty()
+    {
+        Texture *tex = new Texture();
+        tex->Load();
+        return tex;
+    }
+
     void TextureManager::Release(const std::string &path)
     {
         if (!references[path])

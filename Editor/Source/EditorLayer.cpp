@@ -21,19 +21,18 @@ namespace Core
         // TODO: From file
 
         Renderer::SetBackgroundColor(0, 0, 0.1 * 255, 255);
-        MaterialManager::Load("EngineResources/Materials/Default.ce_mat");
 
         // World Setup
         World::Create("NewScene");
         World::Activate("NewScene");
 
-        // World::GetActive()->GenerateAndActivateSceneCamera("DefaultCamera", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
+        World::GetActive()->GenerateSceneCamera("GameCamera", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
+
         {
             Actor *a = new Actor();
             World::GetActive()->AddActor(a);
             auto mesh = a->AddComponent<MeshComponent>();
             mesh->SetGeometry(new BoxGeometry(1, 1, 1));
-            mesh->mesh->MakeMaterialUnique();
             mesh->mesh->GetMaterial()->GetColor()->Set(0, 0, 255, 255);
         }
         {
@@ -44,13 +43,15 @@ namespace Core
             World::GetActive()->AddActor(a);
             auto mesh = a->AddComponent<MeshComponent>();
             mesh->SetGeometry(new BoxGeometry(1, 1, 1));
-            mesh->mesh->MakeMaterialUnique();
             mesh->mesh->GetMaterial()->GetColor()->Set(0, 125, 255, 255);
+            mesh->mesh->GetMaterial()->GetColorTexture()->Load("EngineResources/Images/crate.png");
         }
         // TODO: End from file
 
         sceneHierarchyPanel.UpdateContextToWorldActive();
         sceneSettingsPanel.UpdateSceneToWorldActive();
+
+        CameraSystem::Activate("__EditorCamera__");
     }
 
     void EditorLayer::OnRender()
@@ -72,6 +73,7 @@ namespace Core
         if (ImGui::Button("A"))
         {
             CameraSystem::Activate("__EditorCamera__");
+            Renderer::Resize(lastFrameViewportSize.x, lastFrameViewportSize.y);
         }
 
         if (ImGui::Button("B"))
