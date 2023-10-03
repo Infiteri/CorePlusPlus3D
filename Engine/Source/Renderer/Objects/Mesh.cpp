@@ -11,6 +11,7 @@ namespace Core
     {
         material = MaterialManager::GetNew();
         init = false;
+        isMaterialUnique = true;
     }
 
     Mesh::~Mesh()

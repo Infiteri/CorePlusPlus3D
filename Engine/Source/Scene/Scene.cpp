@@ -10,10 +10,17 @@
 
 namespace Core
 {
+    SceneEnvironment::~SceneEnvironment()
+    {
+        delete directionalLight;
+    }
+
     Scene::Scene()
     {
         name = "Scene";
         sceneCameraName = "__NONE__INVALID__";
+
+        environment.Raw()->directionalLight = new DirectionalLight();
 
         state = SceneState::Created;
     }
@@ -61,7 +68,7 @@ namespace Core
         if (state != SceneState::Running)
             return;
 
-        environment.Raw()->directionalLight.Update();
+        environment.Raw()->directionalLight->Update();
 
         for (Actor *a : actors)
             a->Render();
@@ -188,7 +195,7 @@ namespace Core
 
     DirectionalLight *Scene::GetEnvironmentDirectionalLight()
     {
-        return &environment.Raw()->directionalLight;
+        return environment.Raw()->directionalLight;
     }
 
     std::vector<Actor *> Scene::GetActors()

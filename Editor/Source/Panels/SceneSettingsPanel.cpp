@@ -8,6 +8,8 @@
 #include "Renderer/Camera/CameraSystem.h"
 #include "Renderer/Camera/PerspectiveCamera.h"
 
+#include "CoreEditorUtils.h"
+
 #include <imgui.h>
 #include <imgui_internal.h>
 
@@ -63,7 +65,7 @@ namespace Core
                     sceneCamera->UpdateProjection();
                 }
 
-                ImGui::TreePop(); // Close the tree node when done
+                ImGui::TreePop();
             }
         }
         else
@@ -101,6 +103,40 @@ namespace Core
                 renderCreateCameraDisplay = true;
             }
         }
+
+        // -- Environment --
+        SceneEnvironment *environment = scene->GetEnvironment();
+
+        // Light
+        bool closeEnv = ImGui::TreeNodeEx("Environment");
+
+        if (closeEnv)
+        {
+            bool closeDir = ImGui::TreeNodeEx("Directional Light");
+
+            if (closeDir)
+            {
+
+                Color *color = environment->directionalLight->GetColor();
+                float directionalLightColors[4] = {color->r / 255, color->g / 255, color->b / 255, color->a / 255};
+
+                if (ImGui::ColorEdit4("Color", directionalLightColors))
+                {
+                    color->Set(directionalLightColors[0] * 255, directionalLightColors[1] * 255, directionalLightColors[1] * 255, directionalLightColors[3] * 255);
+                }
+
+                float directionArray[3] = {environment->directionalLight->GetDirection()->x, environment->directionalLight->GetDirection()->y, environment->directionalLight->GetDirection()->z};
+                if (ImGui::DragFloat3("Direction", directionArray, 0.1))
+                {
+                    environment->directionalLight->GetDirection()->Set(directionArray[0], directionArray[1], directionArray[2]);
+                }
+
+                ImGui::TreePop();
+            }
+
+            ImGui::TreePop();
+        }
+        // -----------------
 
         ImGui::End();
     }

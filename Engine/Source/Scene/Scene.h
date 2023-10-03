@@ -14,7 +14,9 @@ namespace Core
 {
     struct SceneEnvironment
     {
-        DirectionalLight directionalLight;
+        DirectionalLight* directionalLight;
+
+        ~SceneEnvironment();
     };
 
     enum class SceneState
