@@ -4,6 +4,8 @@
 #include "Renderer/Color.h"
 #include "Renderer/Buffer/VertexArray.h"
 
+#include "Renderer/Texture/CubeMapTexture.h"
+
 namespace Core
 {
     /// @brief Enumerations that represent the types of sky modes.
@@ -16,11 +18,12 @@ namespace Core
         CubeMap,
     };
 
-    class Sky
+    class CE_API Sky
     {
     private:
         Color *color;
         VertexArray *array;
+        CubeMapTexture *cubeTexture;
 
         SkyMode mode;
 

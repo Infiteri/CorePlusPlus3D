@@ -134,6 +134,50 @@ namespace Core
                 ImGui::TreePop();
             }
 
+            bool closeSky = ImGui::TreeNodeEx("Sky");
+            Sky *sky = environment->sky;
+
+            if (closeSky)
+            {
+                // WIP: Sky select string
+                const char *skyTypeSelection[2] = {"Color", "Cube Map"};
+                const char *skyCurrent = skyTypeSelection[(int)sky->GetMode()];
+
+                if (ImGui::BeginCombo("Sky Mode", skyCurrent))
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        bool isSelected = (skyCurrent == skyTypeSelection[i]);
+
+                        if (ImGui::Selectable(skyTypeSelection[i], isSelected))
+                        {
+                            skyCurrent = skyTypeSelection[i];
+                            sky->SetMode((SkyMode)i);
+                        }
+
+                        if (isSelected)
+                            ImGui::SetItemDefaultFocus();
+                    }
+
+                    ImGui::EndCombo();
+                }
+
+                // Actual props editor
+                if (sky->GetMode() == SkyMode::Color)
+                {
+                    Color *col = sky->GetColor();
+                    float colors[4] = {col->r / 255, col->g / 255, col->b / 255, col->a / 255};
+
+                    if (ImGui::ColorEdit4("Color", colors))
+                        col->Set(colors[0] * 255, colors[1] * 255, colors[2] * 255, colors[3] * 255);
+                }
+                else if (sky->GetMode() == SkyMode::CubeMap)
+                {
+                }
+
+                ImGui::TreePop();
+            }
+
             ImGui::TreePop();
         }
         // -----------------

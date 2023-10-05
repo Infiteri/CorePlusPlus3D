@@ -23,6 +23,8 @@
 
 #include "Light/DirectionalLight.h"
 
+#include "Scene/World.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -42,8 +44,6 @@ namespace Core
     struct RendererState
     {
         Viewport viewport;
-        Color backgroundColor;
-        Sky *sky;
 
         // Screen related
         FrameBuffer *ScreenFramebuffer;
@@ -99,9 +99,6 @@ namespace Core
 
         state->movement = new PerspectiveMovement();
 
-        state->sky = new Sky();
-        state->sky->SetMode(SkyMode::Color);
-
         // After objects creation
         RegenerateObjectsWithNewViewport();
         SetDepthMode(DepthMode::Lequal);
@@ -136,7 +133,8 @@ namespace Core
         }
 
         glDepthMask(false);
-        state->sky->Render();
+        if (World::GetActive() != nullptr)
+            World::GetActive()->GetEnvironment()->sky->Render();
 
         glDepthMask(true);
 
@@ -215,11 +213,6 @@ namespace Core
         return ShaderSystem::Get("EngineResources/Shaders/Object");
     }
 
-    Color *Renderer::GetBackgroundColor()
-    {
-        return &state->backgroundColor;
-    }
-
     void Renderer::SetDepthMode(DepthMode mode)
     {
         switch (mode)
@@ -237,16 +230,6 @@ namespace Core
             state->depthType = GL_LEQUAL;
             break;
         }
-    }
-
-    void Renderer::SetBackgroundColor(float r, float g, float b, float a)
-    {
-        state->backgroundColor.Set(r, g, b, a);
-    }
-
-    Sky *Renderer::GetSky()
-    {
-        return state->sky;
     }
 
     FrameBuffer *Renderer::GetFrameBuffer()

@@ -16,11 +16,8 @@ namespace Core
     {
         // Create editor camera
         CameraSystem::Generate("__EditorCamera__", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
-        CameraSystem::Activate("__EditorCamera__");
 
         // TODO: From file
-
-        Renderer::SetBackgroundColor(0, 0, 0.1 * 255, 255);
 
         // World Setup
         World::Create("NewScene");

@@ -1,41 +1,12 @@
 #include "Texture.h"
 
 #include "Core/Logger.h"
+#include "Renderer/Manager/TextureManager.h"
 
 #include <glad/glad.h>
 
 namespace Core
 {
-    static CeU32 globalGens = 0;
-
-    static GLenum FilterToGL(TextureFilter filter)
-    {
-        if (filter == TextureFilter::Nearest)
-            return GL_NEAREST;
-        else if (filter == TextureFilter::Linear)
-            return GL_LINEAR;
-        else if (filter == TextureFilter::LinearMipMap)
-            return GL_LINEAR_MIPMAP_LINEAR;
-        else if (filter == TextureFilter::NearestMipMap)
-            return GL_NEAREST_MIPMAP_NEAREST;
-
-        return GL_NEAREST;
-    };
-
-    static void LoadUtil(int w, int h, CeU8 *data, GLenum channel, TextureConfiguration config)
-    {
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexImage2D(GL_TEXTURE_2D, 0, channel, w, h, 0, channel, GL_UNSIGNED_BYTE, data);
-
-        glGenerateMipmap(GL_TEXTURE_2D);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, FilterToGL(config.min));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, FilterToGL(config.mag));
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    };
-
     static GLenum ChannelToGL(int c)
     {
         return c == 3 ? GL_RGB : GL_RGBA;
@@ -43,8 +14,8 @@ namespace Core
 
     Texture::Texture()
     {
-        generation = globalGens;
-        globalGens++;
+        generation = TextureManager::GetGlobalTextureCount();
+        TextureManager::IncrementGlobalTextureCount();
     }
 
     Texture::~Texture()
@@ -60,7 +31,7 @@ namespace Core
         Bind();
 
         CeU8 data[4] = {255, 255, 255, 255};
-        LoadUtil(1, 1, data, GL_RGBA, {});
+        TextureLoadUtils(1, 1, data, GL_RGBA, {});
 
         Unbind();
     }
@@ -73,7 +44,7 @@ namespace Core
 
         glGenTextures(1, &id);
         Bind();
-        LoadUtil(image->GetWidth(), image->GetHeight(), image->GetData(), ChannelToGL(image->GetChannels()), {});
+        TextureLoadUtils(image->GetWidth(), image->GetHeight(), image->GetData(), ChannelToGL(image->GetChannels()), {});
         Unbind();
     }
 
@@ -85,7 +56,7 @@ namespace Core
 
         glGenTextures(1, &id);
         Bind();
-        LoadUtil(image->GetWidth(), image->GetHeight(), image->GetData(), ChannelToGL(image->GetChannels()), config);
+        TextureLoadUtils(image->GetWidth(), image->GetHeight(), image->GetData(), ChannelToGL(image->GetChannels()), config);
         Unbind();
     }
 
@@ -110,7 +81,7 @@ namespace Core
         glDeleteTextures(1, &id);
 
         generation = 0;
-        globalGens--;
+        TextureManager::DecrementGlobalTextureCount();
     }
 
     void Texture::Use()

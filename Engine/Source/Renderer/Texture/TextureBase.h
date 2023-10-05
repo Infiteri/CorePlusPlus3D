@@ -19,6 +19,9 @@ namespace Core
         TextureFilter mag = TextureFilter::Linear;
     };
 
+    CeU32 TextureFilterToOpenGL(TextureFilter filter);
+    void TextureLoadUtils(int w, int h, CeU8 *data, CeU32 channel, TextureConfiguration config);
+
     class TextureBase
     {
     protected:

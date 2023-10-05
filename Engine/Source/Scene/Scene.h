@@ -6,6 +6,7 @@
 #include "Core/Scope.h"
 
 #include "Renderer/Light/DirectionalLight.h"
+#include "Renderer/Sky/Sky.h"
 
 #include <string>
 #include <vector>
@@ -14,7 +15,8 @@ namespace Core
 {
     struct SceneEnvironment
     {
-        DirectionalLight* directionalLight;
+        DirectionalLight *directionalLight;
+        Sky *sky;
 
         ~SceneEnvironment();
     };

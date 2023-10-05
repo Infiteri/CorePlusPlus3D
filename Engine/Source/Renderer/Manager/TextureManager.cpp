@@ -7,6 +7,9 @@
 
 namespace Core
 {
+    static Texture *defaultTexture;
+    static CeU32 GTextureGenerationCount = 0;
+
     struct TextureRef
     {
         int count = 0;
@@ -17,9 +20,7 @@ namespace Core
             delete texture;
         };
     };
-
     static std::unordered_map<std::string, TextureRef *> references;
-    static Texture *defaultTexture;
 
     void TextureManager::Init()
     {
@@ -97,5 +98,20 @@ namespace Core
             delete references[path];
             references[path] = nullptr;
         }
+    }
+
+    int TextureManager::GetGlobalTextureCount()
+    {
+        return GTextureGenerationCount;
+    }
+
+    void TextureManager::IncrementGlobalTextureCount()
+    {
+        GTextureGenerationCount++;
+    }
+
+    void TextureManager::DecrementGlobalTextureCount()
+    {
+        GTextureGenerationCount--;
     }
 }

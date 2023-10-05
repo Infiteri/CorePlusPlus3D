@@ -13,6 +13,7 @@ namespace Core
     SceneEnvironment::~SceneEnvironment()
     {
         delete directionalLight;
+        delete sky;
     }
 
     Scene::Scene()
@@ -21,6 +22,7 @@ namespace Core
         sceneCameraName = "__NONE__INVALID__";
 
         environment.Raw()->directionalLight = new DirectionalLight();
+        environment.Raw()->sky = new Sky();
 
         state = SceneState::Created;
     }

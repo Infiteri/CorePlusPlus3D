@@ -18,5 +18,9 @@ namespace Core
         static Texture *GetDefault();
         static Texture *GetNewEmpty();
         static void Release(const std::string &path);
+
+        static int GetGlobalTextureCount();
+        static void IncrementGlobalTextureCount();
+        static void DecrementGlobalTextureCount();
     };
 }

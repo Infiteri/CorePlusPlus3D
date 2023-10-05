@@ -1,6 +1,8 @@
 #include "Sky.h"
 
 #include "Renderer/ShaderSystem.h"
+#include "Renderer/Camera/CameraSystem.h"
+#include "Renderer/Camera/PerspectiveCamera.h"
 
 #include <glad/glad.h>
 
@@ -57,13 +59,25 @@ namespace Core
 
     Sky::Sky()
     {
-        color = new Color(0,125,255,255);
+        color = new Color(0, 0, 0, 255);
+
+        std::vector<std::string> paths = {"EngineResources/Images/Lyck/negx.jpg",
+                                          "EngineResources/Images/Lyck/negx.jpg",
+                                          "EngineResources/Images/Lyck/negx.jpg",
+                                          "EngineResources/Images/Lyck/negx.jpg",
+                                          "EngineResources/Images/Lyck/negx.jpg",
+                                          "EngineResources/Images/Lyck/negx.jpg"};
+
+        cubeTexture = new CubeMapTexture();
+        cubeTexture->Load(paths);
 
         // Setup in-world with shader
         array = new VertexArray();
         array->GenVertexBuffer(cubeVertices, sizeof(cubeVertices));
         array->GetVertexBuffer()->AddLayout(0, 0, 3);
         array->GetVertexBuffer()->Bind();
+
+        mode = SkyMode::CubeMap;
     }
 
     Sky::~Sky()
@@ -73,13 +87,28 @@ namespace Core
     void Sky::Render()
     {
         // TODO: Shader
-        ShaderSystem::Get("EngineResources/Shaders/SkyBox")->Use();
 
         array->GetVertexBuffer()->Bind();
+        auto shd = ShaderSystem::Get("EngineResources/Shaders/SkyBox");
+        PerspectiveCamera *camera = CameraSystem::GetActive();
 
         switch (mode)
         {
-        default:
+        case SkyMode::CubeMap:
+
+            if (camera && shd && shd->IsValid())
+            {
+                shd->Use();
+                shd->Mat4(camera->GetProjection(), "uProjection");
+                shd->Mat4(camera->GetViewMatrix(), "uView");
+                shd->Mat4(Matrix4::Translate(camera->GetPosition()), "uModel");
+
+                cubeTexture->Use();
+                shd->Int(cubeTexture->GetGeneration(), "uSkybox");
+            }
+
+            break;
+
         case SkyMode::Color:
             glClearColor(color->r / 255, color->g / 255, color->b / 255, color->a / 255);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
