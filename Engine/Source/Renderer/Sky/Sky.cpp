@@ -104,6 +104,8 @@ namespace Core
                 shd->Mat4(Matrix4::Translate(camera->GetPosition()), "uModel");
 
                 cubeTexture->Use();
+                shd->Vec4(1, 1, 1, 1, "uTint");
+                
                 shd->Int(cubeTexture->GetGeneration(), "uSkybox");
             }
 
