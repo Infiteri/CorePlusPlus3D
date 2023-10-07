@@ -8,6 +8,17 @@
 
 namespace Core
 {
+    struct CubeMapConfiguration
+    {
+        std::string left;
+        std::string right;
+        std::string top;
+        std::string bottom;
+        std::string front;
+        std::string back;
+        TextureConfiguration textureConfiguration;
+    };
+
     class CE_API CubeMapTexture : public TextureBase
     {
     private:
@@ -26,6 +37,10 @@ namespace Core
 
         /// @brief If its already created, call destroy before loading again
         void Load(std::vector<std::string> _filepaths, TextureConfiguration config);
+
+        void Load(CubeMapConfiguration config);
+        
+        void Load(const std::string &filepath);
 
         void Bind();
         void Unbind();

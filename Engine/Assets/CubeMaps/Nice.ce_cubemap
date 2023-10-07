@@ -1,0 +1,6 @@
+left = EngineResources/Images/Lyck/negx.jpg
+right = EngineResources/Images/Lyck/posx.jpg
+top = EngineResources/Images/Lyck/posy.jpg
+bottom = EngineResources/Images/Lyck/negy.jpg
+front = EngineResources/Images/Lyck/negz.jpg
+back = EngineResources/Images/Lyck/posz.jpg

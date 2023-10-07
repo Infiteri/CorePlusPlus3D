@@ -61,15 +61,8 @@ namespace Core
     {
         color = new Color(0, 0, 0, 255);
 
-        std::vector<std::string> paths = {"EngineResources/Images/Lyck/negx.jpg",
-                                          "EngineResources/Images/Lyck/negx.jpg",
-                                          "EngineResources/Images/Lyck/negx.jpg",
-                                          "EngineResources/Images/Lyck/negx.jpg",
-                                          "EngineResources/Images/Lyck/negx.jpg",
-                                          "EngineResources/Images/Lyck/negx.jpg"};
-
         cubeTexture = new CubeMapTexture();
-        cubeTexture->Load(paths);
+        cubeTexture->Load("EngineResources/CubeMaps/Nice.ce_cubemap");
 
         // Setup in-world with shader
         array = new VertexArray();
@@ -105,7 +98,7 @@ namespace Core
 
                 cubeTexture->Use();
                 shd->Vec4(1, 1, 1, 1, "uTint");
-                
+
                 shd->Int(cubeTexture->GetGeneration(), "uSkybox");
             }
 
