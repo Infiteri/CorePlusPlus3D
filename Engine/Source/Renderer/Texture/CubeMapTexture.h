@@ -25,6 +25,8 @@ namespace Core
         std::vector<std::string> filepaths;
         std::vector<Image *> images;
 
+        void ReGenImages();
+
     public:
         CubeMapTexture();
         ~CubeMapTexture();

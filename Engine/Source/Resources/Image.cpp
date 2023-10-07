@@ -1,5 +1,7 @@
 #include "Image.h"
 #include "Core/Logger.h"
+#include "Loaders/CustomImageLoader.h"
+#include "Utils/StringUtils.h"
 
 // STB Image
 #define STB_IMAGE_IMPLEMENTATION
@@ -11,21 +13,38 @@ namespace Core
     Image::Image(const std::string &_path)
     {
         this->path = _path;
-
         data = 0;
         width = 0;
         height = 0;
         channels = 0;
         valid = false;
 
-        data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-
-        if (!data)
+        if (_path.empty())
         {
-            valid = false;
-            const char *reason = stbi_failure_reason();
-            CE_FATAL("Image loading failure: STB Reason: %s (%s)", reason, path.c_str());
             return;
+        }
+
+        if (StringUtils::GetFileExtension(_path).compare("ce_image") == 0)
+        {
+            data = (CeU8 *)CustomImageLoader::Load(_path.c_str(), &width, &height, &channels);
+            if (!data)
+            {
+                valid = false;
+                CE_FATAL("Image loading failure: Data not valid, might be path. (%s)", path.c_str());
+                return;
+            }
+        }
+        else
+        {
+
+            data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+            if (!data)
+            {
+                valid = false;
+                const char *reason = stbi_failure_reason();
+                CE_FATAL("Image loading failure: STB Reason: %s (%s)", reason, path.c_str());
+                return;
+            }
         }
 
         valid = true;

@@ -11,6 +11,25 @@
 
 namespace Core
 {
+    void CubeMapTexture::ReGenImages()
+    {
+        Timer timer{"Total"};
+        for (int i = 0; i < 6; i++)
+        {
+            Timer timer{"Image"};
+
+            Image *img = new Image(filepaths[i]);
+            images.push_back(img);
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, img->GetWidth(), img->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, img->GetData());
+
+            timer.Stop();
+            CE_TRACE("%s: %f", filepaths[i].c_str(), -timer.GetTimeDiff());
+        }
+
+        timer.Stop();
+        CE_TRACE("Total: %f", timer.GetTimeDiff());
+    }
+
     CubeMapTexture::CubeMapTexture()
     {
         image = nullptr;
@@ -52,32 +71,20 @@ namespace Core
             return;
         }
 
+        //? state
+        filepaths = _filepaths;
+        generation = TextureManager::GetGlobalTextureCount();
+        TextureManager::IncrementGlobalTextureCount();
         glGenTextures(1, &id);
         Bind();
 
-        for (int i = 0; i < 6; i++)
-        {
-            Timer timer = Timer("Load Image");
-
-            Image *img = new Image(_filepaths[i]);
-            images.push_back(img);
-
-            timer.Stop();
-            CE_TRACE("%s: %f.", _filepaths[i].c_str(), timer.GetTimeDiff());
-
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, img->GetWidth(), img->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, img->GetData());
-        }
+        ReGenImages();
 
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-        //? state
-        filepaths = _filepaths;
-        generation = TextureManager::GetGlobalTextureCount();
-        TextureManager::IncrementGlobalTextureCount();
 
         Unbind();
     }
@@ -93,32 +100,20 @@ namespace Core
             return;
         }
 
+        filepaths = _filepaths;
+        generation = TextureManager::GetGlobalTextureCount();
+        TextureManager::IncrementGlobalTextureCount();
+
         glGenTextures(1, &id);
         Bind();
 
-        for (int i = 0; i < 6; i++)
-        {
-            Timer timer = Timer("Load Image");
-
-            Image *img = new Image(_filepaths[i]);
-            images.push_back(img);
-
-            timer.Stop();
-            CE_TRACE("%s: %f.", _filepaths[i].c_str(), timer.GetTimeDiff());
-
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, img->GetWidth(), img->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, img->GetData());
-        }
+        ReGenImages();
 
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, TextureFilterToOpenGL(config.min));
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, TextureFilterToOpenGL(config.mag));
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-        //? state
-        filepaths = _filepaths;
-        generation = TextureManager::GetGlobalTextureCount();
-        TextureManager::IncrementGlobalTextureCount();
 
         Unbind();
     }
