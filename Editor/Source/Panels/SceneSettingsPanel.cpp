@@ -9,6 +9,7 @@
 #include "Renderer/Camera/PerspectiveCamera.h"
 
 #include "CoreEditorUtils.h"
+#include "Utils/StringUtils.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -173,6 +174,27 @@ namespace Core
                 }
                 else if (sky->GetMode() == SkyMode::CubeMap)
                 {
+                    if (ImGui::Button("Cube Map"))
+                    {
+                        // TODO: Display a nice cube map viewer.
+                    }
+
+                    if (ImGui::BeginDragDropTarget())
+                    {
+                        const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+
+                        if (payload)
+                        {
+                            const char *name = (const char *)payload->Data;
+                            std::string ext = StringUtils::GetFileExtension(name);
+                            if (ext == "ce_cubemap")
+                            {
+                                sky->CreateCubeTexture(name);
+                            }
+                        }
+
+                        ImGui::EndDragDropTarget();
+                    }
                 }
 
                 ImGui::TreePop();

@@ -4,6 +4,8 @@
 #include "Renderer/Camera/CameraSystem.h"
 #include "Renderer/Camera/PerspectiveCamera.h"
 
+#include "Resources/Loaders/CubeMapConfigLoader.h"
+
 #include <glad/glad.h>
 
 namespace Core
@@ -117,5 +119,14 @@ namespace Core
     void Sky::SetMode(SkyMode _mode)
     {
         mode = _mode;
+    }
+
+    void Sky::CreateCubeTexture(const std::string &filepath)
+    {
+        if (cubeTexture)
+            delete cubeTexture;
+
+        cubeTexture = new CubeMapTexture();
+        cubeTexture->Load(CubeMapConfigLoader::GetConfigFromFile(filepath));
     }
 }

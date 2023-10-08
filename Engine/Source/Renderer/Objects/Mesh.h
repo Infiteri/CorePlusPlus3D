@@ -22,7 +22,7 @@ namespace Core
         Mesh();
         ~Mesh();
 
-        void SetMaterialFromName(const std::string &name);
+        void SetMaterial(const std::string &name);
         void SetGeometry(Geometry *_geometry);
 
         inline Material *GetMaterial() { return material; };

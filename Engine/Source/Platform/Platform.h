@@ -5,6 +5,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace Core
 {
@@ -33,6 +34,12 @@ namespace Core
         std::unordered_map<std::string, DynamicLibraryFunction *> functions;
     };
 
+    struct DirectoryEntry
+    {
+        bool isFolder;
+        std::string path;
+    };
+
     class CE_API Platform
     {
     public:
@@ -48,6 +55,14 @@ namespace Core
         static void Free(void *block);
         static void *Allocate(CeU64 size);
         static void *MemCpy(void *dest, const void *source, CeU64 size);
+
+        // ------------------------------------------------
+
+        // --------------- DIRECTORY ENTRY ----------------
+
+        static std::vector<std::string> GetFilePathsInDirectory(const std::string &directoryPath);
+        static std::vector<std::string> GetFolderPathsInDirectory(const std::string &directoryPath);
+        static std::vector<DirectoryEntry> GetDirectoryEntries(const std::string &directoryPath);
 
         // ------------------------------------------------
 

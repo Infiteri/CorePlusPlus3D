@@ -40,8 +40,6 @@ namespace Core
     {
         image = new Image(_filepath);
 
-        CE_INFO("%s, %i", _filepath.c_str(), isDefault);
-
         glGenTextures(1, &id);
         Bind();
         TextureLoadUtils(image->GetWidth(), image->GetHeight(), image->GetData(), ChannelToGL(image->GetChannels()), {});
@@ -51,8 +49,6 @@ namespace Core
     void Texture::Load(const std::string &_filepath, TextureConfiguration config)
     {
         image = new Image(_filepath);
-
-        CE_INFO("%s, %i", _filepath.c_str(), isDefault);
 
         glGenTextures(1, &id);
         Bind();

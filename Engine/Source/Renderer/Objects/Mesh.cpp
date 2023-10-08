@@ -18,12 +18,13 @@ namespace Core
     {
     }
 
-    void Mesh::SetMaterialFromName(const std::string &name)
+    void Mesh::SetMaterial(const std::string &name)
     {
         if (material && material->GetName().compare("DefaultMaterial") != 0)
             MaterialManager::Release(material->GetName());
 
         material = MaterialManager::Get(name);
+        isMaterialUnique = false;
     }
 
     void Mesh::SetGeometry(Geometry *_geometry)
@@ -62,9 +63,13 @@ namespace Core
 
     void Mesh::MakeMaterialUnique()
     {
-
-        if (isMaterialUnique && material)
-            delete material;
+        if (material)
+        {
+            if (isMaterialUnique)
+                delete material;
+            else if (material->GetName().compare("DefaultMaterial") != 0)
+                MaterialManager::Release(material->GetName());
+        }
 
         isMaterialUnique = true;
         material = new Material();

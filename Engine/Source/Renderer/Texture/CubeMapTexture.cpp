@@ -13,21 +13,12 @@ namespace Core
 {
     void CubeMapTexture::ReGenImages()
     {
-        Timer timer{"Total"};
         for (int i = 0; i < 6; i++)
         {
-            Timer timer{"Image"};
-
             Image *img = new Image(filepaths[i]);
             images.push_back(img);
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, img->GetWidth(), img->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, img->GetData());
-
-            timer.Stop();
-            CE_TRACE("%s: %f", filepaths[i].c_str(), -timer.GetTimeDiff());
         }
-
-        timer.Stop();
-        CE_TRACE("Total: %f", timer.GetTimeDiff());
     }
 
     CubeMapTexture::CubeMapTexture()

@@ -17,6 +17,7 @@ namespace Core
     MaterialConfiguration MaterialLoader::GetConfigFromFile(const std::string &path)
     {
         MaterialConfiguration config;
+        config.name = path;
 
         FileHandle file;
         file.Open(path);
@@ -62,7 +63,7 @@ namespace Core
                 }
                 else if (StringUtils::EqualI(key, "name"))
                 {
-                    config.name = value;
+                    CE_ERROR("MaterialLoader: Names are now the file path. The name will be the filepath.");
                 }
                 else if (StringUtils::EqualI(key, "colorTextureName"))
                 {

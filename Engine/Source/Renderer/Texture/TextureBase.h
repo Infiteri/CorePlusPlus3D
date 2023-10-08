@@ -22,7 +22,7 @@ namespace Core
     CeU32 TextureFilterToOpenGL(TextureFilter filter);
     void TextureLoadUtils(int w, int h, CeU8 *data, CeU32 channel, TextureConfiguration config);
 
-    class TextureBase
+    class CE_API TextureBase
     {
     protected:
         CeU32 id;

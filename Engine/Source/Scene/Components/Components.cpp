@@ -41,7 +41,7 @@ namespace Core
 
     void MeshComponent::SetMaterialFromName(const std::string &name)
     {
-        mesh->SetMaterialFromName(name);
+        mesh->SetMaterial(name);
     }
 
     ActorScriptComponent::ActorScriptComponent()

@@ -106,6 +106,7 @@ namespace Core
         }
 
         std::string RemoveFileExtension(const std::string &filePath)
+
         {
             size_t dotPos = filePath.rfind('.');
             if (dotPos != std::string::npos)
@@ -117,7 +118,7 @@ namespace Core
 
         bool Equal(const std::string &a, const std::string &b)
         {
-            
+
             return a == b;
         }
 

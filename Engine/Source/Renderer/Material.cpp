@@ -1,5 +1,6 @@
 #include "Material.h"
 
+#include "Core/Logger.h"
 #include "Shader.h"
 
 #include "Renderer.h"
@@ -16,19 +17,13 @@ namespace Core
 
     Material::Material(MaterialConfiguration config)
     {
+        name = config.name;
         color.Set(config.color.r, config.color.g, config.color.b, config.color.a);
 
-        name = config.name;
-
         if (config.colorTextureName.empty())
-        {
-            texture = new Texture();
-            texture->Load();
-        }
+            texture = TextureManager::GetNewEmpty();
         else
-        {
             texture = TextureManager::Get(config.colorTextureName);
-        }
     }
 
     Material::~Material()
@@ -56,12 +51,29 @@ namespace Core
         return texture;
     }
 
+    void Material::SetColorTexture(const std::string &name)
+    {
+        if (texture && !texture->IsMarkedAsDefault() && texture->HasImage())
+        {
+            TextureManager::Release(texture->GetImagePath());
+            texture = nullptr;
+        }
+        else if (texture && !texture->IsMarkedAsDefault())
+        {
+            delete texture;
+            texture = nullptr;
+        }
+        texture = TextureManager::Get(name);
+    }
+
     void Material::Use()
     {
         Shader *shader = Renderer::GetObjectShader();
 
-        shader->Vec4(color.r / 255, color.g / 255, color.b / 255, color.a / 255, "uColor");
+        if (!shader || !texture || texture == nullptr)
+            return;
 
+        shader->Vec4(color.r / 255, color.g / 255, color.b / 255, color.a / 255, "uColor");
         texture->Use();
         shader->Int(texture->GetGeneration(), "uColorTexture");
     }

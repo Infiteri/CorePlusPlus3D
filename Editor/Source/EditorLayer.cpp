@@ -40,13 +40,13 @@ namespace Core
             World::GetActive()->AddActor(a);
             auto mesh = a->AddComponent<MeshComponent>();
             mesh->SetGeometry(new BoxGeometry(1, 1, 1));
-            mesh->mesh->GetMaterial()->GetColor()->Set(0, 125, 255, 255);
-            mesh->mesh->GetMaterial()->GetColorTexture()->Load("EngineResources/Images/crate.png");
+            mesh->mesh->SetMaterial("EngineResources/Materials/Default.ce_mat");
         }
         // TODO: End from file
 
         sceneHierarchyPanel.UpdateContextToWorldActive();
         sceneSettingsPanel.UpdateSceneToWorldActive();
+        contentBrowserPanel.LoadAssets();
 
         CameraSystem::Activate("__EditorCamera__");
     }
@@ -65,6 +65,7 @@ namespace Core
 
         sceneHierarchyPanel.OnImGuiRender();
         sceneSettingsPanel.OnImGuiRender();
+        contentBrowserPanel.OnImGuiRender();
 
         ImGui::Begin("Test");
         if (ImGui::Button("A"))
@@ -159,6 +160,18 @@ namespace Core
         }
         // End update renderer viewport
         ImGui::Image((void *)(CeU64)(CeU32)(Renderer::GetFrameBuffer()->GetRenderPass(0)->id), viewportSize, ImVec2{0, 1}, ImVec2{1, 0});
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+
+            if (payload)
+            {
+                const char *name = (const char *)payload->Data;
+            }
+
+            ImGui::EndDragDropTarget();
+        }
 
         ImGui::End();
     }

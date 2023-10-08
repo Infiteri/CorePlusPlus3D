@@ -12,14 +12,19 @@
 
 #include "CoreEditorUtils.h"
 
+#include "Utils/StringUtils.h"
+
 namespace Core
 {
     static const ImGuiColorEditFlags colorEditFlags = ImGuiColorEditFlags_NoInputs;
+    static char FileMaterialNameBuffer[256];
 
     SceneHierarchyPanel::SceneHierarchyPanel()
     {
         this->selectionContext = nullptr;
         this->scene = nullptr;
+
+        CeMemory::Zero(&FileMaterialNameBuffer, 256);
     }
 
     SceneHierarchyPanel::~SceneHierarchyPanel()
@@ -166,6 +171,35 @@ namespace Core
                 // Update the material's color when the UI color is edited
                 Color *color = m->mesh->GetMaterial()->GetColor();
                 color->Set(colors[0] * 255, colors[1] * 255, colors[2] * 255, colors[3] * 255);
+            }
+
+            ImGui::Button("Texture");
+
+            if (ImGui::BeginDragDropTarget())
+            {
+                const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+
+                if (payload)
+                {
+                    const char *name = (const char *)payload->Data;
+                    std::string ext = StringUtils::GetFileExtension(name);
+                    if (ext == "png" || ext == "jpg" || ext == "ce_image")
+                    {
+                        m->mesh->GetMaterial()->SetColorTexture(name);
+                    }
+                }
+
+                ImGui::EndDragDropTarget();
+            }
+
+            ImGui::Separator();
+
+            ImGui::InputText("File Name", FileMaterialNameBuffer, 256);
+
+            if (ImGui::Button("Form File"))
+            {
+                m->mesh->SetMaterial(FileMaterialNameBuffer);
+                CeMemory::Zero(&FileMaterialNameBuffer, 256);
             }
         }
         else

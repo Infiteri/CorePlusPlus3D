@@ -14,7 +14,7 @@ namespace Core
     /// @param ColorTextureName The texture to use for the color texture, if not empty, it will get a texture with this name, please keep in mind that is a texture path and not just a simple name.
     struct MaterialConfiguration
     {
-        /// @brief The material name, used everywhere related to materials.
+        /// @brief The material name which is now a path, used everywhere related to materials.
         std::string name;
 
         /// @brief Color of the material to use.
@@ -36,13 +36,8 @@ namespace Core
         Material(MaterialConfiguration config);
         ~Material();
 
-        /// @brief Returns the material's name, either "DefaultMaterial" or the name passed in the 'config' param when constructing material or the value of key "name"
-        /// in file if loaded from a file. can be set later.
-        /// @return The materials name.
         std::string GetName();
 
-        /// @brief Sets the materials name. Keep in mind that if this is done randomly, things might break, best used when using the editor and changing a unique material.
-        /// @param name The new material name.
         void SetName(const std::string &name);
 
         /// @brief Returns the color of the materials, could use "->Set" on the return value to set the color's values.
@@ -52,6 +47,8 @@ namespace Core
         /// @brief Returns a pointer to the color texture, could be empty, default or custom. (Based on the colorTextureName)
         /// @return A pointer to a Texture object.
         Texture *GetColorTexture();
+
+        void SetColorTexture(const std::string& name);
 
         /// @brief Do not call yourself.
         void Use();

@@ -4,6 +4,7 @@
 
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SceneSettingsPanel.h"
+#include "Panels/ContentBrowserPanel.h"
 
 namespace Core
 {
@@ -12,6 +13,7 @@ namespace Core
     public:
         SceneHierarchyPanel sceneHierarchyPanel;
         SceneSettingsPanel sceneSettingsPanel;
+        ContentBrowserPanel contentBrowserPanel;
 
         EditorLayer(){};
         ~EditorLayer(){};

@@ -42,5 +42,8 @@ namespace Core
         /// @brief Color makes sense only when sky mode is set to color, the sky will use a clear color instead of a cube map or shader.
         /// @return Pointer to Color instance / object.
         inline Color *GetColor() const { return color; };
+
+        void CreateCubeTexture(const std::string &filepath);
+        inline CubeMapTexture *GetCubeTexture() { return cubeTexture; };
     };
 }
