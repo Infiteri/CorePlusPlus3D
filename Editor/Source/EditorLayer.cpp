@@ -16,39 +16,40 @@ namespace Core
     {
         // Create editor camera
         CameraSystem::Generate("__EditorCamera__", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
+        CameraSystem::Activate("__EditorCamera__");
 
         // TODO: From file
 
         // World Setup
-        World::Create("NewScene");
-        World::Activate("NewScene");
+        // World::GetActive()->GenerateSceneCamera("GameCamera", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
 
-        World::GetActive()->GenerateSceneCamera("GameCamera", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
+        // {
+        //     Actor *a = new Actor();
+        //     World::GetActive()->AddActor(a);
+        //     auto mesh = a->AddComponent<MeshComponent>();
+        //     mesh->SetGeometry(new BoxGeometry(1, 1, 1));
+        //     mesh->mesh->GetMaterial()->GetColor()->Set(0, 0, 255, 255);
+        // }
+        // {
+        //     Actor *a = new Actor();
+        //     a->SetName("A2");
+        //     a->GetTransform()->GetPosition()->Set(-3, 0, 0);
 
-        {
-            Actor *a = new Actor();
-            World::GetActive()->AddActor(a);
-            auto mesh = a->AddComponent<MeshComponent>();
-            mesh->SetGeometry(new BoxGeometry(1, 1, 1));
-            mesh->mesh->GetMaterial()->GetColor()->Set(0, 0, 255, 255);
-        }
-        {
-            Actor *a = new Actor();
-            a->SetName("A2");
-            a->GetTransform()->GetPosition()->Set(-3, 0, 0);
-
-            World::GetActive()->AddActor(a);
-            auto mesh = a->AddComponent<MeshComponent>();
-            mesh->SetGeometry(new BoxGeometry(1, 1, 1));
-            mesh->mesh->SetMaterial("EngineResources/Materials/Default.ce_mat");
-        }
+        //     World::GetActive()->AddActor(a);
+        //     auto mesh = a->AddComponent<MeshComponent>();
+        //     mesh->SetGeometry(new BoxGeometry(1, 1, 1));
+        //     mesh->mesh->SetMaterial("EngineResources/Materials/Default.ce_mat");
+        // }
         // TODO: End from file
+
+        SceneSerializer ser = SceneSerializer{World::GetActive()};
+        // World::Create("NewScene");
+        // World::Activate("NewScene");
+        ser.DeserializeAndCreateNewScene("EngineResources/Scenes/Main.ce_scene");
 
         sceneHierarchyPanel.UpdateContextToWorldActive();
         sceneSettingsPanel.UpdateSceneToWorldActive();
         contentBrowserPanel.LoadAssets();
-
-        CameraSystem::Activate("__EditorCamera__");
     }
 
     void EditorLayer::OnRender()

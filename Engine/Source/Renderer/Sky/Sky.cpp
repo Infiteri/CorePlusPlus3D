@@ -62,9 +62,7 @@ namespace Core
     Sky::Sky()
     {
         color = new Color(0, 0, 0, 255);
-
         cubeTexture = new CubeMapTexture();
-        cubeTexture->Load("EngineResources/CubeMaps/Nice.ce_cubemap");
 
         // Setup in-world with shader
         array = new VertexArray();
@@ -72,7 +70,7 @@ namespace Core
         array->GetVertexBuffer()->AddLayout(0, 0, 3);
         array->GetVertexBuffer()->Bind();
 
-        mode = SkyMode::CubeMap;
+        mode = SkyMode::Color;
     }
 
     Sky::~Sky()
