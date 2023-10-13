@@ -132,7 +132,7 @@ namespace Core
             out << YAML::Key << "Name" << YAML::Value << material->GetName().c_str();
             out << YAML::Key << "Unique" << YAML::Value << (mesh->mesh->IsMaterialUnique() == true ? "Yes" : "No");
 
-            if (!mesh->mesh->IsMaterialUnique())
+            if (mesh->mesh->IsMaterialUnique())
             {
                 out << YAML::Key << "Color" << YAML::Value << material->GetColor();
                 out << YAML::Key << "ColorTextureName" << YAML::Value << material->GetColorTexture()->GetImagePath().c_str();
@@ -159,9 +159,9 @@ namespace Core
 
         if (actorScript)
         {
-            CE_ASSERT(actorScript->owner != nullptr);
-            CE_ASSERT(!actorScript->owner->GetName().empty());
-            CE_ASSERT(!actorScript->className.empty());
+            CE_ASSERT_IF(actorScript->owner == nullptr);
+            CE_ASSERT_IF(actorScript->owner->GetName().empty());
+            CE_ASSERT_IF(actorScript->className.empty());
 
             out << YAML::Key << "ActorScriptComponent";
             out << YAML::BeginMap;
@@ -173,15 +173,25 @@ namespace Core
         out << YAML::EndMap;
     }
 
+    void SceneSerializer::SerCamera(std::string name, PerspectiveCamera *camera, YAML::Emitter &out)
+    {
+        out << YAML::Key << "SceneCamera" << YAML::BeginMap;
+        out << YAML::Key << "Name" << YAML::Value << name.c_str();
+        out << YAML::Key << "Fov" << YAML::Value << camera->GetFOV();
+        out << YAML::Key << "Near" << YAML::Value << camera->GetNear();
+        out << YAML::Key << "Far" << YAML::Value << camera->GetFar();
+        out << YAML::Key << "Position" << YAML::Value << camera->GetPosition();
+        out << YAML::Key << "Rotation" << YAML::Value << camera->GetRotation();
+        out << YAML::EndMap;
+    }
+
     void SceneSerializer::Serialize(const std::string &name)
     {
         auto camera = CameraSystem::Get(scene->GetSceneCameraName());
-
-        CE_ASSERT(scene != nullptr);
-        CE_ASSERT(camera != nullptr);
-        CE_ASSERT(!name.empty());
-
         auto env = scene->GetEnvironment();
+
+        CE_ASSERT_IF(scene == nullptr);
+        CE_ASSERT_IF(name.empty());
 
         // Start serializing
         YAML::Emitter out;
@@ -189,14 +199,16 @@ namespace Core
         out << YAML::Key << "Scene";
         out << YAML::Value << scene->GetName().c_str();
 
-        out << YAML::Key << "SceneCamera" << YAML::BeginMap;
-        out << YAML::Key << "Name" << YAML::Value << scene->GetSceneCameraName().c_str();
-        out << YAML::Key << "Fov" << YAML::Value << camera->GetFOV();
-        out << YAML::Key << "Near" << YAML::Value << camera->GetNear();
-        out << YAML::Key << "Far" << YAML::Value << camera->GetFar();
-        out << YAML::Key << "Position" << YAML::Value << camera->GetPosition();
-        out << YAML::Key << "Rotation" << YAML::Value << camera->GetRotation();
-        out << YAML::EndMap;
+        if (camera)
+        {
+            SerCamera(scene->GetSceneCameraName(), camera, out);
+        }
+        else
+        {
+            PerspectiveCamera *temp = new PerspectiveCamera();
+            SerCamera("DefaultCameraName", temp, out);
+            delete temp;
+        }
 
         out << YAML::Key << "Actors";
         out << YAML::Value << YAML::BeginSeq;
@@ -215,8 +227,7 @@ namespace Core
 
     void SceneSerializer::Deserialize(const std::string &name)
     {
-        CE_ASSERT(scene != nullptr);
-        CE_ASSERT(!name.empty());
+        CE_ASSERT_IF(name.empty() && "SceneSerializer::Deserialize: Name cannot be empty.");
 
         std::ifstream stream(name);
         std::stringstream strStream(name);
@@ -229,6 +240,7 @@ namespace Core
             return;
 
         std::string sceneName = data["Scene"].as<std::string>();
+        scene->SetName(sceneName.c_str());
 
         auto actors = data["Actors"];
         if (actors)
@@ -250,13 +262,12 @@ namespace Core
                 {
                     auto c = a->AddComponent<MeshComponent>();
 
-                    if (mesh["Unique"].as<std::string>().compare("Yes"))
+                    if (mesh["Unique"].as<std::string>().compare("Yes") == 0)
                     {
                         auto col = mesh["Color"];
-                        std::string colorTexture = mesh["ColorTextureName"].as<std::string>();
-
                         c->mesh->GetMaterial()->GetColor()->Set(col[0].as<float>(), col[1].as<float>(), col[2].as<float>(), col[3].as<float>());
 
+                        std::string colorTexture = mesh["ColorTextureName"] ? mesh["ColorTextureName"].as<std::string>() : "";
                         if (!colorTexture.empty())
                         {
                             c->mesh->GetMaterial()->SetColorTexture(colorTexture);
@@ -286,8 +297,26 @@ namespace Core
 
     void SceneSerializer::DeserializeAndCreateNewScene(const std::string &name)
     {
-        World::Create("NewScene");
-        World::Activate("NewScene");
+        World::StopActive();
+
+        CE_ASSERT_IF(name.empty() && "SceneSerializer::Deserialize: Name cannot be empty.");
+        std::ifstream stream(name);
+        std::stringstream strStream(name);
+        strStream << stream.rdbuf();
+        YAML::Node data = YAML::Load(strStream.str());
+        if (!data["Scene"])
+            return;
+
+        std::string sceneName = data["Scene"].as<std::string>();
+
+        if (World::Get(sceneName) != nullptr)
+        {
+            World::Delete(sceneName);
+        }
+
+        World::Create(sceneName);
+        World::Activate(sceneName);
+
         Set(World::GetActive());
         Deserialize(name);
     }

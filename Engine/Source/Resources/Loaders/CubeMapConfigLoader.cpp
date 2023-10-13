@@ -24,7 +24,7 @@ namespace Core
 
         if (!file.Valid())
         {
-            CE_FATAL("Unable to open handle for reading: %s when loading material configuration.", path.c_str());
+            CE_FATAL("Unable to open handle for reading: %s when loading cube map configuration.", path.c_str());
             return config;
         }
 

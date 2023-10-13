@@ -1,4 +1,5 @@
 #include "EngineLoop.h"
+#include "Core/CeAssert.h"
 
 #include "Core/Engine.h"
 #include "Core/CeConfigurations.h"
@@ -15,6 +16,9 @@ namespace Core
 
     void EngineLoop::PreInit(Application *app, EngineConfiguration *config)
     {
+        CE_ASSERT_IF(app == nullptr);    // Crash if app is nullptr
+        CE_ASSERT_IF(config == nullptr); // Crash if config is nullptr
+
         Engine::PreInit(app, config);
     }
 

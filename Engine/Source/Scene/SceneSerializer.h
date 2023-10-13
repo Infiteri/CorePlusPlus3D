@@ -12,6 +12,7 @@ namespace YAML
 
 namespace Core
 {
+    class PerspectiveCamera;
     class CE_API SceneSerializer
     {
     private:
@@ -24,6 +25,7 @@ namespace Core
         void Set(Scene *scene);
 
         void SerActor(Actor *ac, Actor *parent, YAML::Emitter &out);
+        void SerCamera(std::string name, PerspectiveCamera *camera, YAML::Emitter &out);
 
         void Serialize(const std::string &name);
         void Deserialize(const std::string &name);

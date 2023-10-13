@@ -38,6 +38,9 @@ namespace Core
 
     void Engine::PreInit(Application *app, EngineConfiguration *config)
     {
+        CE_ASSERT_IF(app == nullptr && "Engine::PreInit: Application is nullptr.");
+        CE_ASSERT_IF(config == nullptr && "Engine::PreInit: Application is config.");
+
         GConfig = config;
         GApp = app;
 
@@ -50,6 +53,7 @@ namespace Core
 
         // Create window
         GWindowInstance = new Window(config->windowConfig);
+        CE_ASSERT_IF(GWindowInstance == nullptr && "Engine::PreInit: Window unable to create.");
 
         // Post window
         ImGuiLayer::Init();
@@ -124,6 +128,9 @@ namespace Core
 
     float Engine::GetWindowAspect()
     {
+        if (!GWindowInstance)
+            return 1280.0f / 720.0f;
+
         return (float)GWindowInstance->GetWidth() / (float)GWindowInstance->GetHeight();
     }
 

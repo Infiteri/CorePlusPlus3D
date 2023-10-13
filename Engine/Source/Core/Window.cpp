@@ -17,14 +17,17 @@ namespace Core
     void OnMouseMove(GLFWwindow *win, double x, double y);
     void Viewport(GLFWwindow *win, int w, int h);
 
-    Window::Window(WindowConfiguration config) 
+    Window::Window(WindowConfiguration config)
     {
         this->config = config;
 
-        glfwInit();
+        int result = glfwInit();
+        CE_ASSERT_IF(result == GLFW_FALSE && "Window::Window: glfwInit didn't return successful.")
 
         // Create window
         handle = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
+        CE_ASSERT_IF(handle == nullptr && "Window::Window: glfw window handle cannot be nullptr.")
+
         glfwSetWindowPos(handle, config.x, config.y);
         glfwMakeContextCurrent(handle);
         glfwSwapInterval(1);
@@ -34,7 +37,6 @@ namespace Core
             glfwMaximizeWindow(handle);
             glfwGetWindowSize(handle, &this->config.width, &this->config.height);
             Renderer::Resize(this->config.width, this->config.height);
-            
         }
 
         // Poll events

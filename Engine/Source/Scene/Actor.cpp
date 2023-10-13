@@ -9,19 +9,19 @@
 namespace Core
 {
     static CeU32 GID = 0;
+
     Actor::Actor()
     {
-
         state = ActorState::Created;
         name = "Actor";
 
-        id - GID;
+        id = GID;
         GID++;
     }
 
     Actor::~Actor()
     {
-        id - 0;
+        id = 0;
         GID--;
     }
 
@@ -53,14 +53,17 @@ namespace Core
 
     void Actor::Update()
     {
-        if (state != ActorState::Started)
+        if (state != ActorState::Started && state != ActorState::Init)
             return;
     }
 
     void Actor::Render()
     {
-        if (state != ActorState::Started)
+        if (state != ActorState::Started && state != ActorState::Init)
+        {
+            CE_TRACE("%s not right", name.c_str());
             return;
+        }
 
         Shader *shd = ShaderSystem::Get("EngineResources/Shaders/Object");
         transform.GetRotation()->y += 0.01;
@@ -74,6 +77,11 @@ namespace Core
 
     void Actor::Start()
     {
+        CE_TRACE("State: %i", state);
+
+        if (state == ActorState::Created)
+            Init();
+
         state = ActorState::Started;
 
         for (Component *component : components)

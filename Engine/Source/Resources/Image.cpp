@@ -19,10 +19,7 @@ namespace Core
         channels = 0;
         valid = false;
 
-        if (_path.empty())
-        {
-            return;
-        }
+        CE_ASSERT_IF(_path.empty() && "Image::Image: Path cannot be empty.");
 
         if (StringUtils::GetFileExtension(_path).compare("ce_image") == 0)
         {
@@ -36,7 +33,6 @@ namespace Core
         }
         else
         {
-
             data = stbi_load(path.c_str(), &width, &height, &channels, 0);
             if (!data)
             {

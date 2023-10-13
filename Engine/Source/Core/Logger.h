@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Base.h"
+#include "CeAssert.h"
 
 #define CE_ENABLE_INFO_LOGGING 1
 #define CE_ENABLE_WARN_LOGGING 1

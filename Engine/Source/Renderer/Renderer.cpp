@@ -120,8 +120,19 @@ namespace Core
 
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(state->depthType);
+
         glClearColor(1, 1, 1, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if (World::GetActive() != nullptr)
+        {
+            if (World::GetActive()->GetEnvironment()->sky->GetMode() == SkyMode::Color)
+            {
+                auto c = World::GetActive()->GetEnvironment()->sky->GetColor();
+                glClearColor(c->r / 255, c->g / 255, c->b / 255, c->a / 255);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            }
+        }
     }
 
     void Renderer::Render()
@@ -132,11 +143,15 @@ namespace Core
             return;
         }
 
-        glDepthMask(false);
         if (World::GetActive() != nullptr)
-            World::GetActive()->GetEnvironment()->sky->Render();
-
-        glDepthMask(true);
+        {
+            if (World::GetActive()->GetEnvironment()->sky->GetMode() != SkyMode::Color)
+            {
+                glDepthMask(false);
+                World::GetActive()->GetEnvironment()->sky->Render();
+                glDepthMask(true);
+            }
+        }
 
         PerspectiveCamera *camera = CameraSystem::GetActive();
         if (camera)

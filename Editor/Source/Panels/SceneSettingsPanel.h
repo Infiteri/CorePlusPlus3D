@@ -14,7 +14,7 @@ namespace Core
         SceneSettingsPanel();
         ~SceneSettingsPanel();
 
-        inline void UpdateSceneToWorldActive() { scene = World::GetActive(); };
+        void UpdateSceneToWorldActive();
 
         void OnImGuiRender();
     };

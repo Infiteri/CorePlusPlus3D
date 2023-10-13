@@ -24,6 +24,10 @@ namespace Core
         void OnImGuiRender();
         void OnDetach();
 
+        void New();
+        void Open();
+        void SaveAs();
+
         void BeginDockspace();
         void EndDockspace();
         void RenderSceneViewport();

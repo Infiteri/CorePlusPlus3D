@@ -105,8 +105,7 @@ namespace Core
             break;
 
         case SkyMode::Color:
-            glClearColor(color->r / 255, color->g / 255, color->b / 255, color->a / 255);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            // NOTE: Color handled by the renderer at the beginning of the frame.
             break;
         }
 

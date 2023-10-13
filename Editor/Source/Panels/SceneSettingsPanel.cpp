@@ -18,14 +18,24 @@ namespace Core
 {
     static bool renderCreateCameraDisplay = false;
     static char createCameraNameBuffer[256];
+    static char sceneNameBuffer[256];
 
     SceneSettingsPanel::SceneSettingsPanel()
     {
         this->scene = nullptr;
+
+        CeMemory::Zero(&sceneNameBuffer, 256);
     }
 
     SceneSettingsPanel::~SceneSettingsPanel()
     {
+    }
+
+    void SceneSettingsPanel::UpdateSceneToWorldActive()
+    {
+        
+        scene = World::GetActive();
+        CeMemory::Copy(&sceneNameBuffer, scene->GetName().c_str(), scene->GetName().size() * sizeof(char));
     }
 
     void SceneSettingsPanel::OnImGuiRender()
@@ -34,6 +44,9 @@ namespace Core
             return;
 
         ImGui::Begin("Scene Settings");
+
+        if (ImGui::InputText("Name", sceneNameBuffer, 256))
+            scene->SetName(sceneNameBuffer);
 
         // Camera work
         PerspectiveCamera *sceneCamera = CameraSystem::Get(scene->GetSceneCameraName());

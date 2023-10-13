@@ -47,7 +47,7 @@ namespace Core
     {
         if (perspectives[name] == nullptr)
         {
-            CE_ERROR("Unable to find camera '%s'.", name.c_str());
+            CE_ERROR("CameraSystem::Activate: Unable to find camera '%s'.", name.c_str());
             return;
         }
 
@@ -60,7 +60,7 @@ namespace Core
     {
         if (perspectives[name] == nullptr)
         {
-            CE_ERROR("Unable to find camera '%s'.", name.c_str());
+            CE_ERROR("CameraSystem::UpdateProjection: Unable to find camera '%s'.", name.c_str());
             return;
         }
 

@@ -62,7 +62,7 @@ namespace Core
     }
 
     void Mesh::MakeMaterialUnique()
-    
+
     {
         if (material)
         {

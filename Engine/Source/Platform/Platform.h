@@ -66,6 +66,13 @@ namespace Core
 
         // ------------------------------------------------
 
+        // --------------- FILE DIALOGS ------------------
+
+        static std::string OpenFileDialog(const char *filter);
+        static std::string SaveFileDialog(const char *filter);
+
+        // ------------------------------------------------
+
         // --------------- DYNAMIC LIBRARY ---------------
 
         static DynamicLibrary CreateLibrary(const std::string &_name);

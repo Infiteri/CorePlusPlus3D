@@ -67,7 +67,7 @@ namespace Core
 
     void Scene::Render()
     {
-        if (state != SceneState::Running)
+        if (state != SceneState::Running && state != SceneState::Init)
             return;
 
         environment.Raw()->directionalLight->Update();

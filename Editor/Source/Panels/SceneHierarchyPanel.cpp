@@ -45,8 +45,9 @@ namespace Core
         ImGui::Begin("Scene Hierarchy");
 
         for (Actor *actor : scene->GetActors())
+        {
             RenderActor(actor);
-
+        }
         // Right-Click
         if (ImGui::BeginPopupContextWindow(0, 1))
         {
@@ -72,6 +73,7 @@ namespace Core
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_AllowItemOverlap;
         if (selectionContext != nullptr && selectionContext->GetID() == a->GetID())
             flags |= ImGuiTreeNodeFlags_Selected;
+
         bool pop = ImGui::TreeNodeEx((void *)(CeU64)(CeU32)a->GetID(), flags, a->GetName().c_str());
 
         if (ImGui::IsItemClicked())
@@ -201,12 +203,48 @@ namespace Core
                 m->mesh->SetMaterial(FileMaterialNameBuffer);
                 CeMemory::Zero(&FileMaterialNameBuffer, 256);
             }
+
+            if (ImGui::BeginDragDropTarget())
+            {
+                const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+
+                if (payload)
+                {
+                    const char *name = (const char *)payload->Data;
+                    if (StringUtils::GetFileExtension(name).compare("   ce_mat") == 0)
+                    {
+                        m->mesh->SetMaterial(name);
+                        CeMemory::Zero(&name, 256);
+                    }
+                }
+
+                ImGui::EndDragDropTarget();
+            }
         }
         else
         {
+            ImGui::Text(m->mesh->GetMaterial()->GetName().c_str());
+
             if (ImGui::Button("Make Unique"))
             {
                 m->mesh->MakeMaterialUnique();
+            }
+
+            if (ImGui::BeginDragDropTarget())
+            {
+                const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+
+                if (payload)
+                {
+                    const char *name = (const char *)payload->Data;
+                    if (StringUtils::GetFileExtension(name).compare("ce_mat") == 0)
+                    {
+                        m->mesh->SetMaterial(name);
+                        CeMemory::Zero(&name, 256);
+                    }
+                }
+
+                ImGui::EndDragDropTarget();
             }
         }
 

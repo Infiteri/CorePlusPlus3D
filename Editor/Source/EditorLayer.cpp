@@ -18,34 +18,9 @@ namespace Core
         CameraSystem::Generate("__EditorCamera__", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
         CameraSystem::Activate("__EditorCamera__");
 
-        // TODO: From file
-
-        // World Setup
-        // World::GetActive()->GenerateSceneCamera("GameCamera", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
-
-        // {
-        //     Actor *a = new Actor();
-        //     World::GetActive()->AddActor(a);
-        //     auto mesh = a->AddComponent<MeshComponent>();
-        //     mesh->SetGeometry(new BoxGeometry(1, 1, 1));
-        //     mesh->mesh->GetMaterial()->GetColor()->Set(0, 0, 255, 255);
-        // }
-        // {
-        //     Actor *a = new Actor();
-        //     a->SetName("A2");
-        //     a->GetTransform()->GetPosition()->Set(-3, 0, 0);
-
-        //     World::GetActive()->AddActor(a);
-        //     auto mesh = a->AddComponent<MeshComponent>();
-        //     mesh->SetGeometry(new BoxGeometry(1, 1, 1));
-        //     mesh->mesh->SetMaterial("EngineResources/Materials/Default.ce_mat");
-        // }
-        // TODO: End from file
-
         SceneSerializer ser = SceneSerializer{World::GetActive()};
-        // World::Create("NewScene");
-        // World::Activate("NewScene");
         ser.DeserializeAndCreateNewScene("EngineResources/Scenes/Main.ce_scene");
+        World::InitActive();
 
         sceneHierarchyPanel.UpdateContextToWorldActive();
         sceneSettingsPanel.UpdateSceneToWorldActive();
@@ -67,6 +42,30 @@ namespace Core
         sceneHierarchyPanel.OnImGuiRender();
         sceneSettingsPanel.OnImGuiRender();
         contentBrowserPanel.OnImGuiRender();
+
+        if (ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::MenuItem("File"))
+            {
+                ImGui::OpenPopup("FilePopup");
+            }
+
+            if (ImGui::BeginPopup("FilePopup"))
+            {
+                if (ImGui::MenuItem("New", "Ctrl+N"))
+                    New();
+
+                if (ImGui::MenuItem("Open...", "Ctrl+O"))
+                    Open();
+
+                if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+                    SaveAs();
+
+                ImGui::EndPopup();
+            }
+
+            ImGui::EndMainMenuBar();
+        }
 
         ImGui::Begin("Test");
         if (ImGui::Button("A"))
@@ -101,6 +100,47 @@ namespace Core
 
     void EditorLayer::OnDetach()
     {
+    }
+
+    void EditorLayer::New()
+    {
+        World::StopActive();
+
+        World::Create("NewSceneCreate");
+        World::Activate("NewSceneCreate");
+
+        World::InitActive();
+        World::StartActive();
+
+        sceneHierarchyPanel.UpdateContextToWorldActive();
+        sceneSettingsPanel.UpdateSceneToWorldActive();
+    }
+
+    void EditorLayer::Open()
+    {
+        std::string name = Platform::OpenFileDialog("Core Scene (*.ce_scene)\0*.ce_scene\0");
+        if (!name.empty())
+        {
+            SceneSerializer ser{World::GetActive()};
+            ser.DeserializeAndCreateNewScene(name);
+            sceneHierarchyPanel.UpdateContextToWorldActive();
+            sceneSettingsPanel.UpdateSceneToWorldActive();
+
+            World::InitActive();
+            World::StartActive();
+        }
+    }
+
+    void EditorLayer::SaveAs()
+    {
+        std::string name = Platform::SaveFileDialog("Core Scene (*.ce_scene)\0*.ce_scene\0");
+        if (!name.empty())
+        {
+            SceneSerializer ser{World::GetActive()};
+            ser.Serialize(name);
+            sceneHierarchyPanel.UpdateContextToWorldActive();
+            sceneSettingsPanel.UpdateSceneToWorldActive();
+        }
     }
 
     void EditorLayer::BeginDockspace()

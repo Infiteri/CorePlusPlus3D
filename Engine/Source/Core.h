@@ -11,6 +11,8 @@
 #include "Event/EventManager.h"
 #include "Event/CeEvents.h"
 
+#include "Platform/Platform.h"
+
 #include "Math/Math.h"
 #include "Math/Vectors.h"
 #include "Math/Matrix4.h"
