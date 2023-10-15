@@ -32,4 +32,9 @@ namespace Core
     {
         
     }
+    
+    void Layer::OnEvent(Event *event)
+    {
+        
+    }
 }

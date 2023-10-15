@@ -22,7 +22,7 @@ namespace Core
         virtual void Update();
 
         inline Matrix4 GetTransformMatrix() { return transform.GetMatrix(); };
-        inline Color* GetColor() { return &color; };
+        inline Color *GetColor() { return &color; };
         inline Vector3 *GetPosition() { return transform.GetPosition(); };
         inline Vector3 *GetRotation() { return transform.GetRotation(); };
         inline Vector3 *GetScale() { return transform.GetScale(); };

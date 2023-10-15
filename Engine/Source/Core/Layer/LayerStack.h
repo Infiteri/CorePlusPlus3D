@@ -15,6 +15,8 @@ namespace Core
         static void Destroy();
         static void Update();
         static void RenderImGui();
+        
+        static void OnEvent(Event* event);
 
         /// @brief Pushes a new layer to the Layer Stack.
         /// @param layer A pointer to a layer class to be pushed.

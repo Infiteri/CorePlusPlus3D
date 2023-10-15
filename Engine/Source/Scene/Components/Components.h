@@ -22,8 +22,9 @@ namespace Core
 
         virtual void Start(){};
         virtual void Stop(){};
-
         virtual void Render(){};
+
+        virtual void From(Component *other){};
     };
 
     class CE_API MeshComponent : public Component
@@ -38,6 +39,8 @@ namespace Core
         void Render();
         void Destroy();
 
+        void From(MeshComponent *other);
+
         void SetGeometry(Geometry *geo);
         void SetMaterialFromName(const std::string &name);
     };
@@ -46,6 +49,8 @@ namespace Core
     {
     public:
         std::string className;
+
+        void From(ActorScriptComponent *other);
 
         ActorScriptComponent();
         ~ActorScriptComponent();

@@ -17,6 +17,7 @@ int main(int argc, char const *argv[])
     config.windowConfig.width = 1024;
     config.windowConfig.height = 576;
     config.windowConfig.startMaximized = false;
+    config.windowConfig.decorated = true;
     config.windowConfig.title = "Hello Core Engine";
 
     Core::EngineLoop GEngineLoop;

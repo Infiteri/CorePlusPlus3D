@@ -2,6 +2,8 @@
 
 #include "Base.h"
 
+#include "Event/Event.h"
+
 namespace Core
 {
     class CE_API Layer
@@ -14,5 +16,6 @@ namespace Core
         virtual void OnDetach();
         virtual void OnUpdate();
         virtual void OnImGuiRender();
+        virtual void OnEvent(Event *event);
     };
 }

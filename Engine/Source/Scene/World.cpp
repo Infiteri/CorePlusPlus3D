@@ -7,7 +7,7 @@
 namespace Core
 {
     static std::unordered_map<std::string, Scene *> scenes;
-    static Scene *activeScene;
+    static Scene *activeScene = nullptr;
     ;
 
     void World::Init()
@@ -89,6 +89,28 @@ namespace Core
         CE_DEBUG("Activated scene '%s'", activeScene->GetName().c_str());
     }
 
+    void World::Activate(Scene *scene)
+    {
+        activeScene = scene;
+    }
+
+    void World::CopyToActive(Scene *scene)
+    {
+        if (!scene)
+        {
+            CE_ERROR("World::CopyToActive: Scene cannot be a nullptr.");
+            return;
+        }
+
+        if (activeScene)
+        {
+            activeScene->Destroy();
+            delete activeScene;
+        }
+
+        activeScene = Scene::GetCopyOfScene(scene);
+    }
+
     void World::Delete(const std::string &name)
     {
         CE_ASSERT_IF(name.empty() && "Name cannot be empty.");
@@ -101,7 +123,7 @@ namespace Core
         Scene *scene = scenes[name];
         if (scene)
         {
-            auto it = scenes.find(scene->GetName());
+            auto it = scenes.find(name);
             scenes.erase(it);
             CE_TRACE("Deleting scene '%s', scene count is now %i.", name.c_str(), scenes.size());
             scene->Destroy();

@@ -25,17 +25,19 @@ namespace Core
     void LayerStack::Update()
     {
         for (Layer *layer : layers)
-        {
             layer->OnUpdate();
-        }
     }
 
     void LayerStack::RenderImGui()
     {
         for (Layer *layer : layers)
-        {
             layer->OnImGuiRender();
-        }
+    }
+
+    void LayerStack::OnEvent(Event *event)
+    {
+        for (Layer *layer : layers)
+            layer->OnEvent(event);
     }
 
     void LayerStack::PushLayer(Layer *layer)
@@ -49,7 +51,7 @@ namespace Core
         auto it = std::find(layers.begin(), layers.end(), layer);
         if (it != layers.end())
         {
-            layers.erase(it);   
+            layers.erase(it);
             insert--;
         }
 

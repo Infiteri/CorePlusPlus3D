@@ -21,10 +21,10 @@ namespace Core
     class CE_API Sky
     {
     private:
-        Color *color;
-        VertexArray *array;
-        CubeMapTexture *cubeTexture;
-
+        Color *color = nullptr;
+        VertexArray *array = nullptr;
+        CubeMapTexture *cubeTexture = nullptr;
+        std::string cubeTextureConfigPath = "";
         SkyMode mode;
 
     public:
@@ -45,5 +45,8 @@ namespace Core
 
         void CreateCubeTexture(const std::string &filepath);
         inline CubeMapTexture *GetCubeTexture() { return cubeTexture; };
+        inline std::string GetCubeTexturePath() { return cubeTextureConfigPath; };
+
+        void From(Sky *other);
     };
 }

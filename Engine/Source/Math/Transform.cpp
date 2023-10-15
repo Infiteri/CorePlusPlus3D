@@ -12,6 +12,13 @@ namespace Core
     Transform::~Transform()
     {
     }
+    
+    void Transform::From(Transform* other)
+    {
+        position.Set(other->GetPosition());
+        rotation.Set(other->GetRotation());
+        scale.Set(other->GetScale());
+    }
 
     Matrix4 Transform::GetMatrix()
     {

@@ -124,6 +124,16 @@ namespace Core
             delete cubeTexture;
 
         cubeTexture = new CubeMapTexture();
+        cubeTextureConfigPath = filepath;
         cubeTexture->Load(CubeMapConfigLoader::GetConfigFromFile(filepath));
+    }
+
+    void Sky::From(Sky *other)
+    {
+        SetMode(other->GetMode());
+        this->color->Set(other->GetColor());
+
+        if (other->GetMode() == SkyMode::CubeMap)
+            CreateCubeTexture(other->GetCubeTexturePath());
     }
 }

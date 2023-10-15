@@ -32,3 +32,5 @@
 #include "Scene/SceneSerializer.h"
 
 #include "Script/ActorScript.h"
+
+#include "Utils/StringUtils.h"

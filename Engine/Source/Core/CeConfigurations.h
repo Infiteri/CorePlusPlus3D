@@ -24,6 +24,9 @@ namespace Core
 
         /// @brief Start maximized or not, if true, x, y, width and height are useless.
         bool startMaximized = false;
+
+                /// @brief Use top bar.
+        bool decorated = true;
     };
 
     /// @brief Setup engine configuration.

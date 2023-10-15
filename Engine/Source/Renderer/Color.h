@@ -17,5 +17,6 @@ namespace Core
         ~Color();
 
         void Set(float _r, float _g, float _b, float _a);
+        void Set(Color* other);
     };
 }

@@ -5,6 +5,8 @@
 #include "Math/Math.h"
 
 #include "Renderer/Camera/CameraSystem.h"
+#include "Renderer/Geometry/BoxGeometry.h"
+#include "Renderer/Geometry/PlaneGeometry.h"
 
 #include "Script/ScriptEngine.h"
 
@@ -29,6 +31,47 @@ namespace Core
 
     Scene::~Scene()
     {
+    }
+
+    Scene *Scene::GetCopyOfScene(Scene *other)
+    {
+        Scene *scene = new Scene();
+
+        scene->SetName(other->GetName());
+        scene->SetSceneCameraName(other->GetSceneCameraName());
+
+        auto nDirLight = scene->GetEnvironment()->directionalLight;
+        auto oDirLight = other->GetEnvironment()->directionalLight;
+        nDirLight->GetColor()->Set(oDirLight->GetColor());
+        nDirLight->GetTransform()->From(oDirLight->GetTransform());
+        nDirLight->GetDirection()->Set(oDirLight->GetDirection());
+
+        auto nSky = scene->GetEnvironment()->sky;
+        auto oSky = other->GetEnvironment()->sky;
+        nSky->SetMode(oSky->GetMode());
+        nSky->From(oSky);
+
+        for (Actor *a : other->GetActors())
+        {
+            Actor *outActor = new Actor();
+            outActor->SetName(a->GetName());
+
+            auto transform = a->GetTransform();
+            auto mesh = a->GetComponent<MeshComponent>();
+            auto script = a->GetComponent<ActorScriptComponent>();
+
+            outActor->GetTransform()->From(transform);
+
+            if (mesh)
+                outActor->AddComponent<MeshComponent>()->From(mesh);
+
+            if (script)
+                outActor->AddComponent<ActorScriptComponent>()->From(script);
+
+            scene->AddActor(outActor);
+        }
+
+        return scene;
     }
 
     void Scene::Init()
@@ -67,7 +110,10 @@ namespace Core
 
     void Scene::Render()
     {
-        if (state != SceneState::Running && state != SceneState::Init)
+        if (state == SceneState::Created) // Rendering can be done in most states
+            return;
+
+        if (state == SceneState::Destroyed)
             return;
 
         environment.Raw()->directionalLight->Update();
@@ -154,7 +200,7 @@ namespace Core
         CameraSystem::Activate(sceneCameraName);
     }
 
-    void Scene::SetName(const char *_name)
+    void Scene::SetName(const std::string &_name)
     {
         name = _name;
     }

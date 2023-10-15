@@ -30,9 +30,7 @@ namespace Core
         state = ActorState::Init;
 
         for (Component *component : components)
-        {
             component->Init();
-        }
     }
 
     void Actor::Destroy()
@@ -53,41 +51,33 @@ namespace Core
 
     void Actor::Update()
     {
-        if (state != ActorState::Started && state != ActorState::Init)
+        if (state != ActorState::Started)
             return;
+
+        transform.GetRotation()->y += 0.01;
     }
 
     void Actor::Render()
     {
-        if (state != ActorState::Started && state != ActorState::Init)
-        {
-            CE_TRACE("%s not right", name.c_str());
+        if (state == ActorState::Created || state == ActorState::Destroyed) // Rendering can be done in most states
             return;
-        }
 
         Shader *shd = ShaderSystem::Get("EngineResources/Shaders/Object");
-        transform.GetRotation()->y += 0.01;
         shd->Mat4(transform.GetMatrix(), "uTransform");
 
         for (Component *component : components)
-        {
             component->Render();
-        }
     }
 
     void Actor::Start()
     {
-        CE_TRACE("State: %i", state);
-
         if (state == ActorState::Created)
             Init();
 
         state = ActorState::Started;
 
         for (Component *component : components)
-        {
             component->Start();
-        }
     }
 
     void Actor::Stop()

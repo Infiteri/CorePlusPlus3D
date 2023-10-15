@@ -23,4 +23,9 @@ namespace Core
         b = _b;
         a = _a;
     }
+
+    void Color::Set(Color *other)
+    {
+        Set(other->r, other->g, other->b, other->a);
+    }
 }

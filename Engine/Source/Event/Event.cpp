@@ -52,7 +52,7 @@ namespace Core
     {
         void *newBlock = Platform::Allocate(contextSize);
 
-        Platform::MemCpy(newBlock, Context, contextSize) ;
+        Platform::MemCpy(newBlock, Context, contextSize);
 
         return newBlock;
     }

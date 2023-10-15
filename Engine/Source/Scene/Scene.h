@@ -44,6 +44,8 @@ namespace Core
         Scene();
         ~Scene();
 
+        static Scene *GetCopyOfScene(Scene *other);
+
         /// @brief At the beginning of the scene.
         void Init();
 
@@ -66,16 +68,14 @@ namespace Core
         void ActivateSceneCamera();
 
         inline std::string GetName() { return name; };
-        void SetName(const char *_name);
+        void SetName(const std::string &_name);
 
         void SetSceneCameraName(const std::string &cameraName);
         std::string GetSceneCameraName() const;
-
         void GenerateAndActivateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far);
         void GenerateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far);
 
         std::vector<Actor *> GetActors();
-
         SceneEnvironment *GetEnvironment();
         DirectionalLight *GetEnvironmentDirectionalLight();
     };

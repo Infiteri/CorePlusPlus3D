@@ -240,7 +240,7 @@ namespace Core
             return;
 
         std::string sceneName = data["Scene"].as<std::string>();
-        scene->SetName(sceneName.c_str());
+        scene->SetName(sceneName);
 
         auto actors = data["Actors"];
         if (actors)

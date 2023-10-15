@@ -17,6 +17,8 @@ namespace Core
         Transform();
         ~Transform();
 
+        void From(Transform* other);
+
         inline Vector3 *GetPosition() { return &position; };
         inline Vector3 GetRawPosition() { return position; };
 

@@ -22,6 +22,11 @@ namespace Core
         this->y = y;
     }
 
+    void Vector2::Set(Vector2 *v)
+    {
+        Set(v->x, v->y);
+    }
+
     Vector3::Vector3()
     {
         Set(0, 0, 0);
@@ -41,6 +46,11 @@ namespace Core
         this->x = x;
         this->y = y;
         this->z = z;
+    }
+
+    void Vector3::Set(Vector3 *v)
+    {
+        Set(v->x, v->y, v->z);
     }
 
     Vector4::Vector4()
@@ -63,5 +73,10 @@ namespace Core
         this->y = y;
         this->z = z;
         this->w = w;
+    }
+
+    void Vector4::Set(Vector4 *v)
+    {
+        Set(v->x, v->y, v->z, v->w);
     }
 }

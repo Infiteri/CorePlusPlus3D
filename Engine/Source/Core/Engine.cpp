@@ -78,7 +78,9 @@ namespace Core
 
     void Engine::Start()
     {
-        World::StartActive();
+        // NOTE: Removed because of editor
+        //  World::StartActive(); Starting the scene will be done at runtime, editor doesn't work as expected
+
         CE_DEBUG("Engine::Start successful.");
     }
 
@@ -122,7 +124,6 @@ namespace Core
         GApp->Shutdown();
         delete GWindowInstance;
         delete GApp;
-
         CE_DEBUG("Engine::Shutdown successful.");
     }
 

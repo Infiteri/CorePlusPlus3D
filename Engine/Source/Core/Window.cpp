@@ -24,6 +24,11 @@ namespace Core
         int result = glfwInit();
         CE_ASSERT_IF(result == GLFW_FALSE && "Window::Window: glfwInit didn't return successful.")
 
+        if (!config.decorated)
+        {
+            glfwWindowHint(GLFW_DECORATED, false);
+        }
+
         // Create window
         handle = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
         CE_ASSERT_IF(handle == nullptr && "Window::Window: glfw window handle cannot be nullptr.")
@@ -146,8 +151,9 @@ namespace Core
         context.width = w;
         context.height = h;
 
-        EventManager::SendEvent(&context, sizeof(context), EventType::WindowResize);
-
         Renderer::Resize(w, h);
+
+        // NOTE: Viewport event might Resize Renderer so yeah must be done here haha
+        EventManager::SendEvent(&context, sizeof(context), EventType::WindowResize);
     }
 }

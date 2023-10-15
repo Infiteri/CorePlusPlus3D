@@ -1,5 +1,7 @@
 #include "EventManager.h"
 #include "Math/Math.h"
+#include "Core/Layer/LayerStack.h"
+#include "Core/Logger.h"
 
 #include <vector>
 #include <algorithm>
@@ -32,7 +34,7 @@ namespace Core
 
     void EventManager::Update()
     {
-        if (dispatchers.empty() || events.empty() || EventsPerFrame == 0)
+        if (events.empty() || EventsPerFrame == 0)
             return;
 
         // Get the amount of events to be handled.
@@ -44,7 +46,11 @@ namespace Core
             Event *e = events[i];
 
             for (EventDispatcher *d : dispatchers)
+            {
                 d->OnEvent(e);
+            }
+
+            LayerStack::OnEvent(e);
 
             auto it = std::find(events.begin(), events.end(), e);
 

@@ -1,6 +1,7 @@
 #include "SceneSettingsPanel.h"
 
 #include "Core/Engine.h"
+#include "Core/Logger.h"
 #include "Core/Memory/CeMemory.h"
 
 #include "Math/Math.h"
@@ -33,7 +34,6 @@ namespace Core
 
     void SceneSettingsPanel::UpdateSceneToWorldActive()
     {
-        
         scene = World::GetActive();
         CeMemory::Copy(&sceneNameBuffer, scene->GetName().c_str(), scene->GetName().size() * sizeof(char));
     }
@@ -46,10 +46,13 @@ namespace Core
         ImGui::Begin("Scene Settings");
 
         if (ImGui::InputText("Name", sceneNameBuffer, 256))
-            scene->SetName(sceneNameBuffer);
+            scene->SetName(std::string(sceneNameBuffer));
 
         // Camera work
-        PerspectiveCamera *sceneCamera = CameraSystem::Get(scene->GetSceneCameraName());
+        PerspectiveCamera *sceneCamera = nullptr;
+        if (!scene->GetSceneCameraName().empty())
+            sceneCamera = CameraSystem::Get(scene->GetSceneCameraName());
+
         if (sceneCamera != nullptr)
         {
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_AllowItemOverlap;

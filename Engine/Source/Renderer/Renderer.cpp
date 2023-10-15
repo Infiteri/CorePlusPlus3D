@@ -124,11 +124,12 @@ namespace Core
         glClearColor(1, 1, 1, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if (World::GetActive() != nullptr)
+        Scene *activeScene = World::GetActive();
+        if (activeScene != nullptr)
         {
-            if (World::GetActive()->GetEnvironment()->sky->GetMode() == SkyMode::Color)
+            if (activeScene->GetEnvironment()->sky->GetMode() == SkyMode::Color)
             {
-                auto c = World::GetActive()->GetEnvironment()->sky->GetColor();
+                auto c = activeScene->GetEnvironment()->sky->GetColor();
                 glClearColor(c->r / 255, c->g / 255, c->b / 255, c->a / 255);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             }
