@@ -16,6 +16,7 @@ namespace Core
 
         static void Init();
         static void Shutdown();
+        static bool HasGameLibrary();
 
         static void UpdateRuntime();
         static void StartRuntime();

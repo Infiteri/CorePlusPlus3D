@@ -16,8 +16,8 @@ namespace Core
 
     void EngineLoop::PreInit(Application *app, EngineConfiguration *config)
     {
-        CE_ASSERT_IF(app == nullptr);    // Crash if app is nullptr
-        CE_ASSERT_IF(config == nullptr); // Crash if config is nullptr
+        CE_ASSERT_IF(app == nullptr && "EngineLoop::PreInit: Application cannot be a nullptr.");      // Crash if app is nullptr
+        CE_ASSERT_IF(config == nullptr && "EngineLoop::PreInit: Configuration cannot be a nullptr."); // Crash if config is nullptr
 
         Engine::PreInit(app, config);
     }

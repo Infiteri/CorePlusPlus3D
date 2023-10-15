@@ -153,26 +153,26 @@ namespace Core
 
     void DrawMeshUI(MeshComponent *m, Actor *a)
     {
-        float colors[4] = {m->mesh->GetMaterial()->GetColor()->r / 255, m->mesh->GetMaterial()->GetColor()->g / 255, m->mesh->GetMaterial()->GetColor()->b / 255, m->mesh->GetMaterial()->GetColor()->a / 255};
+        auto material = m->mesh->GetMaterial();
+        float colors[4] = {material->GetColor()->r / 255, material->GetColor()->g / 255, material->GetColor()->b / 255, material->GetColor()->a / 255};
 
         // -- Material --
         if (m->mesh->IsMaterialUnique())
         {
             static char NameBuffer[256];
             CeMemory::Zero(&NameBuffer, 256);
-            CeMemory::Copy(&NameBuffer, m->mesh->GetMaterial()->GetName().c_str(), 256);
+            CeMemory::Copy(&NameBuffer, material->GetName().c_str(), 256);
 
             if (ImGui::InputText("Name", NameBuffer, 256))
             {
-                m->mesh->GetMaterial()->SetName(NameBuffer);
+                material->SetName(NameBuffer);
             }
 
-            Color *color = m->mesh->GetMaterial()->GetColor();
+            Color *color = material->GetColor();
             if (ImGui::ColorEdit4("Color", colors, colorEditFlags))
             {
-                // Update the material's color when the UI color is edited
-                Color *color = m->mesh->GetMaterial()->GetColor();
-                color->Set(colors[0] * 255, colors[1] * 255, colors[2] * 255, colors[3] * 255);
+                Color *color = material->GetColor();
+                color->Set4(colors, 255);
             }
 
             ImGui::Button("Texture");
@@ -187,7 +187,7 @@ namespace Core
                     std::string ext = StringUtils::GetFileExtension(name);
                     if (ext == "png" || ext == "jpg" || ext == "ce_image")
                     {
-                        m->mesh->GetMaterial()->SetColorTexture(name);
+                        material->SetColorTexture(name);
                     }
                 }
 
@@ -223,7 +223,7 @@ namespace Core
         }
         else
         {
-            ImGui::Text(m->mesh->GetMaterial()->GetName().c_str());
+            ImGui::Text(material->GetName().c_str());
 
             if (ImGui::Button("Make Unique"))
             {
@@ -286,7 +286,7 @@ namespace Core
         {
             BoxGeometry *geo = (BoxGeometry *)geometry;
 
-            static float edit[3] = {geo->width, geo->height, geo->depth};
+            float edit[3] = {geo->width, geo->height, geo->depth};
 
             if (ImGui::DragFloat3("Sizes", edit, 0.1, 0))
                 m->mesh->SetGeometry(new BoxGeometry(edit[0], edit[1], edit[2]));
@@ -295,7 +295,7 @@ namespace Core
         {
             PlaneGeometry *geo = (PlaneGeometry *)geometry;
 
-            static float edit[2] = {geo->width, geo->height};
+            float edit[2] = {geo->width, geo->height};
 
             if (ImGui::DragFloat2("Sizes", edit, 0.1, 0.0))
                 m->mesh->SetGeometry(new PlaneGeometry(edit[0], edit[1]));
@@ -305,7 +305,7 @@ namespace Core
     void DrawActorScriptUI(ActorScriptComponent *scr, Actor *a)
     {
         // Name
-        static char NameBuffer[256];
+        char NameBuffer[256];
         CeMemory::Zero(&NameBuffer, 256);
         CeMemory::Copy(&NameBuffer, scr->className.c_str(), scr->className.size() <= 256 ? scr->className.size() : 256);
 

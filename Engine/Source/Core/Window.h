@@ -29,6 +29,8 @@ namespace Core
         /// @return Integer.
         int GetHeight();
 
+        float GetAspect();
+
         /// @brief Returns the GLFW handle of the window.
         /// @return GLFWwindow* of the handle.
         inline GLFWwindow *GetHandle() { return handle; };

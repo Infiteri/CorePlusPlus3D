@@ -85,6 +85,11 @@ namespace Core
         return config.height;
     }
 
+    float Window::GetAspect()
+    {
+        return (float)config.width / (float)config.height;
+    }
+
     void OnKeyEvent(GLFWwindow *win, int key, int scancode, int action, int mods)
     {
         bool pressed = action != GLFW_RELEASE;
@@ -122,7 +127,7 @@ namespace Core
             context.type = MouseEventType::Press;
         else
             context.type = MouseEventType::Release;
-
+ 
         // DONE: X / Y position
         context.x = Input::GetMouseX();
         context.y = Input::GetMouseY();

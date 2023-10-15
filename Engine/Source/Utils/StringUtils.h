@@ -42,6 +42,9 @@ namespace Core
         // Extracts the file extension from a file path
         CE_API std::string GetFileExtension(const std::string &filePath);
 
+        CE_API std::string GetFileName(const std::string &filePath);
+
+
         // Removes the file extension from a file path
         CE_API std::string RemoveFileExtension(const std::string &filePath);
 

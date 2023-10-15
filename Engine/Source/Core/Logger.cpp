@@ -39,18 +39,18 @@ namespace Core
 
         // TODO: Refactor strings
 
-        char OutMessage[32000];
-        Platform::MemSet(OutMessage, 0, 32000);
+        char OutMessage[CE_LOGGER_MAX_MESSAGE_LENGTH];
+        Platform::MemSet(OutMessage, 0, CE_LOGGER_MAX_MESSAGE_LENGTH);
 
         // Perform string pending
         __builtin_va_list arg_ptr;
         va_start(arg_ptr, fmt);
-        vsnprintf(OutMessage, 32000, fmt, arg_ptr);
+        vsnprintf(OutMessage, CE_LOGGER_MAX_MESSAGE_LENGTH, fmt, arg_ptr);
         va_end(arg_ptr);
 
-        char OutMessageWithLevels[32000];
-        Platform::MemSet(OutMessageWithLevels, 0, 32000);
-        snprintf(OutMessageWithLevels, 32000, "[%s %s]: %s\n", "Core", logDescriptionString.c_str(), OutMessage);
+        char OutMessageWithLevels[CE_LOGGER_MAX_MESSAGE_LENGTH];
+        Platform::MemSet(OutMessageWithLevels, 0, CE_LOGGER_MAX_MESSAGE_LENGTH);
+        snprintf(OutMessageWithLevels, CE_LOGGER_MAX_MESSAGE_LENGTH, "[%s %s]: %s\n", "Core", logDescriptionString.c_str(), OutMessage);
 
         // WIP: Console colors
         PlatformLogColor color;

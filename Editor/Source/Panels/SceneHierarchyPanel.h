@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Scene/Scene.h"
+#include "Panel.h"
 
-#include <imgui.h>
 
 namespace Core
 {
     class Actor;
 
-    class SceneHierarchyPanel
+    class SceneHierarchyPanel : public Panel
     {
     private:
         Scene *scene;

@@ -28,4 +28,20 @@ namespace Core
     {
         Set(other->r, other->g, other->b, other->a);
     }
+
+    void Color::Set4(float colors[4], float multiplier)
+    {
+        Set(colors[0] * multiplier,
+            colors[1] * multiplier,
+            colors[2] * multiplier,
+            colors[3] * multiplier);
+    }
+
+    void Color::Set3(float colors[3], float multiplier)
+    {
+        Set(colors[0] * multiplier,
+            colors[1] * multiplier,
+            colors[2] * multiplier,
+            a);
+    }
 }

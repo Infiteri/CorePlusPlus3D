@@ -7,19 +7,27 @@
 
 #include "Platform/Platform.h"
 
+#include "Event/CeEvents.h"
 #include "Event/EventManager.h"
 
 #include "Layer/LayerStack.h"
 #include "Layer/ImGuiLayer.h"
 
 #include "Renderer/Renderer.h"
-#include "Renderer/Manager/TextureManager.h"
+#include "Renderer/Manager/TextureManager.h" 
 
 #include "Scene/World.h"
 
 #include "Script/ScriptEngine.h"
 
 #include <glfw/glfw3.h>
+
+#define CE_CLEAR_CONTEXT_UTILS(a, b)             \
+    if (event->GetType() == a)                   \
+    {                                            \
+        b *OUT_EVENT = (b *)event->GetContext(); \
+        delete OUT_EVENT;                        \
+    }
 
 namespace Core
 {
@@ -62,7 +70,8 @@ namespace Core
         Renderer::Init();
 
         // Setup lib
-        ScriptEngine::LoadGameLibrary("GameLibrary.dll");
+        if (config->LoadGameLibrary)
+            ScriptEngine::LoadGameLibrary(config->GameLibraryName);
 
         // Starting application after starting subsystems
         GApp->Init();
@@ -133,6 +142,14 @@ namespace Core
             return 1280.0f / 720.0f;
 
         return (float)GWindowInstance->GetWidth() / (float)GWindowInstance->GetHeight();
+    }
+ 
+    void Engine::ClearEventContext(Event *event)
+    {
+        CE_CLEAR_CONTEXT_UTILS(EventType::MouseMove, MouseMoveEvent);
+        CE_CLEAR_CONTEXT_UTILS(EventType::KeyEvent, KeyEvent);
+        CE_CLEAR_CONTEXT_UTILS(EventType::MouseClick, MouseClickEvent);
+        CE_CLEAR_CONTEXT_UTILS(EventType::WindowResize, ResizeEvent);
     }
 
     Window *Engine::GetWindowInstance()

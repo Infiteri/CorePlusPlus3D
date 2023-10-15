@@ -1,20 +1,17 @@
 #include "Input.h"
 #include "Logger.h"
 
+#include "Math/Vectors.h"
+
 #include <unordered_map>
 
 namespace Core
 {
     struct InputMouseState
     {
-        int x = 0;
-        int y = 0;
-
-        int lastX = 0;
-        int lastY = 0;
-
-        int deltaX = 0;
-        int deltaY = 0;
+        Vector2 position;
+        Vector2 last;
+        Vector2 delta;
     };
 
     static InputMouseState mouse_state;
@@ -41,48 +38,48 @@ namespace Core
 
     int Input::GetMouseX()
     {
-        return mouse_state.x;
+        return mouse_state.position.x;
     }
 
     int Input::GetMouseY()
     {
-        return mouse_state.y;
+        return mouse_state.position.y;
     }
 
     int Input::GetMouseLastX()
     {
-        return mouse_state.lastX;
+        return mouse_state.last.x;
     }
 
     int Input::GetMouseLastY()
     {
-        return mouse_state.y;
+        return mouse_state.last.y;
     }
 
     int Input::GetMouseDeltaX()
     {
-        return mouse_state.deltaX;
+        return mouse_state.delta.x;
     }
 
     int Input::GetMouseDeltaY()
     {
-        return mouse_state.deltaY;
+        return mouse_state.delta.y;
     }
 
     int Input::GetMouseMovementDirectionX()
     {
-        if (mouse_state.deltaX == 0)
+        if (mouse_state.delta.x == 0)
             return 0;
 
-        return mouse_state.deltaX < 0 ? -1 : 1;
+        return mouse_state.delta.x < 0 ? -1 : 1;
     }
 
     int Input::GetMouseMovementDirectionY()
     {
-        if (mouse_state.deltaY == 0)
+        if (mouse_state.delta.y == 0)
             return 0;
 
-        return mouse_state.deltaY < 0 ? -1 : 1;
+        return mouse_state.delta.y < 0 ? -1 : 1;
     }
 
     void InputUpdateKey(Keys key, bool p)
@@ -97,13 +94,8 @@ namespace Core
 
     void InputUpdateMouse(int x, int y)
     {
-        mouse_state.deltaX = x - mouse_state.lastX;
-        mouse_state.deltaY = y - mouse_state.lastY;
-
-        mouse_state.x = x;
-        mouse_state.y = y;
-
-        mouse_state.lastX = mouse_state.x;
-        mouse_state.lastY = mouse_state.y;
+        mouse_state.delta.Set(x - mouse_state.last.x, y - mouse_state.last.y);
+        mouse_state.position.Set(x, y);
+        mouse_state.position.Set(x, y);
     }
 }

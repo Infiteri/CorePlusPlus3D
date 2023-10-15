@@ -9,16 +9,23 @@ namespace Core
 {
     static std::unordered_map<std::string, ActorScript *> scripts;
     static DynamicLibrary library;
+    static bool hasLibrary = false;
 
     typedef ActorScript *(*GetActorScriptPFN)();
 
     void ScriptEngine::Init()
     {
+        hasLibrary = false;
     }
 
     void ScriptEngine::Shutdown()
     {
         ClearScriptList();
+    }
+
+    bool ScriptEngine::HasGameLibrary()
+    {
+        return hasLibrary;
     }
 
     void ScriptEngine::UpdateRuntime()
@@ -106,5 +113,8 @@ namespace Core
     void ScriptEngine::LoadGameLibrary(const std::string &name)
     {
         library = Platform::CreateLibrary(name);
+
+        if (library.valid)
+            hasLibrary = true;
     }
 }

@@ -48,7 +48,7 @@ namespace Core
         /// @return A pointer to a Texture object.
         Texture *GetColorTexture();
 
-        void SetColorTexture(const std::string& name);
+        void SetColorTexture(const std::string &name);
 
         /// @brief Do not call yourself.
         void Use();

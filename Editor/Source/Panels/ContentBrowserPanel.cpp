@@ -7,7 +7,7 @@
 #include "Utils/StringUtils.h"
 #include "Renderer/Material.h"
 
-#include <fstream>
+#define IM_TEXT_UTIL(a) ImGui::InputText(#a, a, 256)
 
 namespace Core
 {
@@ -16,6 +16,9 @@ namespace Core
     static bool pressedFolder = false;
     static bool displayCreateCubeMap = false;
     static bool displayCreateMaterial = false;
+    static float padding = 16.0f;
+    static float thumbnailSize = 64.0f;
+    static float cellSize = thumbnailSize + padding;
 
     char Name[256];
     char Right[256];
@@ -31,13 +34,7 @@ namespace Core
 
     ContentBrowserPanel::ContentBrowserPanel()
     {
-        CeMemory::Zero(Name, 256);
-        CeMemory::Zero(Right, 256);
-        CeMemory::Zero(Left, 256);
-        CeMemory::Zero(Top, 256);
-        CeMemory::Zero(Bottom, 256);
-        CeMemory::Zero(Front, 256);
-        CeMemory::Zero(Back, 256);
+        ZeroCharBuffers();
     }
 
     ContentBrowserPanel::~ContentBrowserPanel()
@@ -57,9 +54,6 @@ namespace Core
     {
         ImGui::Begin("Content Browser");
 
-        static float padding = 16.0f;
-        static float thumbnailSize = 64.0f;
-        float cellSize = thumbnailSize + padding;
         float panelWidth = ImGui::GetContentRegionAvail().x;
         int columnCount = (int)(panelWidth / cellSize);
         if (columnCount < 1)
@@ -67,22 +61,21 @@ namespace Core
         ImVec2 size{thumbnailSize, thumbnailSize}; // Might change based on preferences
         ImGui::Columns(columnCount, 0, false);
 
-        if (activePath.compare(baseResourcesPath) != 0)
-        {
-            if (ImGui::Button("<-"))
-            {
-                activePath = baseResourcesPath;
-            }
-        }
+        if (activePath.compare(baseResourcesPath) != 0 && ImGui::Button("<-"))
+            activePath = baseResourcesPath;
 
         if (ImGui::BeginPopupContextWindow(0, 1))
         {
             if (ImGui::MenuItem("Create Cube Map"))
+            {
+                CeMemory::Copy(&Name, "CubeMap", 256);
                 displayCreateCubeMap = true;
-
+            }
             if (ImGui::MenuItem("Create Material"))
+            {
+                CeMemory::Copy(&Name, "Material`", 256);
                 displayCreateMaterial = true;
-
+            }
             ImGui::EndPopup();
         }
 
@@ -111,7 +104,7 @@ namespace Core
             }
 
             if (!entry.isFolder)
-                ImGui::TextWrapped(StringUtils::RemoveFileExtension(entry.path).c_str());
+                ImGui::TextWrapped(StringUtils::GetFileName(entry.path).c_str());
             else
                 ImGui::TextWrapped(entry.path.c_str());
 
@@ -129,35 +122,35 @@ namespace Core
         {
             ImGui::Begin("Create Cubemap");
 
-            ImGui::InputText("Name", Name, 256);
-            ImGui::InputText("Right", Right, 256);
-            ImGui::InputText("Left", Left, 256);
-            ImGui::InputText("Top", Top, 256);
-            ImGui::InputText("Bottom", Bottom, 256);
-            ImGui::InputText("Front", Front, 256);
-            ImGui::InputText("Back", Back, 256);
+            IM_TEXT_UTIL(Name);
+            IM_TEXT_UTIL(Right);
+            IM_TEXT_UTIL(Left);
+            IM_TEXT_UTIL(Top);
+            IM_TEXT_UTIL(Bottom);
+            IM_TEXT_UTIL(Front);
+            IM_TEXT_UTIL(Back);
 
             if (ImGui::Button("Create"))
             {
                 std::ofstream fout(activePath + std::string("/") + std::string(Name) + ".ce_cubemap");
 
-                fout << "left =" << Left << "\n";
-                fout << "right =" << Right << "\n";
-                fout << "top =" << Top << "\n";
-                fout << "bottom =" << Bottom << "\n";
-                fout << "front =" << Front << "\n";
-                fout << "back =" << Back << "\n";
-
+                FOutFieldEqualValue("left", Left, fout);
+                FOutFieldEqualValue("right", Right, fout);
+                FOutFieldEqualValue("top", Top, fout);
+                FOutFieldEqualValue("bottom", Bottom, fout);
+                FOutFieldEqualValue("front", Front, fout);
+                FOutFieldEqualValue("back", Back, fout);
+                ZeroCharBuffers();
                 fout.close();
 
-                CeMemory::Zero(Name, 256);
-                CeMemory::Zero(Right, 256);
-                CeMemory::Zero(Left, 256);
-                CeMemory::Zero(Top, 256);
-                CeMemory::Zero(Bottom, 256);
-                CeMemory::Zero(Front, 256);
-                CeMemory::Zero(Back, 256);
+                displayCreateCubeMap = false;
+            }
 
+            ImGui::SameLine();
+
+            if (ImGui::Button("Cancel"))
+            {
+                ZeroCharBuffers();
                 displayCreateCubeMap = false;
             }
 
@@ -172,10 +165,7 @@ namespace Core
             float colors[4] = {MaterialConfig.color.r / 255, MaterialConfig.color.g / 255, MaterialConfig.color.b / 255, MaterialConfig.color.a / 255};
             if (ImGui::ColorEdit4("Color", colors))
             {
-                MaterialConfig.color.r = colors[0] * 255;
-                MaterialConfig.color.g = colors[1] * 255;
-                MaterialConfig.color.b = colors[2] * 255;
-                MaterialConfig.color.a = colors[3] * 255;
+                MaterialConfig.color.Set4(colors, 255);
             };
 
             ImGui::Button("Texture");
@@ -198,9 +188,7 @@ namespace Core
                     const char *name = (const char *)payload->Data;
                     std::string ext = StringUtils::GetFileExtension(name);
                     if (ext == "png" || ext == "jpg" || ext == "ce_image")
-                    {
                         MaterialConfig.colorTextureName = name;
-                    }
                 }
 
                 ImGui::EndDragDropTarget();
@@ -217,16 +205,14 @@ namespace Core
                     materialFile << "color = " << MaterialConfig.color.r << " " << MaterialConfig.color.g << " " << MaterialConfig.color.b << " " << MaterialConfig.color.a << "\n";
 
                     if (!MaterialConfig.colorTextureName.empty())
-                    {
-                        materialFile << "colorTextureName = " << MaterialConfig.colorTextureName.c_str() << "\n";
-                    }
+                        FOutFieldEqualValue("colorTextureName", MaterialConfig.colorTextureName.c_str(), materialFile);
 
                     materialFile.close();
                     MaterialConfig.color.Set(255, 255, 255, 255);
                     MaterialConfig.colorTextureName = "";
                 }
 
-                CeMemory::Zero(Name, 256);
+                ZeroCharBuffers();
                 displayCreateMaterial = false;
             }
 
@@ -234,11 +220,27 @@ namespace Core
 
             if (ImGui::Button("Cancel"))
             {
-                CeMemory::Zero(Name, 256);
+                ZeroCharBuffers();
                 displayCreateMaterial = false;
             }
 
             ImGui::End();
         }
+    }
+
+    void ContentBrowserPanel::ZeroCharBuffers()
+    {
+        CeMemory::Zero(Name, 256);
+        CeMemory::Zero(Right, 256);
+        CeMemory::Zero(Left, 256);
+        CeMemory::Zero(Top, 256);
+        CeMemory::Zero(Bottom, 256);
+        CeMemory::Zero(Front, 256);
+        CeMemory::Zero(Back, 256);
+    }
+
+    void ContentBrowserPanel::FOutFieldEqualValue(const char *filedName, const char *value, std::ofstream &out)
+    {
+        out << filedName << " = " << value << "\n";
     }
 }

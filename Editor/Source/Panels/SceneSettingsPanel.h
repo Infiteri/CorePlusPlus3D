@@ -2,10 +2,12 @@
 
 #include "Scene/Scene.h"
 #include "Scene/World.h"
+#include "Panel.h"
+
 
 namespace Core
 {
-    class SceneSettingsPanel
+    class SceneSettingsPanel : public Panel
     {
     private:
         Scene *scene = nullptr;

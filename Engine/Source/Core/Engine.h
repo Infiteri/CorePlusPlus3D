@@ -5,6 +5,8 @@
 #include "Core/CeConfigurations.h"
 #include "Core/Window.h"
 
+#include "Event/Event.h"
+
 namespace Core
 {
     /// @brief Basic User Data struct with void* Data and CeU64 Size that represents the size of the void* Data.
@@ -31,6 +33,7 @@ namespace Core
         static void Update();
         static void Render();
         static void Shutdown();
+        static void ClearEventContext(Event *event);
         // ----------------------------------
 
         /// @brief Returns the windows aspect ratio.

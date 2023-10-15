@@ -6,6 +6,8 @@
 #include "Panels/SceneSettingsPanel.h"
 #include "Panels/ContentBrowserPanel.h"
 
+#include <vector>
+
 namespace Core
 {
     class EditorLayer : public Layer
@@ -19,11 +21,9 @@ namespace Core
         ~EditorLayer(){};
 
         void OnAttach();
-        void OnRender();
-        void OnUpdate();
         void OnImGuiRender();
         void OnDetach();
-        void OnEvent(Event* event);
+        void OnEvent(Event *event);
 
         void New();
         void Open();
@@ -41,14 +41,17 @@ namespace Core
         void StopSceneRuntime();
 
         // -------------- UI ------------------
-        void UI_DrawTopNavBar();
-        void UI_DrawTopBar();
+        void UI_DrawMainTopBar();
+        void UI_DrawTopPlayStopBar();
         // ------------------------------------
 
         void BeginDockspace();
         void EndDockspace();
         void RenderSceneViewport();
 
-        void OpenScene(const std::string& name);
+        void OpenScene(const std::string &name);
+
+    private:
+        void SetContexts();
     };
 }

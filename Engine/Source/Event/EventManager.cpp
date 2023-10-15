@@ -2,6 +2,7 @@
 #include "Math/Math.h"
 #include "Core/Layer/LayerStack.h"
 #include "Core/Logger.h"
+#include "Core/Engine.h"
 
 #include <vector>
 #include <algorithm>
@@ -52,12 +53,13 @@ namespace Core
 
             LayerStack::OnEvent(e);
 
+            Engine::ClearEventContext(e);
+            e->Clear();
+
             auto it = std::find(events.begin(), events.end(), e);
 
             if (it != events.end())
                 events.erase(it);
-
-            e->Clear();
         }
     }
 

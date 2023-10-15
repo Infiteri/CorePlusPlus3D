@@ -24,7 +24,7 @@ namespace Core
         CameraSystem::Activate("__EditorCamera__");
 
         SceneSerializer ser = SceneSerializer{World::GetActive()};
-        ser.DeserializeAndCreateNewScene("EngineResources/Scenes/Main.ce_scene");
+        New();
         World::InitActive();
 
         IconPlayTexture = new Texture();
@@ -33,20 +33,11 @@ namespace Core
         IconStopTexture = new Texture();
         IconStopTexture->Load("EngineResources/CeImage/Icons/StopButton.ce_image");
 
-        sceneHierarchyPanel.UpdateContextToWorldActive();
-        sceneSettingsPanel.UpdateSceneToWorldActive();
+        SetContexts();
         contentBrowserPanel.LoadAssets();
 
         currentSceneState = SceneStateStop;
         StopSceneRuntime();
-    }
-
-    void EditorLayer::OnRender()
-    {
-    }
-
-    void EditorLayer::OnUpdate()
-    {
     }
 
     void EditorLayer::OnImGuiRender()
@@ -57,30 +48,8 @@ namespace Core
         sceneSettingsPanel.OnImGuiRender();
         contentBrowserPanel.OnImGuiRender();
 
-        if (ImGui::BeginMainMenuBar())
-        {
-            if (ImGui::MenuItem("File"))
-                ImGui::OpenPopup("FilePopup");
-
-            if (ImGui::BeginPopup("FilePopup"))
-            {
-                if (ImGui::MenuItem("New", "Ctrl+N"))
-                    New();
-
-                if (ImGui::MenuItem("Open...", "Ctrl+O"))
-                    Open();
-
-                if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
-                    SaveAs();
-
-                ImGui::EndPopup();
-            }
-
-            ImGui::EndMainMenuBar();
-        }
-
-        UI_DrawTopNavBar();
-        UI_DrawTopBar();
+        UI_DrawMainTopBar();
+        UI_DrawTopPlayStopBar();
 
         RenderSceneViewport();
 
@@ -99,7 +68,7 @@ namespace Core
             Renderer::Resize(lastFrameViewportSize.x, lastFrameViewportSize.y);
     }
 
-    void EditorLayer::UI_DrawTopBar()
+    void EditorLayer::UI_DrawTopPlayStopBar()
     {
         ImGui::Begin("##topbar");
 
@@ -123,8 +92,7 @@ namespace Core
         World::Activate("NewSceneCreate");
         World::InitActive();
 
-        sceneHierarchyPanel.UpdateContextToWorldActive();
-        sceneSettingsPanel.UpdateSceneToWorldActive();
+        SetContexts();
     }
 
     void EditorLayer::Open()
@@ -141,8 +109,7 @@ namespace Core
         {
             SceneSerializer ser{World::GetActive()};
             ser.Serialize(name);
-            sceneHierarchyPanel.UpdateContextToWorldActive();
-            sceneSettingsPanel.UpdateSceneToWorldActive();
+            SetContexts();
         }
     }
 
@@ -163,15 +130,36 @@ namespace Core
             World::CopyToActive(EditorScene);
             EditorScene->Destroy();
             delete EditorScene;
-            sceneHierarchyPanel.UpdateContextToWorldActive();
-            sceneSettingsPanel.UpdateSceneToWorldActive();
+            SetContexts();
         }
 
         World::InitActive();
     }
 
-    void EditorLayer::UI_DrawTopNavBar()
+    void EditorLayer::UI_DrawMainTopBar()
     {
+
+        if (ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::MenuItem("File"))
+                ImGui::OpenPopup("FilePopup");
+
+            if (ImGui::BeginPopup("FilePopup"))
+            {
+                if (ImGui::MenuItem("New", "Ctrl+N"))
+                    New();
+
+                if (ImGui::MenuItem("Open...", "Ctrl+O"))
+                    Open();
+
+                if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+                    SaveAs();
+
+                ImGui::EndPopup();
+            }
+
+            ImGui::EndMainMenuBar();
+        }
     }
 
     void EditorLayer::BeginDockspace()
@@ -255,8 +243,13 @@ namespace Core
     {
         SceneSerializer ser{World::GetActive()};
         ser.DeserializeAndCreateNewScene(name);
+        SetContexts();
+        World::InitActive();
+    }
+
+    void EditorLayer::SetContexts()
+    {
         sceneHierarchyPanel.UpdateContextToWorldActive();
         sceneSettingsPanel.UpdateSceneToWorldActive();
-        World::InitActive();
     }
 }

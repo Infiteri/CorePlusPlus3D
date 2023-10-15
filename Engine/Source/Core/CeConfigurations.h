@@ -2,6 +2,8 @@
 
 #include "Base.h"
 
+#include <string>
+
 namespace Core
 {
     /// @brief Basic window configuration.
@@ -25,7 +27,7 @@ namespace Core
         /// @brief Start maximized or not, if true, x, y, width and height are useless.
         bool startMaximized = false;
 
-                /// @brief Use top bar.
+        /// @brief Use top bar.
         bool decorated = true;
     };
 
@@ -34,5 +36,8 @@ namespace Core
     {
         /// @brief Basic window configuration of the engine
         WindowConfiguration windowConfig;
+
+        bool LoadGameLibrary = false;
+        std::string GameLibraryName = "";
     };
 }

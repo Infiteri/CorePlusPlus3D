@@ -1,18 +1,13 @@
 #include "SceneSettingsPanel.h"
-
 #include "Core/Engine.h"
 #include "Core/Logger.h"
 #include "Core/Memory/CeMemory.h"
-
 #include "Math/Math.h"
-
 #include "Renderer/Camera/CameraSystem.h"
 #include "Renderer/Camera/PerspectiveCamera.h"
-
 #include "CoreEditorUtils.h"
 #include "Utils/StringUtils.h"
 
-#include <imgui.h>
 #include <imgui_internal.h>
 
 namespace Core
@@ -24,7 +19,6 @@ namespace Core
     SceneSettingsPanel::SceneSettingsPanel()
     {
         this->scene = nullptr;
-
         CeMemory::Zero(&sceneNameBuffer, 256);
     }
 
@@ -35,7 +29,8 @@ namespace Core
     void SceneSettingsPanel::UpdateSceneToWorldActive()
     {
         scene = World::GetActive();
-        CeMemory::Copy(&sceneNameBuffer, scene->GetName().c_str(), scene->GetName().size() * sizeof(char));
+        if (scene)
+            CeMemory::Copy(&sceneNameBuffer, scene->GetName().c_str(), scene->GetName().size() * sizeof(char));
     }
 
     void SceneSettingsPanel::OnImGuiRender()

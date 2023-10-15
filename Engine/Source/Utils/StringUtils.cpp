@@ -105,6 +105,20 @@ namespace Core
             return "";
         }
 
+        std::string GetFileName(const std::string &filePath)
+        {
+            size_t lastSlash = filePath.find_last_of("/\\"); // Find the last slash or backslash
+
+            if (lastSlash != std::string::npos)
+            {
+                return filePath.substr(lastSlash + 1);
+            }
+            else
+            {
+                return filePath;
+            }
+        }
+
         std::string RemoveFileExtension(const std::string &filePath)
 
         {
