@@ -2,6 +2,8 @@
 
 #include "Core.h"
 
+#include <ImGuizmo.h>
+
 namespace Core
 {
     // Note: Switch this to true to enable dockspace
@@ -16,6 +18,7 @@ namespace Core
 
     static Texture *IconPlayTexture;
     static Texture *IconStopTexture;
+    static ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
 
     void EditorLayer::OnAttach()
     {
@@ -50,10 +53,24 @@ namespace Core
 
         UI_DrawMainTopBar();
         UI_DrawTopPlayStopBar();
-
         RenderSceneViewport();
 
         EndDockspace();
+
+        if (Input::GetKey(Keys::R))
+        {
+            operation = ImGuizmo::ROTATE;
+        }
+
+        if (Input::GetKey(Keys::T))
+        {
+            operation = ImGuizmo::TRANSLATE;
+        }
+
+        if (Input::GetKey(Keys::E))
+        {
+            operation = ImGuizmo::SCALE;
+        }
     }
 
     void EditorLayer::OnDetach()
@@ -234,6 +251,43 @@ namespace Core
             }
 
             ImGui::EndDragDropTarget();
+        }
+
+        Actor *actorContext = sceneHierarchyPanel.selectionContext;
+        PerspectiveCamera *camera = CameraSystem::GetActive();
+        if (actorContext != nullptr && camera != nullptr)
+        {
+            auto tc = actorContext->GetTransform();
+            auto data = tc->GetMatrix().data;
+
+            ImGuizmo::SetOrthographic(false);
+            ImGuizmo::SetDrawlist();
+            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
+
+            ImGuizmo::Manipulate(camera->GetViewMatrix().data, camera->GetProjection()->data, operation, ImGuizmo::LOCAL, data);
+
+            if (ImGuizmo::IsUsing())
+            {
+                if (operation == ImGuizmo::TRANSLATE)
+                {
+                    Math::DecomposePosition(data, tc->GetPosition());
+                }
+                else if (operation == ImGuizmo::ROTATE)
+                {
+                    Vector3 delta;
+                    Vector3 *old = tc->GetRotation();
+
+                    Math::DecomposeRotation(data, &delta);
+
+                    old->x += delta.x - old->x;
+                    old->y += delta.y - old->y;
+                    old->z += delta.z - old->z;
+                }
+                else if (operation == ImGuizmo::SCALE)
+                {
+                    Math::DecomposeScale(data, tc->GetScale());
+                }
+            }
         }
 
         ImGui::End();

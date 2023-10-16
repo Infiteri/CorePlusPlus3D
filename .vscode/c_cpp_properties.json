@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/Engine/Source",
-                "${workspaceFolder}/Engine/Vendor/ImGui"
+                "${workspaceFolder}/Engine/Vendor/ImGui",
+                "${workspaceFolder}/Engine/Vendor/ImGuizmo"
             ],
             "defines": [
                 "_DEBUG",

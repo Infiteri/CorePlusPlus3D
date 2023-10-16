@@ -5,8 +5,8 @@ OBJ_DIR := Bin-Obj
 ASSEMBLY := Editor
 EXTENSION := .exe
 COMPILER_FLAGS := -g #-fPIC
-INCLUDE_FLAGS := -IEditor\Source -IEngine/Source -IEngine/Vendor/ImGui
-LINKER_FLAGS := -g -lEngine -L$(BUILD_DIR) -lImGui
+INCLUDE_FLAGS := -IEditor\Source -IEngine/Source -IEngine/Vendor/ImGui -IEngine/Vendor/ImGuizmo
+LINKER_FLAGS := -g -lEngine -L$(BUILD_DIR) -lImGui -lImGuizmo 
 DEFINES := -D_DEBUG -D_CRT_SECURE_NO_WARNINGS 
 
 # Make does not offer a recursive wildcard function, so here's one:
