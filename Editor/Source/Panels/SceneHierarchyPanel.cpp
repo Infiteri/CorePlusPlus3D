@@ -90,6 +90,7 @@ namespace Core
     // ---------- UI Methods ------------------
     void DrawMeshUI(MeshComponent *m, Actor *a);
     void DrawActorScriptUI(ActorScriptComponent *scr, Actor *a);
+    void DrawCameraComponentUI(PerspectiveCameraComponent *c, Actor *a);
     // ----------------------------------------
 
     void SceneHierarchyPanel::DrawActorComponents(Actor *a)
@@ -124,6 +125,9 @@ namespace Core
         EditorUtils::DrawComponentUI<ActorScriptComponent>("Actor Script", a, [&](ActorScriptComponent *comp)
                                                            { DrawActorScriptUI(comp, a); });
 
+        EditorUtils::DrawComponentUI<PerspectiveCameraComponent>("Camera", a, [&](PerspectiveCameraComponent *comp)
+                                                                 { DrawCameraComponentUI(comp, a); });
+
         for (auto comp : selectionContext->GetComponents())
         {
             if (comp->custom)
@@ -149,14 +153,13 @@ namespace Core
         if (ImGui::BeginPopupContextItem("ComponentPopup"))
         {
             if (ImGui::MenuItem("Mesh"))
-            {
                 selectionContext->AddComponent<MeshComponent>()->SetGeometry(new BoxGeometry(1, 1, 1));
-            }
 
             if (ImGui::MenuItem("Script"))
-            {
                 selectionContext->AddComponent<ActorScriptComponent>();
-            }
+
+            if (ImGui::MenuItem("Camera"))
+                selectionContext->AddComponent<PerspectiveCameraComponent>();
 
             ImGui::EndPopup();
         }
@@ -325,6 +328,10 @@ namespace Core
         // Edit name
         if (ImGui::InputText("Script Class Name", NameBuffer, 256))
             scr->className = NameBuffer;
+    }
+
+    void DrawCameraComponentUI(PerspectiveCameraComponent *c, Actor *a)
+    {
     }
 
     // ----------------------------------------

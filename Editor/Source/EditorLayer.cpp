@@ -318,7 +318,7 @@ namespace Core
 
         if (sceneSettingsPanel.isCameraEditingSelected && World::GetActive() != nullptr)
         {
-            PerspectiveCamera *editCamera = CameraSystem::Get(World::GetActive()->GetSceneCameraName());
+            PerspectiveCamera *editCamera = World::GetActive()->GetActorCameraComponent()->camera;
             if (camera != nullptr && editCamera != nullptr)
             {
                 sceneHierarchyPanel.selectionContext = nullptr;

@@ -41,6 +41,7 @@ namespace Core
         /// @brief ACtivates a camera. Outputs a error message if the camera isn't found.
         /// @param name The name of the camera to search for.
         static void Activate(const std::string &name);
+        static void Activate(PerspectiveCamera* camera);
 
         /// @brief Updates to projection of the camera under this name. Outputs a error message if the camera isn't found.
         /// @param name The name of the camera to search for.

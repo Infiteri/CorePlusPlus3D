@@ -3,6 +3,7 @@
 #include "Base.h"
 
 #include "Renderer/Objects/Mesh.h"
+#include "Renderer/Camera/CameraSystem.h"
 
 namespace Core
 {
@@ -61,4 +62,18 @@ namespace Core
         ~ActorScriptComponent();
     };
 
+    class CE_API PerspectiveCameraComponent : public Component
+    {
+    public:
+        PerspectiveCamera *camera;
+
+        void From(PerspectiveCameraComponent *other);
+
+        PerspectiveCameraComponent();
+        ~PerspectiveCameraComponent();
+
+        void Destroy();
+        void Start();
+        void Render();
+    };
 }

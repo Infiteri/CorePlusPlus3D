@@ -66,7 +66,9 @@ namespace Core
         shd->Mat4(transform.GetMatrix(), "uTransform");
 
         for (Component *component : components)
+        {
             component->Render();
+        }
     }
 
     void Actor::Start()

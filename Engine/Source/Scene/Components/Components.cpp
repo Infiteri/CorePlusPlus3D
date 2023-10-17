@@ -1,6 +1,7 @@
 #include "Components.h"
 
 #include "Core/Logger.h"
+#include "Core/Engine.h"
 
 #include "Scene/Actor.h"
 #include "Script/ActorScript.h"
@@ -87,5 +88,38 @@ namespace Core
 
     ActorScriptComponent::~ActorScriptComponent()
     {
+    }
+
+    void PerspectiveCameraComponent::From(PerspectiveCameraComponent *other)
+    {
+        camera->SetFOV(other->camera->GetFOV());
+        camera->SetNear(other->camera->GetNear());
+        camera->SetFar(other->camera->GetFar());
+        camera->UpdateProjection(Engine::GetWindowAspect());
+    }
+
+    PerspectiveCameraComponent::PerspectiveCameraComponent()
+    {
+        camera = new PerspectiveCamera();
+    }
+
+    PerspectiveCameraComponent::~PerspectiveCameraComponent()
+    {
+    }
+
+    void PerspectiveCameraComponent::Destroy()
+    {
+        delete camera;
+    }
+
+    void PerspectiveCameraComponent::Start()
+    {
+        camera->Update();
+    }
+
+    void PerspectiveCameraComponent::Render()
+    {
+        camera->GetPosition()->Set(owner->GetTransform()->GetPosition());
+        camera->GetRotation()->Set(owner->GetTransform()->GetRotation());
     }
 }

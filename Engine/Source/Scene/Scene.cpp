@@ -21,7 +21,6 @@ namespace Core
     Scene::Scene()
     {
         name = "Scene";
-        sceneCameraName = "__NONE__INVALID__";
 
         environment.Raw()->directionalLight = new DirectionalLight();
         environment.Raw()->sky = new Sky();
@@ -38,7 +37,6 @@ namespace Core
         Scene *scene = new Scene();
 
         scene->SetName(other->GetName());
-        scene->SetSceneCameraName(other->GetSceneCameraName());
 
         auto nDirLight = scene->GetEnvironment()->directionalLight;
         auto oDirLight = other->GetEnvironment()->directionalLight;
@@ -59,6 +57,7 @@ namespace Core
             auto transform = a->GetTransform();
             auto mesh = a->GetComponent<MeshComponent>();
             auto script = a->GetComponent<ActorScriptComponent>();
+            auto camera = a->GetComponent<PerspectiveCameraComponent>();
 
             outActor->GetTransform()->From(transform);
 
@@ -67,6 +66,9 @@ namespace Core
 
             if (script)
                 outActor->AddComponent<ActorScriptComponent>()->From(script);
+
+            if (camera)
+                outActor->AddComponent<PerspectiveCameraComponent>()->From(camera);
 
             scene->AddActor(outActor);
         }
@@ -194,48 +196,33 @@ namespace Core
 
     void Scene::ActivateSceneCamera()
     {
-        if (sceneCameraName.compare("__NONE__INVALID__") == 0 || sceneCameraName.empty())
-        {
+        auto comp = GetActorCameraComponent();
+
+        if (comp)
+            CameraSystem::Activate(comp->camera);
+        else
             CameraSystem::SetActiveCameraToNone();
-            return;
+    }
+
+    PerspectiveCameraComponent *Scene::GetActorCameraComponent()
+    {
+        for (Actor *a : actors)
+        {
+            auto comp = a->GetComponent<PerspectiveCameraComponent>();
+            if (comp)
+            {
+                comp->camera->GetPosition()->Set(a->GetTransform()->GetPosition());
+                comp->camera->GetRotation()->Set(a->GetTransform()->GetRotation());
+                return comp;
+            }
         }
-        CameraSystem::Activate(sceneCameraName);
+
+        return nullptr;
     }
 
     void Scene::SetName(const std::string &_name)
     {
         name = _name;
-    }
-
-    void Scene::SetSceneCameraName(const std::string &cameraName)
-    {
-        if (sceneCameraName == cameraName)
-            return;
-
-        sceneCameraName = cameraName;
-    }
-
-    std::string Scene::GetSceneCameraName() const
-    {
-        return sceneCameraName;
-    }
-
-    void Scene::GenerateAndActivateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far)
-    {
-        GenerateSceneCamera(cameraName, fov, aspect, near, far);
-        ActivateSceneCamera();
-    }
-
-    void Scene::GenerateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far)
-    {
-        if (CameraSystem::DoesCameraExist(cameraName))
-        {
-            CE_ERROR("Camera '%s' exists already.", cameraName.c_str());
-            return;
-        }
-
-        SetSceneCameraName(cameraName);
-        CameraSystem::Generate(cameraName, fov, aspect, near, far);
     }
 
     SceneEnvironment *Scene::GetEnvironment()

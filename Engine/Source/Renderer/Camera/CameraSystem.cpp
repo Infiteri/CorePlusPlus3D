@@ -56,6 +56,11 @@ namespace Core
         CE_TRACE("Active camera: %s", name.c_str());
     }
 
+    void CameraSystem::Activate(PerspectiveCamera *camera)
+    {
+        activeCamera = camera;
+    }
+
     void CameraSystem::UpdateProjection(const std::string &name, float aspect)
     {
         if (perspectives[name] == nullptr)

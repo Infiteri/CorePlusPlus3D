@@ -121,6 +121,7 @@ namespace Core
 
         auto mesh = a->GetComponent<MeshComponent>();
         auto actorScript = a->GetComponent<ActorScriptComponent>();
+        auto camera = a->GetComponent<PerspectiveCameraComponent>();
 
         if (mesh)
         {
@@ -171,12 +172,19 @@ namespace Core
             out << YAML::EndMap;
         }
 
+        if (camera)
+        {
+            out << YAML::Key << "PerspectiveCameraComponent";
+            out << YAML::BeginMap;
+            SerCamera("", camera->camera, out);
+            out << YAML::EndMap;
+        }
+
         out << YAML::EndMap;
     }
 
     void SceneSerializer::SerCamera(std::string name, PerspectiveCamera *camera, YAML::Emitter &out)
     {
-        out << YAML::Key << "Name" << YAML::Value << name.c_str();
         out << YAML::Key << "Fov" << YAML::Value << camera->GetFOV();
         out << YAML::Key << "Near" << YAML::Value << camera->GetNear();
         out << YAML::Key << "Far" << YAML::Value << camera->GetFar();
@@ -186,7 +194,7 @@ namespace Core
 
     void SceneSerializer::Serialize(const std::string &name)
     {
-        auto camera = CameraSystem::Get(scene->GetSceneCameraName());
+        auto camera = scene->GetActorCameraComponent();
         auto env = scene->GetEnvironment();
 
         CE_ASSERT_IF(scene == nullptr);
@@ -197,21 +205,6 @@ namespace Core
         out << YAML::BeginMap;
         out << YAML::Key << "Scene";
         out << YAML::Value << scene->GetName().c_str();
-
-        if (camera)
-        {
-            out << YAML::Key << "SceneCamera" << YAML::BeginMap;
-            SerCamera(scene->GetSceneCameraName(), camera, out);
-            out << YAML::EndMap;
-        }
-        else
-        {
-            PerspectiveCamera *temp = new PerspectiveCamera();
-            out << YAML::Key << "SceneCamera" << YAML::BeginMap;
-            SerCamera("DefaultCameraName", temp, out);
-            out << YAML::EndMap;
-            delete temp;
-        }
 
         out << YAML::Key << "Actors";
         out << YAML::Value << YAML::BeginSeq;
@@ -245,23 +238,6 @@ namespace Core
         std::string sceneName = data["Scene"].as<std::string>();
         scene->SetName(sceneName);
 
-        auto camera = data["SceneCamera"];
-        if (camera)
-        {
-            std::string name = camera["Name"].as<std::string>();
-            float fov = camera["Fov"].as<float>();
-            float near = camera["Near"].as<float>();
-            float far = camera["Far"].as<float>();
-
-            CameraSystem::Generate(name, fov, Engine::GetWindowAspect(), near, far);
-
-            // TODO: Refactor
-            CameraSystem::Get(name)->GetTransform()->GetPosition()->Set(camera["Position"][0].as<float>(), camera["Position"][1].as<float>(), camera["Position"][2].as<float>());
-            CameraSystem::Get(name)->GetTransform()->GetRotation()->Set(camera["Rotation"][0].as<float>(), camera["Rotation"][1].as<float>(), camera["Rotation"][2].as<float>());
-
-            scene->SetSceneCameraName(name);
-        }
-
         auto actors = data["Actors"];
         if (actors)
         {
@@ -270,6 +246,7 @@ namespace Core
                 auto transform = actor["Transform"];
                 auto mesh = actor["MeshComponent"];
                 auto actorScript = actor["ActorScriptComponent"];
+                auto camera = actor["PerspectiveCameraComponent"];
 
                 Actor *a = new Actor();
 
@@ -311,6 +288,15 @@ namespace Core
                     auto script = a->AddComponent<ActorScriptComponent>();
                     script->className = actorScript["ClassName"].as<std::string>();
                     script->owner = a;
+                }
+
+                if (camera)
+                {
+                    auto cc = a->AddComponent<PerspectiveCameraComponent>();
+                    cc->camera->SetFOV(camera["Fov"].as<float>());
+                    cc->camera->SetNear(camera["Near"].as<float>());
+                    cc->camera->SetFar(camera["Far"].as<float>());
+                    cc->camera->UpdateProjection(Engine::GetWindowAspect());
                 }
 
                 scene->AddActor(a);

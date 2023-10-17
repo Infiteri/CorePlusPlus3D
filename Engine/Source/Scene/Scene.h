@@ -34,7 +34,6 @@ namespace Core
     {
     private:
         std::string name;
-        std::string sceneCameraName;
         std::vector<Actor *> actors;
 
         SceneState state;
@@ -65,15 +64,13 @@ namespace Core
         void RemoveActorByName(const std::string &name);
         void RemoveActorByID(CeU32 id);
 
+        // --- CAMERA ---
         void ActivateSceneCamera();
+        PerspectiveCameraComponent *GetActorCameraComponent();
+        // ------------
 
         inline std::string GetName() { return name; };
         void SetName(const std::string &_name);
-
-        void SetSceneCameraName(const std::string &cameraName);
-        std::string GetSceneCameraName() const;
-        void GenerateAndActivateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far);
-        void GenerateSceneCamera(const std::string &cameraName, float fov, float aspect, float near, float far);
 
         std::vector<Actor *> GetActors();
         SceneEnvironment *GetEnvironment();
