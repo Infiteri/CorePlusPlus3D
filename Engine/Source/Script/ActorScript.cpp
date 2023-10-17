@@ -21,4 +21,11 @@ namespace Core
     void ActorScript::OnStop()
     {
     }
+    Transform *ActorScript::GetTransform()
+    {
+        if (owner == nullptr)
+            return nullptr;
+
+        return owner->GetTransform();
+    }
 }

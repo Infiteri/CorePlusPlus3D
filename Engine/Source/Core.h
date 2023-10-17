@@ -24,6 +24,7 @@
 #include "Renderer/Geometry/BoxGeometry.h"
 #include "Renderer/Geometry/PlaneGeometry.h"
 #include "Renderer/Camera/CameraSystem.h"
+#include "Renderer/Camera/PerspectiveMovement.h"
 
 #include "Scene/Scene.h"
 #include "Scene/Actor.h"

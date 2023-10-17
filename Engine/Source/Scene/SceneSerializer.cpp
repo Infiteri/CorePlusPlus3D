@@ -1,5 +1,6 @@
 #include "SceneSerializer.h"
 #include "Core/CeAssert.h"
+#include "Core/Engine.h"
 #include "Core/Logger.h"
 
 #include "Components/Components.h"
@@ -175,14 +176,12 @@ namespace Core
 
     void SceneSerializer::SerCamera(std::string name, PerspectiveCamera *camera, YAML::Emitter &out)
     {
-        out << YAML::Key << "SceneCamera" << YAML::BeginMap;
         out << YAML::Key << "Name" << YAML::Value << name.c_str();
         out << YAML::Key << "Fov" << YAML::Value << camera->GetFOV();
         out << YAML::Key << "Near" << YAML::Value << camera->GetNear();
         out << YAML::Key << "Far" << YAML::Value << camera->GetFar();
         out << YAML::Key << "Position" << YAML::Value << camera->GetPosition();
         out << YAML::Key << "Rotation" << YAML::Value << camera->GetRotation();
-        out << YAML::EndMap;
     }
 
     void SceneSerializer::Serialize(const std::string &name)
@@ -201,12 +200,16 @@ namespace Core
 
         if (camera)
         {
+            out << YAML::Key << "SceneCamera" << YAML::BeginMap;
             SerCamera(scene->GetSceneCameraName(), camera, out);
+            out << YAML::EndMap;
         }
         else
         {
             PerspectiveCamera *temp = new PerspectiveCamera();
+            out << YAML::Key << "SceneCamera" << YAML::BeginMap;
             SerCamera("DefaultCameraName", temp, out);
+            out << YAML::EndMap;
             delete temp;
         }
 
@@ -241,6 +244,23 @@ namespace Core
 
         std::string sceneName = data["Scene"].as<std::string>();
         scene->SetName(sceneName);
+
+        auto camera = data["SceneCamera"];
+        if (camera)
+        {
+            std::string name = camera["Name"].as<std::string>();
+            float fov = camera["Fov"].as<float>();
+            float near = camera["Near"].as<float>();
+            float far = camera["Far"].as<float>();
+
+            CameraSystem::Generate(name, fov, Engine::GetWindowAspect(), near, far);
+
+            // TODO: Refactor
+            CameraSystem::Get(name)->GetTransform()->GetPosition()->Set(camera["Position"][0].as<float>(), camera["Position"][1].as<float>(), camera["Position"][2].as<float>());
+            CameraSystem::Get(name)->GetTransform()->GetRotation()->Set(camera["Rotation"][0].as<float>(), camera["Rotation"][1].as<float>(), camera["Rotation"][2].as<float>());
+
+            scene->SetSceneCameraName(name);
+        }
 
         auto actors = data["Actors"];
         if (actors)
@@ -288,6 +308,9 @@ namespace Core
 
                 if (actorScript)
                 {
+                    auto script = a->AddComponent<ActorScriptComponent>();
+                    script->className = actorScript["ClassName"].as<std::string>();
+                    script->owner = a;
                 }
 
                 scene->AddActor(a);

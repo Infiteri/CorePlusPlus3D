@@ -195,8 +195,10 @@ namespace Core
     void Scene::ActivateSceneCamera()
     {
         if (sceneCameraName.compare("__NONE__INVALID__") == 0 || sceneCameraName.empty())
+        {
+            CameraSystem::SetActiveCameraToNone();
             return;
-
+        }
         CameraSystem::Activate(sceneCameraName);
     }
 

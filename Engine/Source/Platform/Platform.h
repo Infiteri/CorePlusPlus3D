@@ -64,6 +64,8 @@ namespace Core
         static std::vector<std::string> GetFolderPathsInDirectory(const std::string &directoryPath);
         static std::vector<DirectoryEntry> GetDirectoryEntries(const std::string &directoryPath);
 
+        static bool CreateFolder(const std::string& name);
+
         // ------------------------------------------------
 
         // --------------- FILE DIALOGS ------------------

@@ -49,8 +49,6 @@ namespace Core
         FrameBuffer *ScreenFramebuffer;
         VertexArray *ScreenVertexArray;
         // End screen related
-
-        PerspectiveMovement *movement;
         GLenum depthType = GL_LEQUAL;
     };
 
@@ -96,8 +94,6 @@ namespace Core
         state->ScreenVertexArray->GenVertexBuffer(screenQuadVertices, sizeof(screenQuadVertices)); // ! NO sizeof(float) cuz it makes the final image broken (? IDEK Why);
         state->ScreenVertexArray->GetVertexBuffer()->AddLayout(0, 0, 2);
         state->ScreenVertexArray->GetVertexBuffer()->AddLayout(1, 2, 2);
-
-        state->movement = new PerspectiveMovement();
 
         // After objects creation
         RegenerateObjectsWithNewViewport();
@@ -161,7 +157,6 @@ namespace Core
         PerspectiveCamera *camera = CameraSystem::GetActive();
         if (camera)
         {
-            state->movement->Update(camera);
             ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(camera->GetProjection(), "uProjection");
             ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(camera->GetViewMatrix(), "uView");
             ShaderSystem::Get("EngineResources/Shaders/Object")->Vec3(camera->GetPosition(), "uCameraPosition");

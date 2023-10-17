@@ -9,10 +9,12 @@ namespace Core
     class Actor;
     class ActorScript;
 
-    class Component
+    class CE_API Component
     {
     public:
         Actor *owner;
+
+        bool custom = false;
 
         Component(){};
         ~Component(){};
@@ -23,6 +25,9 @@ namespace Core
         virtual void Start(){};
         virtual void Stop(){};
         virtual void Render(){};
+
+        // Only used if is a custom component.
+        virtual void OnImGuiRender(){};
 
         virtual void From(Component *other){};
     };

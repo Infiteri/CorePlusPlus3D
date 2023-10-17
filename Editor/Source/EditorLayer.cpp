@@ -19,6 +19,7 @@ namespace Core
     static Texture *IconPlayTexture;
     static Texture *IconStopTexture;
     static ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+    static PerspectiveMovement *movement;
 
     void EditorLayer::OnAttach()
     {
@@ -38,6 +39,8 @@ namespace Core
 
         SetContexts();
         contentBrowserPanel.LoadAssets();
+
+        movement = new PerspectiveMovement();
 
         currentSceneState = SceneStateStop;
         StopSceneRuntime();
@@ -79,10 +82,28 @@ namespace Core
         delete IconStopTexture;
     }
 
+    void EditorLayer::OnUpdate()
+    {
+        if (currentSceneState == SceneStateStop)
+            OnUpdateEditor();
+        else if (currentSceneState == SceneStatePlay)
+            OnUpdateRuntime();
+    }
+
     void EditorLayer::OnEvent(Event *event)
     {
         if (event->GetType() == EventType::WindowResize)
             Renderer::Resize(lastFrameViewportSize.x, lastFrameViewportSize.y);
+    }
+
+    void EditorLayer::OnUpdateRuntime()
+    {
+        sceneHierarchyPanel.selectionContext = nullptr;
+    }
+
+    void EditorLayer::OnUpdateEditor()
+    {
+        movement->Update(CameraSystem::GetActive());
     }
 
     void EditorLayer::UI_DrawTopPlayStopBar()
@@ -134,6 +155,10 @@ namespace Core
     {
         currentSceneState = SceneStatePlay;
         EditorScene = World::GetActive() ? Scene::GetCopyOfScene(World::GetActive()) : nullptr;
+
+        if (World::GetActive())
+            World::GetActive()->ActivateSceneCamera();
+
         World::StartActive();
     }
 
@@ -149,6 +174,8 @@ namespace Core
             delete EditorScene;
             SetContexts();
         }
+
+        CameraSystem::Activate("__EditorCamera__");
 
         World::InitActive();
     }
@@ -257,14 +284,13 @@ namespace Core
         PerspectiveCamera *camera = CameraSystem::GetActive();
         if (actorContext != nullptr && camera != nullptr)
         {
+            if (sceneSettingsPanel.isCameraEditingSelected)
+                sceneSettingsPanel.isCameraEditingSelected = false;
+
             auto tc = actorContext->GetTransform();
             auto data = tc->GetMatrix().data;
 
-            ImGuizmo::SetOrthographic(false);
-            ImGuizmo::SetDrawlist();
-            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
-
-            ImGuizmo::Manipulate(camera->GetViewMatrix().data, camera->GetProjection()->data, operation, ImGuizmo::LOCAL, data);
+            DrawGizmo(camera, data);
 
             if (ImGuizmo::IsUsing())
             {
@@ -290,6 +316,37 @@ namespace Core
             }
         }
 
+        if (sceneSettingsPanel.isCameraEditingSelected && World::GetActive() != nullptr)
+        {
+            PerspectiveCamera *editCamera = CameraSystem::Get(World::GetActive()->GetSceneCameraName());
+            if (camera != nullptr && editCamera != nullptr)
+            {
+                sceneHierarchyPanel.selectionContext = nullptr;
+
+                auto data = editCamera->GetTransformMatrix().data;
+                DrawGizmo(camera, data);
+
+                if (ImGuizmo::IsUsing())
+                {
+                    if (operation == ImGuizmo::TRANSLATE)
+                    {
+                        Math::DecomposePosition(data, editCamera->GetPosition());
+                    }
+                    else if (operation == ImGuizmo::ROTATE)
+                    {
+                        Vector3 delta;
+                        Vector3 *old = editCamera->GetRotation();
+
+                        Math::DecomposeRotation(data, &delta);
+
+                        old->x += delta.x - old->x;
+                        old->y += delta.y - old->y;
+                        old->z += delta.z - old->z;
+                    }
+                }
+            }
+        }
+
         ImGui::End();
     }
 
@@ -305,5 +362,17 @@ namespace Core
     {
         sceneHierarchyPanel.UpdateContextToWorldActive();
         sceneSettingsPanel.UpdateSceneToWorldActive();
+    }
+
+    void EditorLayer::DrawGizmo(PerspectiveCamera *camera, float *data)
+    {
+        if (camera != nullptr && data != nullptr)
+        {
+            ImGuizmo::SetOrthographic(false);
+            ImGuizmo::SetDrawlist();
+            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
+
+            ImGuizmo::Manipulate(camera->GetViewMatrix().data, camera->GetProjection()->data, operation, ImGuizmo::LOCAL, data);
+        }
     }
 }

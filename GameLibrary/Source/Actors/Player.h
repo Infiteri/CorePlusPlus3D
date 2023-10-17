@@ -1,21 +1,13 @@
 #pragma once
 
 #include "Core.h"
+#include "GameLibraryBase.h"
 
-class __declspec(dllexport) PlayerScript : public Core::ActorScript
+class GAME_API PlayerScript : public Core::ActorScript
 {
 public:
-    PlayerScript();
-    ~PlayerScript();
+    void OnStart();
+    void OnUpdate();
 };
 
-extern "C" __declspec(dllexport) Core::ActorScript *PlayerScriptCreate() { return new PlayerScript(); };
-
-class __declspec(dllexport) PlayerScript2 : public Core::ActorScript
-{
-public:
-    PlayerScript2();
-    ~PlayerScript2();
-};
-
-extern "C" __declspec(dllexport) Core::ActorScript *PlayerScript2Create() { return new PlayerScript2(); };
+CE_EXPORT_ACTOR_SCRIPT(PlayerScript);

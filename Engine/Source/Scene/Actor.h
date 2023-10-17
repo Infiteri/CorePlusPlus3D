@@ -63,6 +63,8 @@ namespace Core
         void SetName(const std::string &name);
         std::string GetName();
 
+        std::vector<Component *> GetComponents() { return components; };
+
         // ---------- COMPONENTS ----------
 
         template <typename T, typename... Args>

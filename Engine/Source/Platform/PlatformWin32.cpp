@@ -8,6 +8,7 @@
 #include <tchar.h>
 #include <Shlwapi.h>
 #include <commdlg.h>
+#include <shlwapi.h>
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
@@ -228,6 +229,11 @@ namespace Core
         }
 
         return paths;
+    }
+
+    bool Platform::CreateFolder(const std::string &name)
+    {
+        return CreateDirectory(name.c_str(), nullptr) != 0;
     }
 
     std::string Platform::OpenFileDialog(const char *filter)

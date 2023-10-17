@@ -1,3 +1,3 @@
 #pragma once
 
-#define GAME_API extern "C" __declspec(dllexport)
+#define GAME_API __declspec(dllexport)

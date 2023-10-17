@@ -29,8 +29,10 @@ namespace Core
     void SceneSettingsPanel::UpdateSceneToWorldActive()
     {
         scene = World::GetActive();
+        CeMemory::Zero(&sceneNameBuffer, 256);
+
         if (scene)
-            CeMemory::Copy(&sceneNameBuffer, scene->GetName().c_str(), scene->GetName().size() * sizeof(char));
+            CeMemory::Copy(&sceneNameBuffer, scene->GetName().c_str(), scene->GetName().length());
     }
 
     void SceneSettingsPanel::OnImGuiRender()
@@ -52,6 +54,8 @@ namespace Core
         {
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_AllowItemOverlap;
             bool cameraClosed = ImGui::TreeNodeEx("camera", flags, scene->GetSceneCameraName().c_str());
+
+            isCameraEditingSelected = false;
 
             if (cameraClosed)
             {
@@ -76,6 +80,19 @@ namespace Core
                     sceneCamera->SetFar(far);
                     sceneCamera->UpdateProjection();
                 }
+
+                bool transformClosed = ImGui::TreeNodeEx("transformCamera", flags, "Transform");
+
+                if (transformClosed)
+                {
+                    EditorUtils::ImGuiVector3Edit("Position", sceneCamera->GetTransform()->GetPosition(), 0.0f);
+                    EditorUtils::ImGuiVector3Edit("Rotation", sceneCamera->GetTransform()->GetRotation(), 0.0f);
+                    EditorUtils::ImGuiVector3Edit("Scale", sceneCamera->GetTransform()->GetScale(), 1.0f);
+
+                    ImGui::TreePop();
+                }
+
+                isCameraEditingSelected = true;
 
                 ImGui::TreePop();
             }

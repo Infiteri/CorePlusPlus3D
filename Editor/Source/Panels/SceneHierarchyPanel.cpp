@@ -1,6 +1,7 @@
 #include "SceneHierarchyPanel.h"
 
 #include "Core/Logger.h"
+#include "Core/Input.h"
 
 #include "Scene/World.h"
 #include "Scene/Actor.h"
@@ -43,6 +44,9 @@ namespace Core
 
         // Actor looping
         ImGui::Begin("Scene Hierarchy");
+
+        if (Input::GetKey(Keys::Escape))
+            selectionContext = nullptr;
 
         for (Actor *actor : scene->GetActors())
         {
@@ -90,6 +94,9 @@ namespace Core
 
     void SceneHierarchyPanel::DrawActorComponents(Actor *a)
     {
+        if (!a)
+            return;
+
         // Name
         static char NameBuffer[256];
         CeMemory::Zero(&NameBuffer, 256);
@@ -116,6 +123,12 @@ namespace Core
 
         EditorUtils::DrawComponentUI<ActorScriptComponent>("Actor Script", a, [&](ActorScriptComponent *comp)
                                                            { DrawActorScriptUI(comp, a); });
+
+        for (auto comp : selectionContext->GetComponents())
+        {
+            if (comp->custom)
+                comp->OnImGuiRender();
+        }
 
         // Delete Entity
         if (ImGui::Button("Destroy"))

@@ -67,6 +67,7 @@ namespace Core
             Matrix4 cameraMatrixRotation = Matrix4::RotationXYZ(camera->GetRotation());
             Vector3 way = Matrix4::Right(&cameraMatrixRotation);
             camera->GetPosition()->x -= way.x * speed;
+            
             camera->GetPosition()->y -= way.y * speed;
             camera->GetPosition()->z -= way.z * speed;
         }

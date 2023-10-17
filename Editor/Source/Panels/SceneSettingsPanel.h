@@ -13,6 +13,8 @@ namespace Core
         Scene *scene = nullptr;
 
     public:
+    bool isCameraEditingSelected = false;
+
         SceneSettingsPanel();
         ~SceneSettingsPanel();
 

@@ -8,7 +8,7 @@ REM Execute the make commands
 make -f "Engine.mak" all
 make -f "Editor.mak" all
 @REM make -f "Sandbox.mak" all
-@REM call GameLibrary/Build.bat
+call GameLibrary/Build.bat
 
 REM Record the end time
 SET End_Time=%TIME%

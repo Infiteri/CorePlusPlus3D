@@ -16,6 +16,7 @@ namespace Core
     static bool pressedFolder = false;
     static bool displayCreateCubeMap = false;
     static bool displayCreateMaterial = false;
+    static bool displayCreateFolder = false;
     static float padding = 16.0f;
     static float thumbnailSize = 64.0f;
     static float cellSize = thumbnailSize + padding;
@@ -73,8 +74,14 @@ namespace Core
             }
             if (ImGui::MenuItem("Create Material"))
             {
-                CeMemory::Copy(&Name, "Material`", 256);
+                CeMemory::Copy(&Name, "Material", 256);
                 displayCreateMaterial = true;
+            }
+
+            if (ImGui::MenuItem("Create Folder"))
+            {
+                CeMemory::Copy(&Name, "Folder", 256);
+                displayCreateFolder = true;
             }
             ImGui::EndPopup();
         }
@@ -222,6 +229,29 @@ namespace Core
             {
                 ZeroCharBuffers();
                 displayCreateMaterial = false;
+            }
+
+            ImGui::End();
+        }
+
+        if (displayCreateFolder)
+        {
+            ImGui::Begin("Create Folder");
+            ImGui::InputText("Folder Name", Name, 256);
+
+            if (ImGui::Button("Create"))
+            {
+                Platform::CreateFolder(activePath + "/" + Name);
+                displayCreateFolder = false;
+                ZeroCharBuffers();
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Cancel"))
+            {
+                ZeroCharBuffers();
+                displayCreateFolder = false;
             }
 
             ImGui::End();

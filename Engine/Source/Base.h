@@ -40,3 +40,6 @@ typedef signed char CeI8;
 typedef signed short CeI16;
 typedef signed int CeI32;
 typedef signed long long CeI64;
+
+#define CE_EXPORT_ACTOR_SCRIPT(className) \
+    extern "C" __declspec(dllexport) Core::ActorScript *className##Create() { return new className(); }

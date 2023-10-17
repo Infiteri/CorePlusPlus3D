@@ -1,19 +1,22 @@
 #include "Player.h"
 
-PlayerScript::PlayerScript()
+class CustomComponent : public Core::Component
 {
-    CE_TRACE("PlayerScript::Create");
+public:
+    CustomComponent()
+    {
+        custom = true;
+    };
+    ~CustomComponent();
+
+    void OnImGuiRender(){};
+};
+
+void PlayerScript::OnUpdate()
+{
 }
 
-PlayerScript::~PlayerScript()
+void PlayerScript::OnStart()
 {
-}
-
-PlayerScript2::PlayerScript2()
-{
-    CE_TRACE("PlayerScript2::Create");
-}
-
-PlayerScript2::~PlayerScript2()
-{
+    auto component = AddComponent<CustomComponent>();
 }

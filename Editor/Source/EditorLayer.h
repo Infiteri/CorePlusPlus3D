@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Layer/Layer.h"
+#include "Renderer/Camera/PerspectiveCamera.h"
 
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SceneSettingsPanel.h"
@@ -23,12 +24,23 @@ namespace Core
         void OnAttach();
         void OnImGuiRender();
         void OnDetach();
+        void OnUpdate();
         void OnEvent(Event *event);
+
+        // -------- UPDATE ROUTINES -----------
+
+        void OnUpdateRuntime();
+        void OnUpdateEditor();
+
+        // ------------------------------------
+
+        // -------- TOP BAR ACTIONS -----------
 
         void New();
         void Open();
         void SaveAs();
 
+        // ------------------------------------
         enum SceneState
         {
             SceneStatePlay,
@@ -53,5 +65,6 @@ namespace Core
 
     private:
         void SetContexts();
+        void DrawGizmo(PerspectiveCamera* camera, float* data);
     };
 }
