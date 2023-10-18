@@ -14,6 +14,7 @@ public:
 
 void PlayerScript::OnUpdate()
 {
+    GetTransform()->GetRotation()->y += Core::Math::DegToRad(1);
 }
 
 void PlayerScript::OnStart()

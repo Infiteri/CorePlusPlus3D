@@ -53,8 +53,6 @@ namespace Core
     {
         if (state != ActorState::Started)
             return;
-
-        transform.GetRotation()->y += 0.01;
     }
 
     void Actor::Render()
