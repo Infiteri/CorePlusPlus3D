@@ -94,6 +94,14 @@ namespace Core
         activeScene = scene;
     }
 
+    Scene *World::CopyActive()
+    {
+        if (!activeScene)
+            return nullptr;
+
+        return Scene::GetCopyOfScene(activeScene);
+    }
+
     void World::CopyToActive(Scene *scene)
     {
         if (!scene)

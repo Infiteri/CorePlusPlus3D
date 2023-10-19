@@ -7,12 +7,34 @@
 #include "Panels/ContentBrowserPanel.h"
 
 #include <vector>
+#include <ImGuizmo.h>
 
 namespace Core
 {
+    struct EditorState
+    {
+        bool drawEditMaterial = false;
+        bool drawImageViewer = false;
+        Texture *imageViewerImage;
+         float imageViewerScale = 1.0f;
+
+        MaterialConfiguration materialConfigurationToEdit;
+        Scene *EditorScene;
+        Texture *IconPlayTexture;
+        Texture *IconStopTexture;
+        ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+        PerspectiveMovement *movement;
+        bool dockspaceOpen = true;
+        bool opt_fullscreen = true;
+        ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+        ImVec2 lastFrameViewportSize;
+    };
+
     class EditorLayer : public Layer
     {
     public:
+        EditorState state;
         SceneHierarchyPanel sceneHierarchyPanel;
         SceneSettingsPanel sceneSettingsPanel;
         ContentBrowserPanel contentBrowserPanel;
@@ -27,14 +49,11 @@ namespace Core
         void OnEvent(Event *event);
 
         // -------- UPDATE ROUTINES -----------
-
         void OnUpdateRuntime();
         void OnUpdateEditor();
-
         // ------------------------------------
 
         // -------- TOP BAR ACTIONS -----------
-
         void New();
         void Open();
         void SaveAs();
@@ -42,8 +61,8 @@ namespace Core
         void NewProject();
         void OpenProject();
         void SaveProject();
-
         // ------------------------------------
+
         enum SceneState
         {
             SceneStatePlay,
@@ -68,6 +87,7 @@ namespace Core
         void UI_DrawMainTopBar();
         void UI_DrawTopPlayStopBar();
         void UI_DrawEditMaterial();
+        void UI_DrawImageViewer();
         // ------------------------------------
 
         void BeginDockspace();

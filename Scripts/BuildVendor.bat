@@ -3,6 +3,7 @@
 mkdir Bin
 
 xcopy /s /y "Engine\Vendor\GLFW\lib\glfw3.dll" "Bin\"
+xcopy /s /y "Engine\Vendor\YAML\yaml.dll" "Bin\"
 
 echo Building Glad
 cd Engine/Vendor/glad
@@ -15,3 +16,9 @@ cd Engine/Vendor/ImGui
 call Build.bat
 cd ../../../
 echo Done Building ImGui
+
+echo Building ImGuizmo
+cd Engine/Vendor/ImGuizmo
+call Build.bat
+cd ../../../
+echo Done Building ImGuizmo

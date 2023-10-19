@@ -88,6 +88,22 @@ namespace Core
         Bind();
     }
 
+    int Texture::GetWidth()
+    {
+        if (!image || image == nullptr)
+            return 0;
+
+        return image->GetWidth();
+    }
+
+    int Texture::GetHeight()
+    {
+        if (!image || image == nullptr)
+            return 0;
+
+        return image->GetHeight();
+    }
+
     void Texture::MarkAsDefault(bool flag)
     {
         isDefault = flag;

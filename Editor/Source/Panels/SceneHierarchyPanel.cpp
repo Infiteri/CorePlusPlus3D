@@ -79,8 +79,9 @@ namespace Core
     {
         // Flags setup
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_AllowItemOverlap;
-        if (selectionContext != nullptr && selectionContext->GetID() == a->GetID())
-            flags |= ImGuiTreeNodeFlags_Selected;
+        if (selectionContext != nullptr)
+            if (selectionContext->GetID() == a->GetID())
+                flags |= ImGuiTreeNodeFlags_Selected;
 
         bool pop = ImGui::TreeNodeEx((void *)(CeU64)(CeU32)a->GetID(), flags, a->GetName().c_str());
 

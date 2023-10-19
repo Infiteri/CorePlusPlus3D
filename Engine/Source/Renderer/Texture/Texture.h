@@ -33,6 +33,9 @@ namespace Core
         void Destroy();
         void Use();
 
+        int GetWidth();
+        int GetHeight();
+
         /// @brief Do not call unless you're the TextureManager. If this is marked as default and its not it will not be cleared in the material.
         void MarkAsDefault(bool flag);
         bool IsMarkedAsDefault();

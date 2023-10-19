@@ -2,68 +2,46 @@
 
 #include "Panels/CoreEditorUtils.h"
 
-#include <ImGuizmo.h>
+#define CE_EDITOR_CAM_NAME "__EditorCamera__"
 
 namespace Core
 {
     //? EDITOR VARIABLES
     static EditorLayer *inst;
-    static bool drawEditMaterial = false;
-    static MaterialConfiguration materialConfigurationToEdit;
-    static Scene *EditorScene;
-    static Texture *IconPlayTexture;
-    static Texture *IconStopTexture;
-    static ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
-    static PerspectiveMovement *movement;
-
-    //? DOCKSPACE VARIABLES
-    static bool dockspaceOpen = true;
-    static bool opt_fullscreen_persistant = true;
-    static bool opt_fullscreen = opt_fullscreen_persistant;
-    static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-    static ImVec2 lastFrameViewportSize;
 
     void EditorLayer::OnAttach()
     {
         // Create editor camera
-        CameraSystem::Generate("__EditorCamera__", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
-        CameraSystem::Activate("__EditorCamera__");
+        CameraSystem::Generate(CE_EDITOR_CAM_NAME, Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
+        CameraSystem::Activate(CE_EDITOR_CAM_NAME);
 
-        IconPlayTexture = new Texture();
-        IconPlayTexture->Load("EngineResources/CeImage/Icons/PlayButton.ce_image");
+        state.imageViewerImage = nullptr;
+        state.EditorScene = nullptr;
+        state.movement = new PerspectiveMovement();
+        state.IconPlayTexture = new Texture();
+        state.IconPlayTexture->Load("EngineResources/CeImage/Icons/PlayButton.ce_image");
 
-        IconStopTexture = new Texture();
-        IconStopTexture->Load("EngineResources/CeImage/Icons/StopButton.ce_image");
-
-        SetContexts();
+        state.IconStopTexture = new Texture();
+        state.IconStopTexture->Load("EngineResources/CeImage/Icons/StopButton.ce_image");
         contentBrowserPanel.LoadAssets();
 
-        movement = new PerspectiveMovement();
-
-        currentSceneState = SceneStateStop;
+        SetContexts();
         StopSceneRuntime();
-
         SwapActiveCameraTo(CameraEditor);
 
         // Runtime loading from project
         if (Project::GetConfig() != nullptr)
-        {
             OpenScene(Project::GetConfig()->startScene);
-        }
         else
-        {
             New();
-            World::InitActive();
-        }
 
         inst = this;
     }
 
     void EditorLayer::OnDetach()
     {
-        delete IconPlayTexture;
-        delete IconStopTexture;
+        delete state.IconPlayTexture;
+        delete state.IconStopTexture;
     }
 
     void EditorLayer::OnUpdate()
@@ -91,6 +69,7 @@ namespace Core
         UI_DrawEditMaterial();
         UI_DrawMainTopBar();
         UI_DrawTopPlayStopBar();
+        UI_DrawImageViewer();
         RenderSceneViewport();
 
         EndDockspace();
@@ -108,7 +87,7 @@ namespace Core
     void EditorLayer::OnUpdateEditor()
     {
         if (activeCameraType == CameraEditor)
-            movement->Update(CameraSystem::GetActive());
+            state.movement->Update(CameraSystem::GetActive());
     }
     // --------------------------------
 
@@ -117,7 +96,7 @@ namespace Core
     {
         ImGui::Begin("##topbar");
 
-        Texture *tex = currentSceneState == SceneStatePlay ? IconStopTexture : IconPlayTexture;
+        Texture *tex = currentSceneState == SceneStatePlay ? state.IconStopTexture : state.IconPlayTexture;
         if (ImGui::ImageButton((ImTextureID)(CeU64)(CeU32)tex->GetID(), {12, 12}))
         {
             if (currentSceneState == SceneStatePlay)
@@ -131,17 +110,17 @@ namespace Core
 
     void EditorLayer::UI_DrawEditMaterial()
     {
-        if (!drawEditMaterial)
+        if (!state.drawEditMaterial)
             return;
 
         if (currentSceneState == SceneStatePlay)
             return;
 
         ImGui::Begin("Edit Material");
-        ImGui::Text("Material Name: %s", materialConfigurationToEdit.name.c_str());
+        ImGui::Text("Material Name: %s", state.materialConfigurationToEdit.name.c_str());
 
         // Color
-        auto color = &materialConfigurationToEdit.color;
+        auto color = &state.materialConfigurationToEdit.color;
         float colors[4] = {color->r / 255, color->g / 255, color->b / 255, color->a / 255};
         if (ImGui::ColorEdit4("Color", colors))
             color->Set4(colors, 255);
@@ -161,7 +140,7 @@ namespace Core
                 {
                     std::string ext = StringUtils::GetFileExtension(name);
                     if (ext == "png" || ext == "jpg" || ext == "ce_image")
-                        materialConfigurationToEdit.colorTextureName = name;
+                        state.materialConfigurationToEdit.colorTextureName = name;
                 }
             }
 
@@ -170,19 +149,67 @@ namespace Core
 
         if (ImGui::Button("Close"))
         {
-            EditorUtils::MaterialToFile(materialConfigurationToEdit.name, &materialConfigurationToEdit);
+            EditorUtils::MaterialToFile(state.materialConfigurationToEdit.name, &state.materialConfigurationToEdit);
 
             // Change
-            auto out = MaterialManager::Get(materialConfigurationToEdit.name);
-            out->GetColor()->Set(&materialConfigurationToEdit.color);
-            out->SetColorTexture(materialConfigurationToEdit.colorTextureName);
-            MaterialManager::Release(materialConfigurationToEdit.name);
+            auto out = MaterialManager::Get(state.materialConfigurationToEdit.name);
+            out->GetColor()->Set(&state.materialConfigurationToEdit.color);
+            out->SetColorTexture(state.materialConfigurationToEdit.colorTextureName);
+            MaterialManager::Release(state.materialConfigurationToEdit.name);
             // End Change
 
-            MaterialManager::Release(materialConfigurationToEdit.name);
-            drawEditMaterial = false;
+            MaterialManager::Release(state.materialConfigurationToEdit.name);
+            state.drawEditMaterial = false;
         }
 
+        ImGui::End();
+    }
+
+    void EditorLayer::UI_DrawImageViewer()
+    {
+
+        if (!state.drawImageViewer)
+            return;
+
+        if (state.imageViewerImage == nullptr)
+            return;
+
+        ImGui::Begin("Image Viewer");
+
+        if (ImGui::Button("Close"))
+        {
+            delete state.imageViewerImage;
+            state.drawImageViewer = false;
+        }
+
+        ImGui::SameLine();
+
+        ImGui::DragFloat("Scaling", &state.imageViewerScale, 0.05, 0.01);
+
+        ImGui::Image((void *)(CeU64)(CeU32)state.imageViewerImage->GetID(), {(float)state.imageViewerImage->GetWidth() * state.imageViewerScale, (float)state.imageViewerImage->GetHeight() * state.imageViewerScale});
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+
+            if (payload)
+            {
+                const char *name = (const char *)payload->Data;
+                if (name)
+                {
+                    auto ext = StringUtils::GetFileExtension(name);
+                    if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "ce_image")
+                    {
+                        state.imageViewerImage = new Texture();
+                        state.imageViewerImage->Load(name);
+
+                        state.drawImageViewer = true;
+                    }
+                }
+            }
+
+            ImGui::EndDragDropTarget();
+        }
         ImGui::End();
     }
 
@@ -283,13 +310,13 @@ namespace Core
     void EditorLayer::MapGizmoToKey(Keys key, int newMode)
     {
         if (Input::GetKey(key))
-            operation = (ImGuizmo::OPERATION)newMode;
+            state.operation = (ImGuizmo::OPERATION)newMode;
     }
 
     void EditorLayer::StartSceneRuntime()
     {
         currentSceneState = SceneStatePlay;
-        EditorScene = World::GetActive() ? Scene::GetCopyOfScene(World::GetActive()) : nullptr;
+        state.EditorScene = World::CopyActive();
         SwapActiveCameraTo(CameraGamePlay);
         World::StartActive();
     }
@@ -299,11 +326,11 @@ namespace Core
         currentSceneState = SceneStateStop;
         World::StopActive();
 
-        if (EditorScene)
+        if (state.EditorScene != nullptr)
         {
-            World::CopyToActive(EditorScene);
-            EditorScene->Destroy();
-            delete EditorScene;
+            World::CopyToActive(state.EditorScene);
+            state.EditorScene->Destroy();
+            delete state.EditorScene;
             SetContexts();
         }
 
@@ -317,7 +344,7 @@ namespace Core
         if (activeCameraType != type)
         {
             if (type == CameraEditor)
-                CameraSystem::Activate("__EditorCamera__");
+                CameraSystem::Activate(CE_EDITOR_CAM_NAME);
             else
                 World::GetActive()->ActivateSceneCamera();
 
@@ -341,7 +368,7 @@ namespace Core
 
     void EditorLayer::ResizeViewport()
     {
-        Renderer::Resize(lastFrameViewportSize.x, lastFrameViewportSize.y);
+        Renderer::Resize(state.lastFrameViewportSize.x, state.lastFrameViewportSize.y);
     }
 
     EditorLayer *EditorLayer::Get()
@@ -361,7 +388,7 @@ namespace Core
     // -- VIEWPORT---------------------
     void EditorLayer::BeginDockspace()
     {
-        if (opt_fullscreen)
+        if (state.opt_fullscreen)
         {
             ImGuiViewport *viewport = ImGui::GetMainViewport();
             ImGui::SetNextWindowPos(viewport->Pos);
@@ -369,18 +396,18 @@ namespace Core
             ImGui::SetNextWindowViewport(viewport->ID);
             ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
             ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-            window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-            window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+            state.window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+            state.window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
         }
 
-        if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-            window_flags |= ImGuiWindowFlags_NoBackground;
+        if (state.dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+            state.window_flags |= ImGuiWindowFlags_NoBackground;
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
+        ImGui::Begin("DockSpace Demo", &state.dockspaceOpen, state.window_flags);
         ImGui::PopStyleVar();
 
-        if (opt_fullscreen)
+        if (state.opt_fullscreen)
             ImGui::PopStyleVar(2);
 
         // DockSpace
@@ -391,7 +418,7 @@ namespace Core
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {
             ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), state.dockspace_flags);
         }
 
         style.WindowMinSize.x = minWinSizeX;
@@ -410,9 +437,9 @@ namespace Core
 
         // Update renderer viewport
         ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-        if (viewportSize.x != lastFrameViewportSize.x || viewportSize.y != lastFrameViewportSize.y)
+        if (viewportSize.x != state.lastFrameViewportSize.x || viewportSize.y != state.lastFrameViewportSize.y)
         {
-            lastFrameViewportSize = viewportSize;
+            state.lastFrameViewportSize = viewportSize;
             ResizeViewport();
         }
         // End update renderer viewport
@@ -425,17 +452,25 @@ namespace Core
             if (payload)
             {
                 const char *name = (const char *)payload->Data;
+                auto ext = StringUtils::GetFileExtension(name);
                 if (name)
                 {
-                    if (StringUtils::GetFileExtension(name).compare("ce_scene") == 0)
+                    if (ext == "ce_scene")
                         OpenScene(name);
-                    else if (StringUtils::GetFileExtension(name).compare("ce_mat") == 0)
+                    else if (ext == "ce_mat")
                     {
                         auto mat = MaterialManager::Get(name);
-                        materialConfigurationToEdit.name = name;
-                        materialConfigurationToEdit.color.Set(mat->GetColor());
-                        materialConfigurationToEdit.colorTextureName = mat->GetColorTexture()->HasImage() ? mat->GetColorTexture()->GetImagePath() : "";
-                        drawEditMaterial = true;
+                        state.materialConfigurationToEdit.name = name;
+                        state.materialConfigurationToEdit.color.Set(mat->GetColor());
+                        state.materialConfigurationToEdit.colorTextureName = mat->GetColorTexture()->HasImage() ? mat->GetColorTexture()->GetImagePath() : "";
+                        state.drawEditMaterial = true;
+                    }
+                    else if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "ce_image")
+                    {
+                        state.imageViewerImage = new Texture();
+                        state.imageViewerImage->Load(name);
+
+                        state.drawImageViewer = true;
                     }
                 }
             }
@@ -459,11 +494,11 @@ namespace Core
 
                 if (ImGuizmo::IsUsing())
                 {
-                    if (operation == ImGuizmo::TRANSLATE)
+                    if (state.operation == ImGuizmo::TRANSLATE)
                     {
                         Math::DecomposePosition(data, tc->GetPosition());
                     }
-                    else if (operation == ImGuizmo::ROTATE)
+                    else if (state.operation == ImGuizmo::ROTATE)
                     {
                         Vector3 delta;
                         Vector3 *old = tc->GetRotation();
@@ -474,7 +509,7 @@ namespace Core
                         old->y += delta.y - old->y;
                         old->z += delta.z - old->z;
                     }
-                    else if (operation == ImGuizmo::SCALE)
+                    else if (state.operation == ImGuizmo::SCALE)
                     {
                         Math::DecomposeScale(data, tc->GetScale());
                     }
@@ -493,7 +528,7 @@ namespace Core
             ImGuizmo::SetDrawlist();
             ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
 
-            ImGuizmo::Manipulate(camera->GetViewMatrix().data, camera->GetProjection()->data, operation, ImGuizmo::LOCAL, data);
+            ImGuizmo::Manipulate(camera->GetViewMatrix().data, camera->GetProjection()->data, state.operation, ImGuizmo::LOCAL, data);
         }
     }
     // --------------------------------
