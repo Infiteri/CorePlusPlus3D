@@ -13,6 +13,8 @@
 
 #include "Platform/Platform.h"
 
+#include "Project/Project.h"
+
 #include "Math/Math.h"
 #include "Math/Vectors.h"
 #include "Math/Matrix4.h"

@@ -38,6 +38,8 @@ namespace Core
 
         std::string GetName();
 
+        void From(Material *other);
+
         void SetName(const std::string &name);
 
         /// @brief Returns the color of the materials, could use "->Set" on the return value to set the color's values.

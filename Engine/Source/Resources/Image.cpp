@@ -48,7 +48,7 @@ namespace Core
 
     Image::~Image()
     {
-        stbi_image_free(data);
+        FreeData();
     }
 
     CeU8 *Image::GetData()
@@ -74,5 +74,14 @@ namespace Core
     std::string Image::GetPath()
     {
         return path;
+    }
+
+    void Image::FreeData()
+    {
+        if (data)
+        {
+            stbi_image_free(data);
+            data = nullptr;
+        }
     }
 }

@@ -14,9 +14,11 @@
 #include "Layer/ImGuiLayer.h"
 
 #include "Renderer/Renderer.h"
-#include "Renderer/Manager/TextureManager.h" 
+#include "Renderer/Manager/TextureManager.h"
 
 #include "Scene/World.h"
+
+#include "Project/Project.h"
 
 #include "Script/ScriptEngine.h"
 
@@ -69,9 +71,24 @@ namespace Core
         // Setup renderer
         Renderer::Init();
 
+        // Load Project
+        // Note:: In core every project will have a file named "Project.ce_proj".
+        Project::New();
+        Project::Load("Project.ce_proj");
+
+        if (Project::GetConfig() == nullptr)
+        {
+            //? Debug mode only
+            CE_ASSERT_IF(Project::GetConfig() == nullptr && "Project name must be Project.ce_proj");
+            //? Debug mode only end
+
+            Engine::Shutdown();
+            return;
+        }
+
         // Setup lib
-        if (config->LoadGameLibrary)
-            ScriptEngine::LoadGameLibrary(config->GameLibraryName);
+        if (!Project::GetConfig()->scriptPath.empty())
+            ScriptEngine::LoadGameLibrary(Project::GetConfig()->scriptPath);
 
         // Starting application after starting subsystems
         GApp->Init();
@@ -143,7 +160,7 @@ namespace Core
 
         return (float)GWindowInstance->GetWidth() / (float)GWindowInstance->GetHeight();
     }
- 
+
     void Engine::ClearEventContext(Event *event)
     {
         CE_CLEAR_CONTEXT_UTILS(EventType::MouseMove, MouseMoveEvent);

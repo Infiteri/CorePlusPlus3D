@@ -2,9 +2,12 @@
 
 #include "Core/Logger.h"
 #include "Core/Input.h"
+#include "EditorLayer.h"
 
 #include "Scene/World.h"
 #include "Scene/Actor.h"
+
+#include "Math/Math.h"
 
 #include "Renderer/Geometry/BoxGeometry.h"
 #include "Renderer/Geometry/PlaneGeometry.h"
@@ -19,6 +22,7 @@ namespace Core
 {
     static const ImGuiColorEditFlags colorEditFlags = ImGuiColorEditFlags_NoInputs;
     static char FileMaterialNameBuffer[256];
+    static bool renderCameraPerspective = false;
 
     SceneHierarchyPanel::SceneHierarchyPanel()
     {
@@ -332,6 +336,33 @@ namespace Core
 
     void DrawCameraComponentUI(PerspectiveCameraComponent *c, Actor *a)
     {
+        // views
+        float fov = Math::RadToDeg(c->camera->GetFOV());
+        float near = c->camera->GetNear();
+        float far = c->camera->GetFar();
+
+        if (ImGui::DragFloat("Fov", &fov))
+        {
+            c->camera->SetFOV(Math::DegToRad(fov));
+            c->camera->UpdateProjection();
+        }
+
+        if (ImGui::DragFloat("Near", &near))
+        {
+            c->camera->SetNear(near);
+            c->camera->UpdateProjection();
+        }
+
+        if (ImGui::DragFloat("Far", &far))
+        {
+            c->camera->SetFar(far);
+            c->camera->UpdateProjection();
+        }
+
+        if (ImGui::Checkbox("View", &renderCameraPerspective))
+        {
+            EditorLayer::Get()->HandleViewGameCamera(renderCameraPerspective);
+        }
     }
 
     // ----------------------------------------

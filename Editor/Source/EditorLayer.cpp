@@ -1,12 +1,22 @@
 #include "EditorLayer.h"
 
-#include "Core.h"
+#include "Panels/CoreEditorUtils.h"
 
 #include <ImGuizmo.h>
 
 namespace Core
 {
-    // Note: Switch this to true to enable dockspace
+    //? EDITOR VARIABLES
+    static EditorLayer *inst;
+    static bool drawEditMaterial = false;
+    static MaterialConfiguration materialConfigurationToEdit;
+    static Scene *EditorScene;
+    static Texture *IconPlayTexture;
+    static Texture *IconStopTexture;
+    static ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+    static PerspectiveMovement *movement;
+
+    //? DOCKSPACE VARIABLES
     static bool dockspaceOpen = true;
     static bool opt_fullscreen_persistant = true;
     static bool opt_fullscreen = opt_fullscreen_persistant;
@@ -14,22 +24,11 @@ namespace Core
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
     static ImVec2 lastFrameViewportSize;
 
-    static Scene *EditorScene;
-
-    static Texture *IconPlayTexture;
-    static Texture *IconStopTexture;
-    static ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
-    static PerspectiveMovement *movement;
-
     void EditorLayer::OnAttach()
     {
         // Create editor camera
         CameraSystem::Generate("__EditorCamera__", Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
         CameraSystem::Activate("__EditorCamera__");
-
-        SceneSerializer ser = SceneSerializer{World::GetActive()};
-        New();
-        World::InitActive();
 
         IconPlayTexture = new Texture();
         IconPlayTexture->Load("EngineResources/CeImage/Icons/PlayButton.ce_image");
@@ -44,36 +43,21 @@ namespace Core
 
         currentSceneState = SceneStateStop;
         StopSceneRuntime();
-    }
 
-    void EditorLayer::OnImGuiRender()
-    {
-        BeginDockspace();
+        SwapActiveCameraTo(CameraEditor);
 
-        sceneHierarchyPanel.OnImGuiRender();
-        sceneSettingsPanel.OnImGuiRender();
-        contentBrowserPanel.OnImGuiRender();
-
-        UI_DrawMainTopBar();
-        UI_DrawTopPlayStopBar();
-        RenderSceneViewport();
-
-        EndDockspace();
-
-        if (Input::GetKey(Keys::R))
+        // Runtime loading from project
+        if (Project::GetConfig() != nullptr)
         {
-            operation = ImGuizmo::ROTATE;
+            OpenScene(Project::GetConfig()->startScene);
+        }
+        else
+        {
+            New();
+            World::InitActive();
         }
 
-        if (Input::GetKey(Keys::T))
-        {
-            operation = ImGuizmo::TRANSLATE;
-        }
-
-        if (Input::GetKey(Keys::E))
-        {
-            operation = ImGuizmo::SCALE;
-        }
+        inst = this;
     }
 
     void EditorLayer::OnDetach()
@@ -93,19 +77,42 @@ namespace Core
     void EditorLayer::OnEvent(Event *event)
     {
         if (event->GetType() == EventType::WindowResize)
-            Renderer::Resize(lastFrameViewportSize.x, lastFrameViewportSize.y);
+            ResizeViewport();
     }
 
+    void EditorLayer::OnImGuiRender()
+    {
+        BeginDockspace();
+
+        sceneHierarchyPanel.OnImGuiRender();
+        sceneSettingsPanel.OnImGuiRender();
+        contentBrowserPanel.OnImGuiRender();
+
+        UI_DrawEditMaterial();
+        UI_DrawMainTopBar();
+        UI_DrawTopPlayStopBar();
+        RenderSceneViewport();
+
+        EndDockspace();
+
+        MapGizmoToKey(Keys::T, ImGuizmo::TRANSLATE);
+        MapGizmoToKey(Keys::R, ImGuizmo::ROTATE);
+        MapGizmoToKey(Keys::E, ImGuizmo::SCALE);
+    }
+
+    // -- EDITOR UPDATING METHODS -----
     void EditorLayer::OnUpdateRuntime()
     {
-        sceneHierarchyPanel.selectionContext = nullptr;
     }
 
     void EditorLayer::OnUpdateEditor()
     {
-        movement->Update(CameraSystem::GetActive());
+        if (activeCameraType == CameraEditor)
+            movement->Update(CameraSystem::GetActive());
     }
+    // --------------------------------
 
+    // -- UI ----------------------------
     void EditorLayer::UI_DrawTopPlayStopBar()
     {
         ImGui::Begin("##topbar");
@@ -122,6 +129,108 @@ namespace Core
         ImGui::End();
     }
 
+    void EditorLayer::UI_DrawEditMaterial()
+    {
+        if (!drawEditMaterial)
+            return;
+
+        if (currentSceneState == SceneStatePlay)
+            return;
+
+        ImGui::Begin("Edit Material");
+        ImGui::Text("Material Name: %s", materialConfigurationToEdit.name.c_str());
+
+        // Color
+        auto color = &materialConfigurationToEdit.color;
+        float colors[4] = {color->r / 255, color->g / 255, color->b / 255, color->a / 255};
+        if (ImGui::ColorEdit4("Color", colors))
+            color->Set4(colors, 255);
+
+        if (ImGui::Button("Texture"))
+        {
+        }
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+
+            if (payload)
+            {
+                const char *name = (const char *)payload->Data;
+                if (name)
+                {
+                    std::string ext = StringUtils::GetFileExtension(name);
+                    if (ext == "png" || ext == "jpg" || ext == "ce_image")
+                        materialConfigurationToEdit.colorTextureName = name;
+                }
+            }
+
+            ImGui::EndDragDropTarget();
+        }
+
+        if (ImGui::Button("Close"))
+        {
+            EditorUtils::MaterialToFile(materialConfigurationToEdit.name, &materialConfigurationToEdit);
+
+            // Change
+            auto out = MaterialManager::Get(materialConfigurationToEdit.name);
+            out->GetColor()->Set(&materialConfigurationToEdit.color);
+            out->SetColorTexture(materialConfigurationToEdit.colorTextureName);
+            MaterialManager::Release(materialConfigurationToEdit.name);
+            // End Change
+
+            MaterialManager::Release(materialConfigurationToEdit.name);
+            drawEditMaterial = false;
+        }
+
+        ImGui::End();
+    }
+
+    void EditorLayer::UI_DrawMainTopBar()
+    {
+
+        if (ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::MenuItem("File"))
+                ImGui::OpenPopup("FilePopup");
+
+            if (ImGui::MenuItem("Project"))
+                ImGui::OpenPopup("ProjectPopup");
+
+            if (ImGui::BeginPopup("FilePopup"))
+            {
+                if (ImGui::MenuItem("New", "Ctrl+N"))
+                    New();
+
+                if (ImGui::MenuItem("Open...", "Ctrl+O"))
+                    Open();
+
+                if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+                    SaveAs();
+
+                ImGui::EndPopup();
+            }
+
+            if (ImGui::BeginPopup("ProjectPopup"))
+            {
+                if (ImGui::MenuItem("New", "Ctrl+N"))
+                    NewProject();
+
+                if (ImGui::MenuItem("Open...", "Ctrl+O"))
+                    OpenProject();
+
+                if (ImGui::MenuItem("Save", "Ctrl+S"))
+                    SaveProject();
+
+                ImGui::EndPopup();
+            }
+
+            ImGui::EndMainMenuBar();
+        }
+    }
+    // --------------------------------
+
+    // -- TOP BAR ACTIONS -------------
     void EditorLayer::New()
     {
         World::StopActive();
@@ -151,14 +260,37 @@ namespace Core
         }
     }
 
+    void EditorLayer::NewProject()
+    {
+        Project::New();
+    }
+
+    void EditorLayer::OpenProject()
+    {
+        std::string name = Platform::OpenFileDialog("Core Project(*.ce_proj)\0*.ce_proj\0");
+        if (!name.empty())
+            Project::Load(name);
+    }
+
+    void EditorLayer::SaveProject()
+    {
+        Project::SaveActive("Project.ce_proj");
+    }
+    // --------------------------------
+
+    // -- EDITOR GENERAL ACTIONS ------
+
+    void EditorLayer::MapGizmoToKey(Keys key, int newMode)
+    {
+        if (Input::GetKey(key))
+            operation = (ImGuizmo::OPERATION)newMode;
+    }
+
     void EditorLayer::StartSceneRuntime()
     {
         currentSceneState = SceneStatePlay;
         EditorScene = World::GetActive() ? Scene::GetCopyOfScene(World::GetActive()) : nullptr;
-
-        if (World::GetActive())
-            World::GetActive()->ActivateSceneCamera();
-
+        SwapActiveCameraTo(CameraGamePlay);
         World::StartActive();
     }
 
@@ -175,37 +307,58 @@ namespace Core
             SetContexts();
         }
 
-        CameraSystem::Activate("__EditorCamera__");
+        SwapActiveCameraTo(CameraEditor);
 
         World::InitActive();
     }
 
-    void EditorLayer::UI_DrawMainTopBar()
+    void EditorLayer::SwapActiveCameraTo(ActiveCameraType type)
     {
-
-        if (ImGui::BeginMainMenuBar())
+        if (activeCameraType != type)
         {
-            if (ImGui::MenuItem("File"))
-                ImGui::OpenPopup("FilePopup");
+            if (type == CameraEditor)
+                CameraSystem::Activate("__EditorCamera__");
+            else
+                World::GetActive()->ActivateSceneCamera();
 
-            if (ImGui::BeginPopup("FilePopup"))
-            {
-                if (ImGui::MenuItem("New", "Ctrl+N"))
-                    New();
-
-                if (ImGui::MenuItem("Open...", "Ctrl+O"))
-                    Open();
-
-                if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
-                    SaveAs();
-
-                ImGui::EndPopup();
-            }
-
-            ImGui::EndMainMenuBar();
+            activeCameraType = type;
         }
     }
 
+    void EditorLayer::HandleViewGameCamera(bool flag)
+    {
+        if (flag)
+            SwapActiveCameraTo(CameraGamePlay);
+        else
+            SwapActiveCameraTo(CameraEditor);
+    }
+
+    void EditorLayer::SetContexts()
+    {
+        sceneHierarchyPanel.UpdateContextToWorldActive();
+        sceneSettingsPanel.UpdateSceneToWorldActive();
+    }
+
+    void EditorLayer::ResizeViewport()
+    {
+        Renderer::Resize(lastFrameViewportSize.x, lastFrameViewportSize.y);
+    }
+
+    EditorLayer *EditorLayer::Get()
+    {
+        return inst;
+    }
+
+    void EditorLayer::OpenScene(const std::string &name)
+    {
+        SceneSerializer ser{World::GetActive()};
+        ser.DeserializeAndCreateNewScene(name);
+        SetContexts();
+        World::InitActive();
+    }
+    // --------------------------------
+
+    // -- VIEWPORT---------------------
     void EditorLayer::BeginDockspace()
     {
         if (opt_fullscreen)
@@ -260,7 +413,7 @@ namespace Core
         if (viewportSize.x != lastFrameViewportSize.x || viewportSize.y != lastFrameViewportSize.y)
         {
             lastFrameViewportSize = viewportSize;
-            Renderer::Resize(viewportSize.x, viewportSize.y);
+            ResizeViewport();
         }
         // End update renderer viewport
         ImGui::Image((void *)(CeU64)(CeU32)(Renderer::GetFrameBuffer()->GetRenderPass(0)->id), viewportSize, ImVec2{0, 1}, ImVec2{1, 0});
@@ -273,69 +426,47 @@ namespace Core
             {
                 const char *name = (const char *)payload->Data;
                 if (name)
+                {
                     if (StringUtils::GetFileExtension(name).compare("ce_scene") == 0)
                         OpenScene(name);
+                    else if (StringUtils::GetFileExtension(name).compare("ce_mat") == 0)
+                    {
+                        auto mat = MaterialManager::Get(name);
+                        materialConfigurationToEdit.name = name;
+                        materialConfigurationToEdit.color.Set(mat->GetColor());
+                        materialConfigurationToEdit.colorTextureName = mat->GetColorTexture()->HasImage() ? mat->GetColorTexture()->GetImagePath() : "";
+                        drawEditMaterial = true;
+                    }
+                }
             }
 
             ImGui::EndDragDropTarget();
         }
 
-        Actor *actorContext = sceneHierarchyPanel.selectionContext;
-        PerspectiveCamera *camera = CameraSystem::GetActive();
-        if (actorContext != nullptr && camera != nullptr)
+        if (currentSceneState != SceneStatePlay)
         {
-            if (sceneSettingsPanel.isCameraEditingSelected)
-                sceneSettingsPanel.isCameraEditingSelected = false;
-
-            auto tc = actorContext->GetTransform();
-            auto data = tc->GetMatrix().data;
-
-            DrawGizmo(camera, data);
-
-            if (ImGuizmo::IsUsing())
+            Actor *actorContext = sceneHierarchyPanel.selectionContext;
+            PerspectiveCamera *camera = CameraSystem::GetActive();
+            if (actorContext != nullptr && camera != nullptr)
             {
-                if (operation == ImGuizmo::TRANSLATE)
-                {
-                    Math::DecomposePosition(data, tc->GetPosition());
-                }
-                else if (operation == ImGuizmo::ROTATE)
-                {
-                    Vector3 delta;
-                    Vector3 *old = tc->GetRotation();
+                if (sceneSettingsPanel.isCameraEditingSelected)
+                    sceneSettingsPanel.isCameraEditingSelected = false;
 
-                    Math::DecomposeRotation(data, &delta);
+                auto tc = actorContext->GetTransform();
+                auto data = tc->GetMatrix().data;
 
-                    old->x += delta.x - old->x;
-                    old->y += delta.y - old->y;
-                    old->z += delta.z - old->z;
-                }
-                else if (operation == ImGuizmo::SCALE)
-                {
-                    Math::DecomposeScale(data, tc->GetScale());
-                }
-            }
-        }
-
-        if (sceneSettingsPanel.isCameraEditingSelected && World::GetActive() != nullptr)
-        {
-            PerspectiveCamera *editCamera = World::GetActive()->GetActorCameraComponent()->camera;
-            if (camera != nullptr && editCamera != nullptr)
-            {
-                sceneHierarchyPanel.selectionContext = nullptr;
-
-                auto data = editCamera->GetTransformMatrix().data;
                 DrawGizmo(camera, data);
 
                 if (ImGuizmo::IsUsing())
                 {
                     if (operation == ImGuizmo::TRANSLATE)
                     {
-                        Math::DecomposePosition(data, editCamera->GetPosition());
+                        Math::DecomposePosition(data, tc->GetPosition());
                     }
                     else if (operation == ImGuizmo::ROTATE)
                     {
                         Vector3 delta;
-                        Vector3 *old = editCamera->GetRotation();
+                        Vector3 *old = tc->GetRotation();
 
                         Math::DecomposeRotation(data, &delta);
 
@@ -343,25 +474,15 @@ namespace Core
                         old->y += delta.y - old->y;
                         old->z += delta.z - old->z;
                     }
+                    else if (operation == ImGuizmo::SCALE)
+                    {
+                        Math::DecomposeScale(data, tc->GetScale());
+                    }
                 }
             }
         }
 
         ImGui::End();
-    }
-
-    void EditorLayer::OpenScene(const std::string &name)
-    {
-        SceneSerializer ser{World::GetActive()};
-        ser.DeserializeAndCreateNewScene(name);
-        SetContexts();
-        World::InitActive();
-    }
-
-    void EditorLayer::SetContexts()
-    {
-        sceneHierarchyPanel.UpdateContextToWorldActive();
-        sceneSettingsPanel.UpdateSceneToWorldActive();
     }
 
     void EditorLayer::DrawGizmo(PerspectiveCamera *camera, float *data)
@@ -375,4 +496,5 @@ namespace Core
             ImGuizmo::Manipulate(camera->GetViewMatrix().data, camera->GetProjection()->data, operation, ImGuizmo::LOCAL, data);
         }
     }
+    // --------------------------------
 }

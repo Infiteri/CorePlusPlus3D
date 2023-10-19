@@ -18,7 +18,7 @@ namespace Core
         bool valid = false;
 
     public:
-        Image(const std::string& path);
+        Image(const std::string &path);
         ~Image();
 
         CeU8 *GetData();
@@ -26,6 +26,8 @@ namespace Core
         int GetHeight();
         int GetChannels();
         std::string GetPath();
+
+        void FreeData();
     };
 
 }

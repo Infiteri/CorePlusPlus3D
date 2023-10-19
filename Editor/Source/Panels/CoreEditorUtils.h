@@ -2,8 +2,7 @@
 
 #include "Math/Vectors.h"
 
-#include "Scene/Actor.h"
-#include "Renderer/Geometry/Geometry.h"
+#include "Core.h"
 
 #include <imgui.h>
 
@@ -47,5 +46,6 @@ namespace Core
 
         std::string GeometryTypeToString(GeometryType t);
         GeometryType StringToGeometryType(const std::string &v);
+        void MaterialToFile(const std::string &name, MaterialConfiguration *mat);
     }
 }

@@ -271,7 +271,10 @@ namespace Core
                         }
                     }
                     else
-                        c->SetMaterialFromName(mesh["Name"].as<std::string>());
+                    {
+                        auto m_name = mesh["Name"].as<std::string>();
+                        c->SetMaterialFromName(m_name);
+                    }
 
                     if (mesh["GeometryType"].as<std::string>().compare("Box") == 0)
                     {

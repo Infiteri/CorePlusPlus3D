@@ -44,6 +44,7 @@ namespace Core
         Bind();
         TextureLoadUtils(image->GetWidth(), image->GetHeight(), image->GetData(), ChannelToGL(image->GetChannels()), {});
         Unbind();
+        image->FreeData();
     }
 
     void Texture::Load(const std::string &_filepath, TextureConfiguration config)
@@ -54,6 +55,7 @@ namespace Core
         Bind();
         TextureLoadUtils(image->GetWidth(), image->GetHeight(), image->GetData(), ChannelToGL(image->GetChannels()), config);
         Unbind();
+        image->FreeData();
     }
 
     void Texture::Bind()

@@ -1,6 +1,0 @@
-left = EngineResources/CeImage/Lyck/negx.ce_image
-right = EngineResources/CeImage/Lyck/posx.ce_image
-top = EngineResources/CeImage/Lyck/posy.ce_image
-bottom = EngineResources/CeImage/Lyck/negy.ce_image
-front = EngineResources/CeImage/Lyck/posz.ce_image
-back = EngineResources/CeImage/Lyck/negz.ce_image

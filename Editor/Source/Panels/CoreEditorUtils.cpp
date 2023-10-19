@@ -3,6 +3,9 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
+#include <fstream>
+#include <ostream>
+
 namespace Core
 {
     namespace EditorUtils
@@ -100,6 +103,23 @@ namespace Core
                 return GeometryType::Plane;
             else
                 return GeometryType::None;
+        }
+
+        void MaterialToFile(const std::string &name, MaterialConfiguration *mat)
+        {
+            std::ofstream materialFile(name);
+            if (materialFile.is_open())
+            {
+                materialFile << "version = 0.1\n";
+                materialFile << "color = " << mat->color.r << " " << mat->color.g << " " << mat->color.b << " " << mat->color.a << "\n";
+
+                if (!mat->colorTextureName.empty())
+                    materialFile << "colorTextureName = " << mat->colorTextureName.c_str() << "\n";
+            }
+            else
+            {
+                CE_ERROR("File handle not open: %s", name);
+            }
         }
     }
 }

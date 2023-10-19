@@ -17,8 +17,21 @@ namespace Core
         {
             Image *img = new Image(filepaths[i]);
             images.push_back(img);
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, img->GetWidth(), img->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, img->GetData());
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB8, img->GetWidth(), img->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, img->GetData());
         }
+    }
+
+    void CubeMapTexture::FreeImagesData()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            Image *img = images[i];
+            img->FreeData();
+            delete img;
+            img = nullptr;
+        }
+
+        images.clear();
     }
 
     CubeMapTexture::CubeMapTexture()
@@ -77,6 +90,8 @@ namespace Core
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
+        FreeImagesData();
+
         Unbind();
     }
 
@@ -106,6 +121,8 @@ namespace Core
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
+        FreeImagesData();
+
         Unbind();
     }
 
@@ -133,14 +150,15 @@ namespace Core
     void CubeMapTexture::Destroy()
     {
         for (Image *img : images)
-            delete img;
+        {
+            if (img != nullptr)
+                delete img;
+        }
 
         glDeleteTextures(1, &id);
 
         generation = 0;
         TextureManager::DecrementGlobalTextureCount();
-
-        images.clear();
     }
 
     void CubeMapTexture::Use()

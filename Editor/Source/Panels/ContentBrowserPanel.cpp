@@ -6,12 +6,14 @@
 #include "Platform/Platform.h"
 #include "Utils/StringUtils.h"
 #include "Renderer/Material.h"
+#include "CoreEditorUtils.h"
+#include "Project/Project.h"
 
 #define IM_TEXT_UTIL(a) ImGui::InputText(#a, a, 256)
 
 namespace Core
 {
-    static std::string baseResourcesPath = "EngineResources"; // TODO: From project
+    static std::string baseResourcesPath = ""; // TODO: From project
     static std::string activePath = baseResourcesPath;
     static bool pressedFolder = false;
     static bool displayCreateCubeMap = false;
@@ -55,6 +57,18 @@ namespace Core
     {
         ImGui::Begin("Content Browser");
 
+        if (activePath.empty())
+        {
+            if (Project::GetConfig() != nullptr)
+            {
+                baseResourcesPath = Project::GetConfig()->assetPath;
+                activePath = baseResourcesPath;
+            }
+
+            ImGui::End();
+
+            return;
+        }
         float panelWidth = ImGui::GetContentRegionAvail().x;
         int columnCount = (int)(panelWidth / cellSize);
         if (columnCount < 1)
@@ -203,22 +217,10 @@ namespace Core
 
             if (ImGui::Button("Create"))
             {
-                std::string materialName = std::string(Name);
-                std::ofstream materialFile(activePath + "/" + materialName + ".ce_mat");
-
-                if (materialFile.is_open())
-                {
-                    materialFile << "version = 0.1\n";
-                    materialFile << "color = " << MaterialConfig.color.r << " " << MaterialConfig.color.g << " " << MaterialConfig.color.b << " " << MaterialConfig.color.a << "\n";
-
-                    if (!MaterialConfig.colorTextureName.empty())
-                        FOutFieldEqualValue("colorTextureName", MaterialConfig.colorTextureName.c_str(), materialFile);
-
-                    materialFile.close();
-                    MaterialConfig.color.Set(255, 255, 255, 255);
-                    MaterialConfig.colorTextureName = "";
-                }
-
+                MaterialConfig.name = Name;
+                EditorUtils::MaterialToFile(activePath + "/" + std::string(Name) + ".ce_mat", &MaterialConfig);
+                MaterialConfig.color.Set(255, 255, 255, 255);
+                MaterialConfig.colorTextureName = "";
                 ZeroCharBuffers();
                 displayCreateMaterial = false;
             }

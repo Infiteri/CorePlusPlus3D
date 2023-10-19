@@ -26,6 +26,7 @@ namespace Core
         std::vector<Image *> images;
 
         void ReGenImages();
+        void FreeImagesData();
 
     public:
         CubeMapTexture();

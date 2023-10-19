@@ -24,6 +24,7 @@ namespace Core
         Color *color = nullptr;
         VertexArray *array = nullptr;
         CubeMapTexture *cubeTexture = nullptr;
+
         std::string cubeTextureConfigPath = "";
         SkyMode mode;
 

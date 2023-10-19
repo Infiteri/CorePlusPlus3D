@@ -3,6 +3,7 @@
 #include "Platform/FileSystem.h"
 
 #include "Utils/StringUtils.h"
+#include "Project/Project.h"
 
 #include <iostream>
 #include <sstream>
@@ -28,6 +29,8 @@ namespace Core
             return config;
         }
 
+        ProjectConfiguration *pConfig = Project::GetConfig();
+
         std::string content = file.Read();
 
         // Split the content into lines
@@ -47,6 +50,7 @@ namespace Core
             {
                 std::string key = line.substr(0, pos);
                 std::string value = line.substr(pos + 1);
+                std::string prefix = pConfig ? pConfig->assetPath + "/" : "";
 
                 // Trim leading and trailing whitespaces from key and value
                 key.erase(0, key.find_first_not_of(" \t"));
@@ -62,17 +66,35 @@ namespace Core
                     // TODO: Version check
                 }
                 else if (StringUtils::EqualI(key, "left"))
-                    config.left = value;
+                {
+
+                    config.left = prefix + value;
+                }
                 else if (StringUtils::EqualI(key, "right"))
-                    config.right = value;
+                {
+
+                    config.right = prefix + value;
+                }
                 else if (StringUtils::EqualI(key, "top"))
-                    config.top = value;
+                {
+
+                    config.top = prefix + value;
+                }
                 else if (StringUtils::EqualI(key, "bottom"))
-                    config.bottom = value;
+                {
+
+                    config.bottom = prefix + value;
+                }
                 else if (StringUtils::EqualI(key, "front"))
-                    config.front = value;
+                {
+
+                    config.front = prefix + value;
+                }
                 else if (StringUtils::EqualI(key, "back"))
-                    config.back = value;
+                {
+
+                    config.back = prefix + value;
+                }
             }
         }
 

@@ -75,6 +75,9 @@ namespace Core
 
     Sky::~Sky()
     {
+        delete color;
+        delete cubeTexture;
+        delete array;
     }
 
     void Sky::Render()
