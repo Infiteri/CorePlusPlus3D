@@ -9,7 +9,7 @@
       "label": "Build",
       "problemMatcher": [],
       "group": {
-        "kind": "build", 
+        "kind": "build",
         "isDefault": true
       }
     },
