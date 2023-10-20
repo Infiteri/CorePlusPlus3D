@@ -5,10 +5,6 @@
 #include <set>
 #include <vector>
 
-// #if !defined(_MSC_VER)
-// #define _malloca(x) alloca(x)
-// #endif
-
 namespace ImCurveEdit
 {
 

@@ -38,7 +38,6 @@ namespace Core
             out->y = data[13];
             out->z = data[14];
         }
-
         void DecomposeRotation(float *data, Vector3 *out)
         {
             float m00 = data[0];
@@ -52,27 +51,25 @@ namespace Core
             float m22 = data[10];
 
             // Calculate the scaling factors
-            float scaleX = Sqrt(m00 * m00 + m01 * m01 + m02 * m02);
-            float scaleY = Sqrt(m10 * m10 + m11 * m11 + m12 * m12);
-            float scaleZ = Sqrt(m20 * m20 + m21 * m21 + m22 * m22);
+            float scaleX = sqrt(m00 * m00 + m01 * m01 + m02 * m02);
+            float scaleY = sqrt(m10 * m10 + m11 * m11 + m12 * m12);
+            float scaleZ = sqrt(m20 * m20 + m21 * m21 + m22 * m22);
 
             // Remove scaling from the matrix to extract the rotation part
             m00 /= scaleX;
             m01 /= scaleX;
             m02 /= scaleX;
-
             m10 /= scaleY;
             m11 /= scaleY;
             m12 /= scaleY;
-
             m20 /= scaleZ;
             m21 /= scaleZ;
             m22 /= scaleZ;
 
             // Calculate rotation angles using the extracted rotation matrix
-            float angleX = atan2f(m12, m22);
-            float angleY = atan2f(-m02, sqrtf(m00 * m00 + m01 * m01));
-            float angleZ = atan2f(m01, m00);
+            float angleX = atan2(m12, m22);
+            float angleY = atan2(-m02, sqrt(m00 * m00 + m01 * m01));
+            float angleZ = atan2(m01, m00);
 
             // Convert angles from radians to degrees if desired
             out->x = angleX;

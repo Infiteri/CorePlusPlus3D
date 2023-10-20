@@ -503,16 +503,23 @@ namespace Core
                         Vector3 delta;
                         Vector3 *old = tc->GetRotation();
 
-                        Math::DecomposeRotation(data, &delta);
+                        Math::DecomposeRotation(data, old);
 
-                        old->x += delta.x - old->x;
-                        old->y += delta.y - old->y;
-                        old->z += delta.z - old->z;
+                        // old->x += delta.x - old->x;
+                        // old->y += delta.y - old->y;
+                        // old->z += delta.z - old->z;
                     }
                     else if (state.operation == ImGuizmo::SCALE)
                     {
                         Math::DecomposeScale(data, tc->GetScale());
                     }
+
+                    float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+                    ImGuizmo::DecomposeMatrixToComponents(data, matrixTranslation, matrixRotation, matrixScale);
+                    ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, data);
+
+                    tc->GetPosition()->Set(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]);
+                    tc->GetRotation()->Set(Math::DegToRad(matrixRotation[0]), Math::DegToRad(matrixRotation[1]), Math::DegToRad(matrixRotation[2]));
                 }
             }
         }
