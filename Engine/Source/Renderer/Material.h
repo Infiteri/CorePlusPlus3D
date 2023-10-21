@@ -37,6 +37,7 @@ namespace Core
         ~Material();
 
         std::string GetName();
+        std::string GetColorTexturePath();
 
         void From(Material *other);
 

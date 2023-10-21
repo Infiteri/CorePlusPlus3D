@@ -17,6 +17,7 @@ namespace Core
     static std::string activePath = baseResourcesPath;
     static bool pressedFolder = false;
     static bool displayCreateCubeMap = false;
+    static bool displayCreateScript = false;
     static bool displayCreateMaterial = false;
     static bool displayCreateFolder = false;
     static float padding = 16.0f;
@@ -85,6 +86,11 @@ namespace Core
             {
                 CeMemory::Copy(&Name, "CubeMap", 256);
                 displayCreateCubeMap = true;
+            }
+            if (ImGui::MenuItem("Create Script"))
+            {
+                CeMemory::Copy(&Name, "Script", 256);
+                displayCreateScript = true;
             }
             if (ImGui::MenuItem("Create Material"))
             {
@@ -254,6 +260,69 @@ namespace Core
             {
                 ZeroCharBuffers();
                 displayCreateFolder = false;
+            }
+
+            ImGui::End();
+        }
+
+        if (displayCreateScript)
+        {
+            ImGui::Begin("Create Folder");
+            ImGui::InputText("Script Name Name", Name, 256);
+
+            if (ImGui::Button("Create"))
+            {
+                std::string NewName = activePath + "/" + std::string(Name) + ".h";
+
+                std::ofstream hFile(NewName.c_str());
+                if (hFile.is_open())
+                {
+                    hFile << "#pragma once\n";
+                    hFile << "\n";
+                    hFile << "#include <Core.h>\n";
+                    hFile << "\n";
+                    hFile << "class " << Name << " : public Core::ActorScript {\n";
+                    hFile << "public:\n";
+                    hFile << "\n";
+                    hFile << Name << "();\n";
+                    hFile << "~" << Name << "();\n";
+                    hFile << "\n";
+                    hFile << "};\n";
+                    hFile << "\n";
+                    hFile << "\n";
+                    hFile << "CE_EXPORT_ACTOR_SCRIPT(" << Name << ");\n";
+                }
+                else
+                {
+                    CE_ERROR("File handle not open: %s", Name);
+                }
+
+                std::string NewName2 = activePath + "/" + std::string(Name) + ".cpp";
+
+                std::ofstream cFile(NewName2.c_str());
+                if (cFile.is_open())
+                {
+                    cFile << "#include <" << Name << ".h>\n";
+                    cFile << "\n";
+                    cFile << Name << "::" << Name << "() {}\n";
+                    cFile << Name << "::"
+                          << "~" << Name << "() {}\n";
+                }
+                else
+                {
+                    CE_ERROR("File handle not open: %s", Name);
+                }
+
+                displayCreateScript = false;
+                ZeroCharBuffers();
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Cancel"))
+            {
+                ZeroCharBuffers();
+                displayCreateScript = false;
             }
 
             ImGui::End();

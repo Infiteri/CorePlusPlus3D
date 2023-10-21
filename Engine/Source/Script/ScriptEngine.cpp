@@ -117,4 +117,9 @@ namespace Core
         if (library.valid)
             hasLibrary = true;
     }
+
+    void ScriptEngine::UnloadLibrary()
+    {
+        Platform::DestroyLibrary(&library);
+    }
 }

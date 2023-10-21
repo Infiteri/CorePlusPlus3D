@@ -1,3 +1,5 @@
+#include "Base.h"
+
 #include "Core/Application.h"
 #include "Core/Input.h"
 #include "Core/Logger.h"
@@ -35,5 +37,6 @@
 #include "Scene/SceneSerializer.h"
 
 #include "Script/ActorScript.h"
+#include "Script/ScriptEngine.h"
 
 #include "Utils/StringUtils.h"

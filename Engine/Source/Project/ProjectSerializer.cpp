@@ -27,6 +27,8 @@ namespace Core
         out << YAML::Key << "StartScene" << YAML::Value << config->startScene.c_str();
         out << YAML::Key << "AssetPath" << YAML::Value << config->assetPath.c_str();
         out << YAML::Key << "ScriptPath" << YAML::Value << config->scriptPath.c_str();
+        out << YAML::Key << "ScriptFilesPath" << YAML::Value << config->scriptFilesPath.c_str();
+        out << YAML::Key << "BuildScriptsPath" << YAML::Value << config->buildScriptsPath.c_str();
 
         out << YAML::EndMap;
 
@@ -51,5 +53,7 @@ namespace Core
         config->startScene = projNode["StartScene"].as<std::string>();
         config->assetPath = projNode["AssetPath"].as<std::string>();
         config->scriptPath = projNode["ScriptPath"].as<std::string>();
+        config->scriptFilesPath = projNode["ScriptFilesPath"].as<std::string>();
+        config->buildScriptsPath = projNode["BuildScriptsPath"].as<std::string>();
     }
 }

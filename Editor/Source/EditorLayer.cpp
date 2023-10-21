@@ -128,6 +128,7 @@ namespace Core
         if (ImGui::ColorEdit4("Color", colors))
             color->Set4(colors, 255);
 
+        // -- TEXTURE -------------------------
         if (state.materialConfigurationToEdit.colorTextureName.empty())
         {
             ImGui::Button("Texture");
@@ -154,20 +155,34 @@ namespace Core
                     std::string ext = StringUtils::GetFileExtension(name);
                     if (ext == "png" || ext == "jpg" || ext == "ce_image")
                     {
+                        state.materialConfigurationToEdit.colorTextureName = name;
                         if (!state.materialConfigurationToEdit.colorTextureName.empty())
                         {
                             delete state.editMaterialTexture;
                             state.editMaterialTexture = new Texture();
                             state.editMaterialTexture->Load(name);
                         }
-
-                        state.materialConfigurationToEdit.colorTextureName = name;
                     }
                 }
             }
-
             ImGui::EndDragDropTarget();
         }
+
+        if (!state.materialConfigurationToEdit.colorTextureName.empty())
+        {
+            if (ImGui::Button("Remove Texture"))
+            {
+                state.materialConfigurationToEdit.colorTextureName = "";
+                if (state.editMaterialTexture)
+                {
+                    delete state.editMaterialTexture;
+                    state.editMaterialTexture = nullptr;
+                }
+            }
+        }
+
+        ImGui::SameLine();
+        // ------------------------------------
 
         if (ImGui::Button("Close"))
         {
@@ -252,6 +267,9 @@ namespace Core
             if (ImGui::MenuItem("Project"))
                 ImGui::OpenPopup("ProjectPopup");
 
+            if (ImGui::MenuItem("Library"))
+                ImGui::OpenPopup("LibraryPopup");
+
             if (ImGui::BeginPopup("FilePopup"))
             {
                 if (ImGui::MenuItem("New", "Ctrl+N"))
@@ -276,6 +294,16 @@ namespace Core
 
                 if (ImGui::MenuItem("Save", "Ctrl+S"))
                     SaveProject();
+
+                ImGui::EndPopup();
+            }
+
+            if (ImGui::BeginPopup("LibraryPopup"))
+            {
+                if (ImGui::MenuItem("Re-Build"))
+                {
+                    ReBuildLibrary();
+                }
 
                 ImGui::EndPopup();
             }
@@ -330,6 +358,24 @@ namespace Core
     void EditorLayer::SaveProject()
     {
         Project::SaveActive("Project.ce_proj");
+    }
+
+    void EditorLayer::ReBuildLibrary()
+    {
+        auto config = Project::GetConfig();
+
+        if (!config)
+            return;
+
+        ScriptEngine::UnloadLibrary();
+
+        std::string finalScript;
+
+        finalScript += "call " + config->buildScriptsPath;
+
+        int sys = system(finalScript.c_str());
+        if (sys == 0)
+            ScriptEngine::LoadGameLibrary(config->scriptPath);
     }
     // --------------------------------
 
@@ -490,7 +536,7 @@ namespace Core
                         auto mat = MaterialManager::Get(name);
                         state.materialConfigurationToEdit.name = name;
                         state.materialConfigurationToEdit.color.Set(mat->GetColor());
-                        state.materialConfigurationToEdit.colorTextureName = mat->GetColorTexture()->HasImage() ? mat->GetColorTexture()->GetImagePath() : "";
+                        state.materialConfigurationToEdit.colorTextureName = mat->GetColorTexturePath();
                         if (!state.materialConfigurationToEdit.colorTextureName.empty())
                         {
                             state.editMaterialTexture = new Texture();

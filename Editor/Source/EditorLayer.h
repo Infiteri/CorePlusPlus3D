@@ -63,6 +63,8 @@ namespace Core
         void NewProject();
         void OpenProject();
         void SaveProject();
+
+        void ReBuildLibrary();
         // ------------------------------------
 
         enum SceneState

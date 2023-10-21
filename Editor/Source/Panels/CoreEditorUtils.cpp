@@ -115,6 +115,10 @@ namespace Core
 
                 if (!mat->colorTextureName.empty())
                     materialFile << "colorTextureName = " << mat->colorTextureName.c_str() << "\n";
+                else
+                    materialFile << "colorTextureName = "
+                                 << ""
+                                 << "\n";
             }
             else
             {

@@ -12,6 +12,8 @@ namespace Core
         std::string name = "Project";
         std::string assetPath;
         std::string scriptPath;
+        std::string scriptFilesPath;
+        std::string buildScriptsPath;
         std::string startScene;
     };
 

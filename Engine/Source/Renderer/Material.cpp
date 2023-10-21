@@ -36,6 +36,13 @@ namespace Core
         return name;
     }
 
+    std::string Material::GetColorTexturePath()
+    {
+        if (!texture)
+            return "";
+        return texture->GetImagePath();
+    }
+
     void Material::From(Material *other)
     {
         SetName(other->GetName());
@@ -62,7 +69,16 @@ namespace Core
     void Material::SetColorTexture(const std::string &name)
     {
         if (name.empty())
+        {
+            if (!texture->IsMarkedAsDefault())
+            {
+                delete texture;
+                texture = new Texture();
+                texture->Load();
+            }
+
             return;
+        }
 
         if (texture && !texture->IsMarkedAsDefault() && texture->HasImage())
         {
