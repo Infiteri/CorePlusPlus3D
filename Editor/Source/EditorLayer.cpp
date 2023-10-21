@@ -16,7 +16,10 @@ namespace Core
         CameraSystem::Activate(CE_EDITOR_CAM_NAME);
 
         state.imageViewerImage = nullptr;
+        state.editMaterialTexture = nullptr;
         state.EditorScene = nullptr;
+        state.editMaterialTextureSizes = 50.0f;
+
         state.movement = new PerspectiveMovement();
         state.IconPlayTexture = new Texture();
         state.IconPlayTexture->Load("EngineResources/CeImage/Icons/PlayButton.ce_image");
@@ -125,8 +128,18 @@ namespace Core
         if (ImGui::ColorEdit4("Color", colors))
             color->Set4(colors, 255);
 
-        if (ImGui::Button("Texture"))
+        if (state.materialConfigurationToEdit.colorTextureName.empty())
         {
+            ImGui::Button("Texture");
+        }
+        else
+        {
+            if (state.editMaterialTexture && state.editMaterialTexture->HasImage())
+            {
+                Texture *tex = state.editMaterialTexture;
+                float aspect = (float)tex->GetWidth() / (float)tex->GetHeight();
+                ImGui::Image((void *)(CeU64)(CeU32)tex->GetID(), {aspect * state.editMaterialTextureSizes, aspect * state.editMaterialTextureSizes});
+            }
         }
 
         if (ImGui::BeginDragDropTarget())
@@ -140,7 +153,16 @@ namespace Core
                 {
                     std::string ext = StringUtils::GetFileExtension(name);
                     if (ext == "png" || ext == "jpg" || ext == "ce_image")
+                    {
+                        if (!state.materialConfigurationToEdit.colorTextureName.empty())
+                        {
+                            delete state.editMaterialTexture;
+                            state.editMaterialTexture = new Texture();
+                            state.editMaterialTexture->Load(name);
+                        }
+
                         state.materialConfigurationToEdit.colorTextureName = name;
+                    }
                 }
             }
 
@@ -150,6 +172,9 @@ namespace Core
         if (ImGui::Button("Close"))
         {
             EditorUtils::MaterialToFile(state.materialConfigurationToEdit.name, &state.materialConfigurationToEdit);
+
+            delete state.editMaterialTexture;
+            state.editMaterialTexture = nullptr;
 
             // Change
             auto out = MaterialManager::Get(state.materialConfigurationToEdit.name);
@@ -180,6 +205,9 @@ namespace Core
         {
             delete state.imageViewerImage;
             state.drawImageViewer = false;
+
+            ImGui::End();
+            return;
         }
 
         ImGui::SameLine();
@@ -463,6 +491,16 @@ namespace Core
                         state.materialConfigurationToEdit.name = name;
                         state.materialConfigurationToEdit.color.Set(mat->GetColor());
                         state.materialConfigurationToEdit.colorTextureName = mat->GetColorTexture()->HasImage() ? mat->GetColorTexture()->GetImagePath() : "";
+                        if (!state.materialConfigurationToEdit.colorTextureName.empty())
+                        {
+                            state.editMaterialTexture = new Texture();
+                            state.editMaterialTexture->Load(state.materialConfigurationToEdit.colorTextureName);
+                        }
+                        else
+                        {
+                            state.editMaterialTexture = nullptr;
+                        }
+
                         state.drawEditMaterial = true;
                     }
                     else if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "ce_image")
@@ -503,11 +541,11 @@ namespace Core
                         Vector3 delta;
                         Vector3 *old = tc->GetRotation();
 
-                        Math::DecomposeRotation(data, old);
+                        Math::DecomposeRotation(data, &delta);
 
-                        // old->x += delta.x - old->x;
-                        // old->y += delta.y - old->y;
-                        // old->z += delta.z - old->z;
+                        old->x += delta.x - old->x;
+                        old->y += delta.y - old->y;
+                        old->z += delta.z - old->z;
                     }
                     else if (state.operation == ImGuizmo::SCALE)
                     {

@@ -40,15 +40,15 @@ namespace Core
         }
         void DecomposeRotation(float *data, Vector3 *out)
         {
-            float m00 = data[0];
+            float m00 = data[0]; // Scale X
             float m01 = data[1];
             float m02 = data[2];
             float m10 = data[4];
-            float m11 = data[5];
+            float m11 = data[5]; // Scale Y
             float m12 = data[6];
             float m20 = data[8];
             float m21 = data[9];
-            float m22 = data[10];
+            float m22 = data[10]; // Scale Z
 
             // Calculate the scaling factors
             float scaleX = sqrt(m00 * m00 + m01 * m01 + m02 * m02);
@@ -87,6 +87,14 @@ namespace Core
             out->x = scaleX;
             out->y = scaleY;
             out->z = scaleZ;
+        }
+
+        void DecomposeTransform(float *data, Vector3 *t, Vector3 *r, Vector3 *s)
+        {
+            t->Set(data[12], data[13], data[14]);
+
+            // get scale
+            DecomposeScale(data, s);
         }
 
         float Sqrt(float x)

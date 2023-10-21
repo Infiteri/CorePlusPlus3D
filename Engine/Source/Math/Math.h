@@ -23,7 +23,7 @@ namespace Core
         CE_API void DecomposePosition(float *data, Vector3 *out);
         CE_API void DecomposeRotation(float *data, Vector3 *out);
         CE_API void DecomposeScale(float *data, Vector3 *out);
-        
+        CE_API void DecomposeTransform(float *data, Vector3 *t, Vector3 *r, Vector3 *s);
 
         CE_API float Sqrt(float x);
         CE_API float Sin(float x);

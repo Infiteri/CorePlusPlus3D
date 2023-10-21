@@ -121,7 +121,7 @@ namespace Core
             EditorUtils::ImGuiVector3Edit("Rotation", a->GetTransform()->GetRotation(), 0.0f);
             EditorUtils::ImGuiVector3Edit("Scale", a->GetTransform()->GetScale(), 1.0f);
             ImGui::TreePop();
-        }
+        } 
 
         // UI
         EditorUtils::DrawComponentUI<MeshComponent>("Mesh", a, [&](MeshComponent *comp)
@@ -232,7 +232,7 @@ namespace Core
                 if (payload)
                 {
                     const char *name = (const char *)payload->Data;
-                    if (StringUtils::GetFileExtension(name).compare("   ce_mat") == 0)
+                    if (StringUtils::GetFileExtension(name).compare("ce_mat") == 0)
                     {
                         m->mesh->SetMaterial(name);
                         CeMemory::Zero(&name, 256);

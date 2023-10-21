@@ -16,7 +16,9 @@ namespace Core
         bool drawEditMaterial = false;
         bool drawImageViewer = false;
         Texture *imageViewerImage;
-         float imageViewerScale = 1.0f;
+        Texture *editMaterialTexture;
+        float editMaterialTextureSizes;
+        float imageViewerScale = 1.0f;
 
         MaterialConfiguration materialConfigurationToEdit;
         Scene *EditorScene;
