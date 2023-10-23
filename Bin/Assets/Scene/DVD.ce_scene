@@ -1,4 +1,10 @@
-Scene: NewSceneCreate
+Scene: DVD
+Sky:
+  Mode: CubeMap
+  CubeMapPath: Assets/CubeMaps/PadNight.ce_cubemap
+DirectionalLight:
+  Color: [255, 0, 0, 255]
+  Direction: [0, 0, 1]
 Actors:
   - Actor: 6
     Name: Camera

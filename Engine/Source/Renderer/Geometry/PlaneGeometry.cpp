@@ -33,6 +33,10 @@ namespace Core
         vertices[(0 * 4) + 1].uv.Set(max_uvx, max_uvy);
         vertices[(0 * 4) + 2].uv.Set(min_uvx, max_uvy);
         vertices[(0 * 4) + 3].uv.Set(max_uvx, min_uvy);
+        vertices[(0 * 4) + 0].normal.Set(0.0f, 0.0f, 1.0f);
+        vertices[(0 * 4) + 1].normal.Set(0.0f, 0.0f, 1.0f);
+        vertices[(0 * 4) + 2].normal.Set(0.0f, 0.0f, 1.0f);
+        vertices[(0 * 4) + 3].normal.Set(0.0f, 0.0f, 1.0f);
 
         // Back face
         vertices[(1 * 4) + 0].position.Set(max_x, min_y, min_z);
@@ -43,6 +47,10 @@ namespace Core
         vertices[(1 * 4) + 1].uv.Set(max_uvx, max_uvy);
         vertices[(1 * 4) + 2].uv.Set(min_uvx, max_uvy);
         vertices[(1 * 4) + 3].uv.Set(max_uvx, min_uvy);
+        vertices[(1 * 4) + 0].normal.Set(0.0f, 0.0f, -1.0f);
+        vertices[(1 * 4) + 1].normal.Set(0.0f, 0.0f, -1.0f);
+        vertices[(1 * 4) + 2].normal.Set(0.0f, 0.0f, -1.0f);
+        vertices[(1 * 4) + 3].normal.Set(0.0f, 0.0f, -1.0f);
 
         // Left
         vertices[(2 * 4) + 0].position.Set(min_x, min_y, min_z);
@@ -53,6 +61,10 @@ namespace Core
         vertices[(2 * 4) + 1].uv.Set(max_uvx, max_uvy);
         vertices[(2 * 4) + 2].uv.Set(min_uvx, max_uvy);
         vertices[(2 * 4) + 3].uv.Set(max_uvx, min_uvy);
+        vertices[(3 * 4) + 0].normal.Set(-1.0f, 0.0f, 0.0f);
+        vertices[(3 * 4) + 1].normal.Set(-1.0f, 0.0f, 0.0f);
+        vertices[(3 * 4) + 2].normal.Set(-1.0f, 0.0f, 0.0f);
+        vertices[(3 * 4) + 3].normal.Set(-1.0f, 0.0f, 0.0f);
 
         // Right face
         vertices[(3 * 4) + 0].position.Set(max_x, min_y, max_z);
@@ -63,6 +75,10 @@ namespace Core
         vertices[(3 * 4) + 1].uv.Set(max_uvx, max_uvy);
         vertices[(3 * 4) + 2].uv.Set(min_uvx, max_uvy);
         vertices[(3 * 4) + 3].uv.Set(max_uvx, min_uvy);
+        vertices[(3 * 4) + 0].normal.Set(1.0f, 0.0f, 0.0f);
+        vertices[(3 * 4) + 1].normal.Set(1.0f, 0.0f, 0.0f);
+        vertices[(3 * 4) + 2].normal.Set(1.0f, 0.0f, 0.0f);
+        vertices[(3 * 4) + 3].normal.Set(1.0f, 0.0f, 0.0f);
 
         for (CeU32 i = 0; i < 4; ++i)
         {

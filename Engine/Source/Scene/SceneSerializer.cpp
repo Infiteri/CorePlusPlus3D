@@ -200,7 +200,7 @@ namespace Core
     {
         out << YAML::Key << "Fov" << YAML::Value << camera->GetFOV();
         out << YAML::Key << "Near" << YAML::Value << camera->GetNear();
-        out << YAML::Key << "Far" << YAML::Value << camera->GetFar(); 
+        out << YAML::Key << "Far" << YAML::Value << camera->GetFar();
         out << YAML::Key << "Position" << YAML::Value << camera->GetPosition();
         out << YAML::Key << "Rotation" << YAML::Value << camera->GetRotation();
     }
@@ -219,11 +219,40 @@ namespace Core
         out << YAML::Key << "Scene";
         out << YAML::Value << scene->GetName().c_str();
 
+        // -- SERIALIZE SKY --------
+        out << YAML::Key << "Sky" << YAML::BeginMap;
+        auto sky = scene->GetEnvironment()->sky;
+        switch (sky->GetMode())
+        {
+        case SkyMode::Color:
+            out << YAML::Key << "Mode" << YAML::Value << "Color";
+            out << YAML::Key << "Color" << YAML::Value << sky->GetColor();
+            break;
+
+        case SkyMode::CubeMap:
+            out << YAML::Key << "Mode" << YAML::Value << "CubeMap";
+            out << YAML::Key << "CubeMapPath" << YAML::Value << sky->GetCubeTexturePath();
+            break;
+
+        default:
+            CE_WARN("Unknown sky type when serializing '%s' scene.", name.c_str());
+            break;
+        }
+        out << YAML::EndMap;
+        // -------------------------
+
+        // -- SERIALIZE LIGHT ------
+        out << YAML::Key << "DirectionalLight" << YAML::BeginMap;
+        auto light = scene->GetEnvironment()->directionalLight;
+        out << YAML::Key << "Color" << YAML::Value << light->GetColor();
+        out << YAML::Key << "Direction" << YAML::Value << light->GetDirection();
+        out << YAML::EndMap;
+        // -------------------------
+
         out << YAML::Key << "Actors";
         out << YAML::Value << YAML::BeginSeq;
 
         //
-
         for (Actor *a : scene->GetActors())
             SerActor(a, nullptr, out);
 
@@ -250,6 +279,41 @@ namespace Core
 
         std::string sceneName = data["Scene"].as<std::string>();
         scene->SetName(sceneName);
+
+        auto env = scene->GetEnvironment();
+        env->sky->SetMode(StringToSkyMode(data["Sky"]["Mode"].as<std::string>()));
+
+        switch (env->sky->GetMode())
+        {
+        case SkyMode::Color:
+        {
+            auto c = data["Sky"]["Color"];
+            env->sky->GetColor()->Set(c[0].as<float>(), c[1].as<float>(), c[2].as<float>(), c[3].as<float>());
+        }
+        break;
+
+        case SkyMode::CubeMap:
+        {
+            env->sky->CreateCubeTexture(data["Sky"]["CubeMapPath"].as<std::string>());
+        }
+        break;
+
+        default:
+            CE_WARN("Unknown sky type when deserializing '%s' scene.", name.c_str());
+            break;
+        }
+
+        //? Deserialize the directional light.
+        {
+            // NOTE: Otherwise default values will be set.
+            if (data["DirectionalLight"])
+            {
+                auto c = data["DirectionalLight"]["Color"];
+                auto dir = data["DirectionalLight"]["Direction"];
+                env->directionalLight->GetColor()->Set(c[0].as<float>(), c[1].as<float>(), c[2].as<float>(), c[3].as<float>());
+                env->directionalLight->GetDirection()->Set(dir[0].as<float>(), dir[1].as<float>(), dir[2].as<float>());
+            }
+        }
 
         auto actors = data["Actors"];
         if (actors)
