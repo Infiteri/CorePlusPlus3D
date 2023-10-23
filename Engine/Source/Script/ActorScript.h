@@ -20,6 +20,8 @@ namespace Core
 
         Transform *GetTransform();
 
+        Actor *GetActorByName(const std::string &name);
+
         template <typename T>
         T *GetComponent()
         {

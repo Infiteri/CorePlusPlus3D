@@ -8,3 +8,7 @@ copied for many reasons, but when it gets deleted the cube map never gets delete
 Oh yea I made a material editor for material asset files. So dragging a material file onto the scene viewport will open a material editor window which allows to edit material props without changing the file directly. Still WIP.
 
 Moved the editor state into a structure called EditorState, therefore the cpp file is smaller. Added also a Image Viewer thing, just drag a image (.png, .jpg or .jpeg) or a custom-format image called CeImage (.ce_image) and it will appear. Also dragging another image on top of the old image will change it.
+
+## 22 October 2023
+
+Okay so started working on a little pong clone, small problem, no collision detection and the scripts are in the bin folder witch get ignored.

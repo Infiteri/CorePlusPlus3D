@@ -7,7 +7,6 @@
 
 namespace Core
 {
-    static std::unordered_map<std::string, ActorScript *> scripts;
     static DynamicLibrary library;
     static bool hasLibrary = false;
 
@@ -122,4 +121,17 @@ namespace Core
     {
         Platform::DestroyLibrary(&library);
     }
+
+    ActorScript *ScriptEngine::GetScriptByNameT(const std::string &name)
+    {
+        for (auto it = scripts.begin(); it != scripts.end(); it++)
+        {
+            if (it->first == name)
+            {
+                return it->second;
+            }
+        }
+
+        return nullptr;
+    };
 }

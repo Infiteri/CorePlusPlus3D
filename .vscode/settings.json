@@ -56,7 +56,9 @@
     "codecvt": "cpp",
     "ratio": "cpp",
     "sparse": "cpp",
-    "dense": "cpp"
+    "dense": "cpp",
+    "numeric": "cpp",
+    "random": "cpp"
   },
   "editor.cursorBlinking": "blink",
   "editor.cursorSmoothCaretAnimation": "off",

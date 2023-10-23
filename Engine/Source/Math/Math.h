@@ -29,5 +29,8 @@ namespace Core
         CE_API float Sin(float x);
         CE_API float Cos(float x);
         CE_API float Tan(float x);
+
+        CE_API float RandomFloat();
+        CE_API float RandomFloat(float min, float max);
     }
 }

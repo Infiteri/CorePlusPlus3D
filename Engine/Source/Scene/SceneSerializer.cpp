@@ -122,6 +122,7 @@ namespace Core
         auto mesh = a->GetComponent<MeshComponent>();
         auto actorScript = a->GetComponent<ActorScriptComponent>();
         auto camera = a->GetComponent<PerspectiveCameraComponent>();
+        auto aabb = a->GetComponent<AABBComponent>();
 
         if (mesh)
         {
@@ -180,6 +181,18 @@ namespace Core
             out << YAML::EndMap;
         }
 
+        if (aabb)
+        {
+            out << YAML::Key << "AABBComponent";
+            out << YAML::BeginMap;
+            out << YAML::Key << "W" << YAML::Value << aabb->width;
+            out << YAML::Key << "H" << YAML::Value << aabb->height;
+            out << YAML::Key << "D" << YAML::Value << aabb->depth;
+            out << YAML::Key << "PX" << YAML::Value << aabb->padding.x;
+            out << YAML::Key << "PY" << YAML::Value << aabb->padding.y;
+            out << YAML::EndMap;
+        }
+
         out << YAML::EndMap;
     }
 
@@ -187,7 +200,7 @@ namespace Core
     {
         out << YAML::Key << "Fov" << YAML::Value << camera->GetFOV();
         out << YAML::Key << "Near" << YAML::Value << camera->GetNear();
-        out << YAML::Key << "Far" << YAML::Value << camera->GetFar();
+        out << YAML::Key << "Far" << YAML::Value << camera->GetFar(); 
         out << YAML::Key << "Position" << YAML::Value << camera->GetPosition();
         out << YAML::Key << "Rotation" << YAML::Value << camera->GetRotation();
     }
@@ -247,6 +260,7 @@ namespace Core
                 auto mesh = actor["MeshComponent"];
                 auto actorScript = actor["ActorScriptComponent"];
                 auto camera = actor["PerspectiveCameraComponent"];
+                auto aabb = actor["AABBComponent"];
 
                 Actor *a = new Actor();
 
@@ -300,6 +314,16 @@ namespace Core
                     cc->camera->SetNear(camera["Near"].as<float>());
                     cc->camera->SetFar(camera["Far"].as<float>());
                     cc->camera->UpdateProjection(Engine::GetWindowAspect());
+                }
+
+                if (aabb)
+                {
+                    auto abc = a->AddComponent<AABBComponent>();
+                    abc->width = aabb["W"].as<float>();
+                    abc->height = aabb["H"].as<float>();
+                    abc->depth = aabb["D"].as<float>();
+                    abc->padding.x = aabb["PX"].as<float>();
+                    abc->padding.y = aabb["PY"].as<float>();
                 }
 
                 scene->AddActor(a);

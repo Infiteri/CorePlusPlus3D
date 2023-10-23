@@ -34,7 +34,9 @@ namespace Core
 
         // Runtime loading from project
         if (Project::GetConfig() != nullptr)
+        {
             OpenScene(Project::GetConfig()->startScene);
+        }
         else
             New();
 
@@ -91,6 +93,51 @@ namespace Core
     {
         if (activeCameraType == CameraEditor)
             state.movement->Update(CameraSystem::GetActive());
+
+        // key binds
+        bool shift = Input::GetKey(Keys::LeftShift);
+        bool ctrl = Input::GetKey(Keys::LeftControl);
+        bool alt = Input::GetKey(Keys::LeftAlt);
+
+        switch (dropDownSetting)
+        {
+        case DropDownSettingProject:
+            break;
+
+        case DropDownSettingLibrary:
+            break;
+
+        case DropDownSettingNone:
+        case DropDownSettingScene:
+        default:
+            if (ctrl && Input::GetKey(Keys::N))
+                New();
+
+            if (ctrl && Input::GetKey(Keys::O))
+                Open();
+
+            if (ctrl && shift && Input::GetKey(Keys::S))
+                SaveAs();
+
+            if (ctrl && Input::GetKey(Keys::S))
+                Save();
+            break;
+        }
+
+        // Dupe an actor
+        if (sceneHierarchyPanel.selectionContext != nullptr)
+        {
+            if (ctrl && Input::GetKey(Keys::D) && !state.hasDupeOnce)
+            {
+                state.hasDupeOnce = true;
+                World::GetActive()->AddActor(Actor::From(sceneHierarchyPanel.selectionContext));
+            }
+        }
+
+        if (!Input::GetKey(Keys::D))
+        {
+            state.hasDupeOnce = false;
+        }
     }
     // --------------------------------
 
@@ -261,8 +308,8 @@ namespace Core
 
         if (ImGui::BeginMainMenuBar())
         {
-            if (ImGui::MenuItem("File"))
-                ImGui::OpenPopup("FilePopup");
+            if (ImGui::MenuItem("Scene"))
+                ImGui::OpenPopup("ScenePopup");
 
             if (ImGui::MenuItem("Project"))
                 ImGui::OpenPopup("ProjectPopup");
@@ -270,7 +317,7 @@ namespace Core
             if (ImGui::MenuItem("Library"))
                 ImGui::OpenPopup("LibraryPopup");
 
-            if (ImGui::BeginPopup("FilePopup"))
+            if (ImGui::BeginPopup("ScenePopup"))
             {
                 if (ImGui::MenuItem("New", "Ctrl+N"))
                     New();
@@ -282,6 +329,8 @@ namespace Core
                     SaveAs();
 
                 ImGui::EndPopup();
+
+                dropDownSetting = DropDownSettingScene;
             }
 
             if (ImGui::BeginPopup("ProjectPopup"))
@@ -296,6 +345,8 @@ namespace Core
                     SaveProject();
 
                 ImGui::EndPopup();
+
+                dropDownSetting = DropDownSettingProject;
             }
 
             if (ImGui::BeginPopup("LibraryPopup"))
@@ -304,6 +355,8 @@ namespace Core
                 {
                     ReBuildLibrary();
                 }
+
+                dropDownSetting = DropDownSettingLibrary;
 
                 ImGui::EndPopup();
             }
@@ -335,10 +388,16 @@ namespace Core
     void EditorLayer::SaveAs()
     {
         std::string name = Platform::SaveFileDialog("Core Scene (*.ce_scene)\0*.ce_scene\0");
-        if (!name.empty())
+        state.activeScenePath = name;
+        Save();
+    }
+
+    void EditorLayer::Save()
+    {
+        if (!state.activeScenePath.empty())
         {
             SceneSerializer ser{World::GetActive()};
-            ser.Serialize(name);
+            ser.Serialize(state.activeScenePath);
             SetContexts();
         }
     }
@@ -408,6 +467,8 @@ namespace Core
             SetContexts();
         }
 
+        sceneHierarchyPanel.selectionContext = nullptr;
+
         SwapActiveCameraTo(CameraEditor);
 
         World::InitActive();
@@ -423,6 +484,8 @@ namespace Core
                 World::GetActive()->ActivateSceneCamera();
 
             activeCameraType = type;
+
+            ResizeViewport();
         }
     }
 
@@ -452,6 +515,7 @@ namespace Core
 
     void EditorLayer::OpenScene(const std::string &name)
     {
+        state.activeScenePath = name;
         SceneSerializer ser{World::GetActive()};
         ser.DeserializeAndCreateNewScene(name);
         SetContexts();
@@ -568,12 +632,8 @@ namespace Core
             PerspectiveCamera *camera = CameraSystem::GetActive();
             if (actorContext != nullptr && camera != nullptr)
             {
-                if (sceneSettingsPanel.isCameraEditingSelected)
-                    sceneSettingsPanel.isCameraEditingSelected = false;
-
                 auto tc = actorContext->GetTransform();
                 auto data = tc->GetMatrix().data;
-
                 DrawGizmo(camera, data);
 
                 if (ImGuizmo::IsUsing())

@@ -20,6 +20,9 @@ namespace Core
         float editMaterialTextureSizes;
         float imageViewerScale = 1.0f;
 
+        std::string activeScenePath;
+        bool hasDupeOnce = false;
+
         MaterialConfiguration materialConfigurationToEdit;
         Scene *EditorScene;
         Texture *IconPlayTexture;
@@ -59,6 +62,7 @@ namespace Core
         void New();
         void Open();
         void SaveAs();
+        void Save();
 
         void NewProject();
         void OpenProject();
@@ -79,8 +83,17 @@ namespace Core
             CameraGamePlay
         };
 
-        SceneState currentSceneState;
+        enum ActiveDropDownMenuSetting
+        {
+            DropDownSettingNone,
+            DropDownSettingScene,
+            DropDownSettingProject,
+            DropDownSettingLibrary,
+        };
+
+        SceneState currentSceneState = SceneStateStop;
         ActiveCameraType activeCameraType = CameraEditor;
+        ActiveDropDownMenuSetting dropDownSetting = DropDownSettingNone;
 
         void StartSceneRuntime();
         void StopSceneRuntime();

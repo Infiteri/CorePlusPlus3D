@@ -8,6 +8,8 @@
 
 namespace Core
 {
+    static std::unordered_map<std::string, ActorScript *> scripts;
+
     class CE_API ScriptEngine
     {
     public:
@@ -29,5 +31,13 @@ namespace Core
         static DynamicLibrary *GetLibrary();
         static void LoadGameLibrary(const std::string &name);
         static void UnloadLibrary();
+
+        static ActorScript *GetScriptByNameT(const std::string &name);
+
+        template <typename T>
+        static T *GetScriptByName(const std::string &name)
+        {
+            return (T *)GetScriptByNameT(name);
+        };
     };
-}
+};

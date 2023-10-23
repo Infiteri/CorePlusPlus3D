@@ -12,6 +12,7 @@ namespace Core
     {
     private:
         Scene *scene;
+        int actorIndex = 0;
 
     public:
         Actor *selectionContext;

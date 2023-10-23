@@ -290,7 +290,7 @@ namespace Core
                     hFile << "};\n";
                     hFile << "\n";
                     hFile << "\n";
-                    hFile << "CE_EXPORT_ACTOR_SCRIPT(" << Name << ");\n";
+                    hFile << "CE_DEFINE_ACTOR_SCRIPT(" << Name << ");\n";
                 }
                 else
                 {
@@ -307,6 +307,9 @@ namespace Core
                     cFile << Name << "::" << Name << "() {}\n";
                     cFile << Name << "::"
                           << "~" << Name << "() {}\n";
+
+                    cFile << "\n";
+                    cFile << "CE_IMPLEMENT_ACTOR_SCRIPT_DEFINE(" << Name << ");\n";
                 }
                 else
                 {

@@ -1,11 +1,15 @@
 #include "Math.h"
 
 #include <cmath>
+#include <random>
 
 namespace Core
 {
     namespace Math
     {
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+
         int Max(int a, int b)
         {
             if (a > b)
@@ -117,5 +121,17 @@ namespace Core
         {
             return tanf(x);
         }
+
+        float RandomFloat()
+        {
+            std::uniform_real_distribution<float> dist(1.0f, 1.0f);
+            return dist(gen);
+        }
+        float RandomFloat(float min, float max)
+        {
+            std::uniform_real_distribution<float> dist(min, max);
+            return dist(gen);
+        }
+
     }
 }

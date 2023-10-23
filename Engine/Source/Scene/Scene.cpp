@@ -10,6 +10,8 @@
 
 #include "Script/ScriptEngine.h"
 
+#include <algorithm>
+
 namespace Core
 {
     SceneEnvironment::~SceneEnvironment()
@@ -51,25 +53,7 @@ namespace Core
 
         for (Actor *a : other->GetActors())
         {
-            Actor *outActor = new Actor();
-            outActor->SetName(a->GetName());
-
-            auto transform = a->GetTransform();
-            auto mesh = a->GetComponent<MeshComponent>();
-            auto script = a->GetComponent<ActorScriptComponent>();
-            auto camera = a->GetComponent<PerspectiveCameraComponent>();
-
-            outActor->GetTransform()->From(transform);
-
-            if (mesh)
-                outActor->AddComponent<MeshComponent>()->From(mesh);
-
-            if (script)
-                outActor->AddComponent<ActorScriptComponent>()->From(script);
-
-            if (camera)
-                outActor->AddComponent<PerspectiveCameraComponent>()->From(camera);
-
+            Actor *outActor = Actor::From(a);
             scene->AddActor(outActor);
         }
 
@@ -153,6 +137,17 @@ namespace Core
         ScriptEngine::StopRuntime();
     }
 
+    Actor *Scene::GetActorByName(const std::string &name)
+    {
+        for (Actor *a : actors)
+        {
+            if (a->GetName() == name)
+                return a;
+        }
+
+        return nullptr;
+    }
+
     void Scene::AddActor(Actor *a)
     {
         if (state == SceneState::Running)
@@ -223,6 +218,36 @@ namespace Core
     void Scene::SetName(const std::string &_name)
     {
         name = _name;
+    }
+
+    void Scene::MoveActorInHierarchy(const std::string &name, int newIndex)
+    {
+        // Find the actor by name
+        Actor *actorToMove = GetActorByName(name);
+
+        if (!actorToMove)
+        {
+            return;
+        }
+
+        if (newIndex < 0 || newIndex >= actors.size())
+        {
+            return;
+        }
+
+        // Find the current index of the actor
+        auto actorIterator = std::find(actors.begin(), actors.end(), actorToMove);
+
+        if (actorIterator != actors.end())
+        {
+            size_t currentIndex = std::distance(actors.begin(), actorIterator);
+
+            // Remove the actor from the current position
+            actors.erase(actorIterator);
+
+            // Insert the actor at the new index
+            actors.insert(actors.begin() + newIndex, actorToMove);
+        }
     }
 
     SceneEnvironment *Scene::GetEnvironment()

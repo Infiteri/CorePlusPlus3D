@@ -1,0 +1,107 @@
+Scene: NewSceneCreate
+Actors:
+  - Actor: 6
+    Name: Camera
+    Transform:
+      Position: [0, 0, 20]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    PerspectiveCameraComponent:
+      Fov: 1.11701071
+      Near: 0.00999999978
+      Far: 1000
+      Position: [0, 0, 20]
+      Rotation: [0, -0, 0]
+  - Actor: 7
+    Name: DVD
+    Transform:
+      Position: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: Assets/Materials/DVD/DVD.ce_mat
+      Unique: No
+      GeometryType: Plane
+      W: 1
+      H: 1
+    ActorScriptComponent:
+      ClassName: DVDScript
+      OwnerName: DVD
+    AABBComponent:
+      W: 1
+      H: 1
+      D: 1
+      PX: 0.200000003
+      PY: 0.200000003
+  - Actor: 8
+    Name: Wall1
+    Transform:
+      Position: [-27.8203087, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: Assets/Materials/DVD/Wall.ce_mat
+      Unique: No
+      GeometryType: Plane
+      W: 1
+      H: 25
+    AABBComponent:
+      W: 1
+      H: 25
+      D: 1
+      PX: 0.5
+      PY: 0.5
+  - Actor: 9
+    Name: Wall2
+    Transform:
+      Position: [27.9375, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: Assets/Materials/DVD/Wall.ce_mat
+      Unique: No
+      GeometryType: Plane
+      W: 1
+      H: 25
+    AABBComponent:
+      W: 1
+      H: 25
+      D: 1
+      PX: 0.5
+      PY: 0.5
+  - Actor: 10
+    Name: Wall3
+    Transform:
+      Position: [0, 11.8359375, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: Assets/Materials/DVD/Wall.ce_mat
+      Unique: No
+      GeometryType: Plane
+      W: 35
+      H: 1
+    AABBComponent:
+      W: 35
+      H: 1
+      D: 1
+      PX: 0.5
+      PY: 0.5
+  - Actor: 11
+    Name: Wall4
+    Transform:
+      Position: [0, -12.3378897, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: Assets/Materials/DVD/Wall.ce_mat
+      Unique: No
+      GeometryType: Plane
+      W: 35
+      H: 1
+    AABBComponent:
+      W: 35
+      H: 1
+      D: 1
+      PX: 0.5
+      PY: 0.5

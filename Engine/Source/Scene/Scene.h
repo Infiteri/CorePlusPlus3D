@@ -60,6 +60,7 @@ namespace Core
         /// @brief When the scene stops to play.
         void Stop();
 
+        Actor *GetActorByName(const std::string &name);
         void AddActor(Actor *a);
         void RemoveActorByName(const std::string &name);
         void RemoveActorByID(CeU32 id);
@@ -71,6 +72,8 @@ namespace Core
 
         inline std::string GetName() { return name; };
         void SetName(const std::string &_name);
+
+        void MoveActorInHierarchy(const std::string &name, int index);
 
         std::vector<Actor *> GetActors();
         SceneEnvironment *GetEnvironment();

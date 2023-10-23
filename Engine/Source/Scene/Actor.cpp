@@ -25,6 +25,34 @@ namespace Core
         GID--;
     }
 
+    Actor *Actor::From(Actor *other)
+    {
+        Actor *outActor = new Actor();
+        outActor->SetName(other->GetName());
+
+        auto transform = other->GetTransform();
+        auto mesh = other->GetComponent<MeshComponent>();
+        auto script = other->GetComponent<ActorScriptComponent>();
+        auto camera = other->GetComponent<PerspectiveCameraComponent>();
+        auto aabb = other->GetComponent<AABBComponent>();
+
+        outActor->GetTransform()->From(transform);
+
+        if (mesh)
+            outActor->AddComponent<MeshComponent>()->From(mesh);
+
+        if (script)
+            outActor->AddComponent<ActorScriptComponent>()->From(script);
+
+        if (camera)
+            outActor->AddComponent<PerspectiveCameraComponent>()->From(camera);
+
+        if (aabb)
+            outActor->AddComponent<AABBComponent>()->From(aabb);
+
+        return outActor;
+    }
+
     void Actor::Init()
     {
         state = ActorState::Init;
@@ -53,6 +81,14 @@ namespace Core
     {
         if (state != ActorState::Started)
             return;
+
+        auto aabb = GetComponent<AABBComponent>();
+        if (aabb)
+        {
+            aabb->x = transform.GetPosition()->x;
+            aabb->y = transform.GetPosition()->y;
+            aabb->z = transform.GetPosition()->z;
+        }
     }
 
     void Actor::Render()

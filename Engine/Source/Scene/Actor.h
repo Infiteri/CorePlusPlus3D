@@ -45,6 +45,8 @@ namespace Core
         Actor();
         ~Actor();
 
+        static Actor* From(Actor* other);
+
         /// @brief At the beginning of the actor.
         void Init();
 

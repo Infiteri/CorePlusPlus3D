@@ -76,4 +76,21 @@ namespace Core
         void Start();
         void Render();
     };
+
+    class CE_API AABBComponent : public Component
+    {
+    public:
+        float x, y, z, width, height, depth = 0;
+        Vector2 padding;
+
+        AABBComponent(){};
+        ~AABBComponent(){};
+
+        void Render();
+
+        void From(AABBComponent *other);
+
+        bool CollidesWith(AABBComponent *other);
+        bool PointInShape(Vector3 point);
+    };
 }

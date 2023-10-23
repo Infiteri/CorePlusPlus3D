@@ -1,4 +1,5 @@
 #include "ActorScript.h"
+#include "Scene/World.h"
 
 namespace Core
 {
@@ -27,5 +28,13 @@ namespace Core
             return nullptr;
 
         return owner->GetTransform();
+    }
+
+    Actor *ActorScript::GetActorByName(const std::string &name)
+    {
+        if (World::GetActive() == nullptr)
+            return nullptr;
+
+        return World::GetActive()->GetActorByName(name);
     }
 }

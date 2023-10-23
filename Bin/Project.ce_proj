@@ -1,0 +1,7 @@
+Project:
+  Name: Sandbox
+  StartScene: Assets/Scene/DVD.ce_scene
+  AssetPath: Assets
+  ScriptPath: GameLibrary.dll
+  ScriptFilesPath: Assets/Scripts
+  BuildScriptsPath: Assets/Scripts/Build.bat

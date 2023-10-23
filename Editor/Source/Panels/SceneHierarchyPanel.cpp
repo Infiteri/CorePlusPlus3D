@@ -18,6 +18,8 @@
 
 #include "Utils/StringUtils.h"
 
+#include <algorithm>
+
 namespace Core
 {
     static const ImGuiColorEditFlags colorEditFlags = ImGuiColorEditFlags_NoInputs;
@@ -52,10 +54,15 @@ namespace Core
         if (Input::GetKey(Keys::Escape))
             selectionContext = nullptr;
 
+        actorIndex = 0;
+
         for (Actor *actor : scene->GetActors())
         {
+            actorIndex++;
             RenderActor(actor);
         }
+
+        actorIndex = 0;
         // Right-Click
         if (ImGui::BeginPopupContextWindow(0, 1))
         {
@@ -85,8 +92,26 @@ namespace Core
 
         bool pop = ImGui::TreeNodeEx((void *)(CeU64)(CeU32)a->GetID(), flags, a->GetName().c_str());
 
+        if (ImGui::BeginDragDropSource())
+        {
+            ImGui::SetDragDropPayload("CE_SCENE_HIERARCHY_ACTOR", a->GetName().c_str(), strlen(a->GetName().c_str()) + 1);
+            ImGui::EndDragDropSource();
+        }
+
         if (ImGui::IsItemClicked())
             selectionContext = a;
+
+        ImGui::Dummy({ImGui::GetWindowWidth(), 5});
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_SCENE_HIERARCHY_ACTOR"))
+            {
+                scene->MoveActorInHierarchy((const char *)payload->Data, actorIndex);
+            }
+
+            ImGui::EndDragDropTarget();
+        }
 
         if (pop)
             ImGui::TreePop();
@@ -96,6 +121,7 @@ namespace Core
     void DrawMeshUI(MeshComponent *m, Actor *a);
     void DrawActorScriptUI(ActorScriptComponent *scr, Actor *a);
     void DrawCameraComponentUI(PerspectiveCameraComponent *c, Actor *a);
+    void DrawAABBComponent(AABBComponent *comp, Actor *a);
     // ----------------------------------------
 
     void SceneHierarchyPanel::DrawActorComponents(Actor *a)
@@ -121,7 +147,7 @@ namespace Core
             EditorUtils::ImGuiVector3Edit("Rotation", a->GetTransform()->GetRotation(), 0.0f);
             EditorUtils::ImGuiVector3Edit("Scale", a->GetTransform()->GetScale(), 1.0f);
             ImGui::TreePop();
-        } 
+        }
 
         // UI
         EditorUtils::DrawComponentUI<MeshComponent>("Mesh", a, [&](MeshComponent *comp)
@@ -132,6 +158,9 @@ namespace Core
 
         EditorUtils::DrawComponentUI<PerspectiveCameraComponent>("Camera", a, [&](PerspectiveCameraComponent *comp)
                                                                  { DrawCameraComponentUI(comp, a); });
+
+        EditorUtils::DrawComponentUI<AABBComponent>("AABB", a, [&](AABBComponent *comp)
+                                                    { DrawAABBComponent(comp, a); });
 
         for (auto comp : selectionContext->GetComponents())
         {
@@ -165,6 +194,9 @@ namespace Core
 
             if (ImGui::MenuItem("Camera"))
                 selectionContext->AddComponent<PerspectiveCameraComponent>();
+
+            if (ImGui::MenuItem("AABB"))
+                selectionContext->AddComponent<AABBComponent>();
 
             ImGui::EndPopup();
         }
@@ -364,6 +396,15 @@ namespace Core
         {
             EditorLayer::Get()->HandleViewGameCamera(renderCameraPerspective);
         }
+    }
+
+    void DrawAABBComponent(AABBComponent *comp, Actor *a)
+    {
+        ImGui::DragFloat("Width", &comp->width);
+        ImGui::DragFloat("Height", &comp->height);
+        ImGui::DragFloat("Depth", &comp->depth);
+        ImGui::DragFloat("Padding X", &comp->padding.x, 0.01, 0.1);
+        ImGui::DragFloat("Padding Y", &comp->padding.y, 0.01, 0.1);
     }
 
     // ----------------------------------------
