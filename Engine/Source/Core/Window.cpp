@@ -68,6 +68,17 @@ namespace Core
         InputUpdateMouse((int)dx, (int)dy);
 
         glfwGetWindowSize(handle, &config.width, &config.height);
+
+        // Additional input polling
+        for (int key = 0; key < GLFW_KEY_LAST; key++)
+        {
+            InputUpdateKey((Keys)key, glfwGetKey(handle, key) != 0);
+        }
+
+        for (int button = 0; button < GLFW_MOUSE_BUTTON_LAST; button++)
+        {
+            InputUpdateButton((Buttons)button, glfwGetMouseButton(handle, button) != 0);
+        }
     }
 
     bool Window::ShouldClose()
@@ -112,7 +123,7 @@ namespace Core
 
         EventManager::SendEvent(event);
 
-        InputUpdateKey((Keys)key, action != GLFW_RELEASE);
+        // InputUpdateKey((Keys)key, action != GLFW_RELEASE);
     }
 
     void OnButtonEvent(GLFWwindow *win, int button, int action, int mods)
@@ -127,14 +138,14 @@ namespace Core
             context.type = MouseEventType::Press;
         else
             context.type = MouseEventType::Release;
- 
+
         // DONE: X / Y position
         context.x = Input::GetMouseX();
         context.y = Input::GetMouseY();
 
         EventManager::SendEvent(&context, sizeof(context), EventType::MouseClick);
 
-        InputUpdateButton((Buttons)button, pressed);
+        // InputUpdateButton((Buttons)button, pressed);
     }
 
     void OnMouseMove(GLFWwindow *win, double x, double y)

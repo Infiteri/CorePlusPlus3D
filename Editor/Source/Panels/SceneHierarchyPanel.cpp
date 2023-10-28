@@ -55,14 +55,13 @@ namespace Core
             selectionContext = nullptr;
 
         actorIndex = 0;
-
-        for (Actor *actor : scene->GetActors())
+        for (int i = 0; i < scene->GetActors().size(); i++)
         {
-            actorIndex++;
-            RenderActor(actor);
+            actorIndex = i;
+            Actor *ctx = scene->GetActors()[i];
+            RenderActor(ctx, nullptr, false, 0);
         }
 
-        actorIndex = 0;
         // Right-Click
         if (ImGui::BeginPopupContextWindow(0, 1))
         {
@@ -82,36 +81,87 @@ namespace Core
         ImGui::End();
     }
 
-    void SceneHierarchyPanel::RenderActor(Actor *a)
+    void SceneHierarchyPanel::RenderActor(Actor *a, Actor *parent, bool parentNodeOpen, CeU32 deep)
     {
+        if (!a || a == nullptr)
+            return;
+
         // Flags setup
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_AllowItemOverlap;
         if (selectionContext != nullptr)
-            if (selectionContext->GetID() == a->GetID())
+            if (selectionContext->GetUUID()->Get() == a->GetUUID()->Get())
                 flags |= ImGuiTreeNodeFlags_Selected;
 
-        bool pop = ImGui::TreeNodeEx((void *)(CeU64)(CeU32)a->GetID(), flags, a->GetName().c_str());
+        bool pop = false;
 
-        if (ImGui::BeginDragDropSource())
+        if (!parent)
         {
-            ImGui::SetDragDropPayload("CE_SCENE_HIERARCHY_ACTOR", a->GetName().c_str(), strlen(a->GetName().c_str()) + 1);
-            ImGui::EndDragDropSource();
+            pop = ImGui::TreeNodeEx((void *)(CeU64)(CeU32)a->GetUUID()->Get(), flags, a->GetName().c_str());
+            if (ImGui::IsItemClicked())
+                selectionContext = a;
+        }
+        else
+        {
+            if (parentNodeOpen)
+            {
+                pop = ImGui::TreeNodeEx((void *)(CeU64)(CeU32)a->GetUUID()->Get(), flags, a->GetName().c_str());
+                if (ImGui::IsItemClicked())
+                    selectionContext = a;
+            }
         }
 
-        if (ImGui::IsItemClicked())
-            selectionContext = a;
-
-        ImGui::Dummy({ImGui::GetWindowWidth(), 5});
+        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+        {
+            ImGui::SetDragDropPayload("CE_SCENE_HIERARCHY_ACTOR", a->GetUUID(), sizeof(UUID));
+            ImGui::EndDragDropSource();
+        }
 
         if (ImGui::BeginDragDropTarget())
         {
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_SCENE_HIERARCHY_ACTOR"))
             {
-                scene->MoveActorInHierarchy((const char *)payload->Data, actorIndex);
+                UUID *uid = (UUID *)payload->Data;
+                CE_TRACE("%s to %ull", a->GetName().c_str(), uid->Get());
+
+                // NOTE: Actor is target, data is name of the actor to move
+                Actor *child = GetChildInHierarchy(parent, uid);
+
+                if (child)
+                {
+                    //? Selection context will be set to nothing
+                    selectionContext = nullptr;
+
+                    RmChildInHierarchy(child->GetParent(), uid);
+                    a->AddChild(child);
+                }
             }
 
             ImGui::EndDragDropTarget();
         }
+
+        // NOTE: This dummy gets rendered wheter or not its in the hierarchy or as a child of an actor.
+        if (!parent)
+        {
+            ImGui::Dummy({ImGui::GetWindowWidth(), 5});
+        }
+        else
+        {
+            if (parentNodeOpen)
+                ImGui::Dummy({ImGui::GetWindowWidth(), 5});
+        }
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_SCENE_HIERARCHY_ACTOR"))
+            {
+                scene->MoveActorInHierarchy((UUID *)payload->Data, actorIndex);
+            }
+
+            ImGui::EndDragDropTarget();
+        }
+
+        for (Actor *child : a->GetChildren())
+            RenderActor(child, a, pop, deep + 1);
 
         if (pop)
             ImGui::TreePop();
@@ -171,10 +221,10 @@ namespace Core
         // Delete Entity
         if (ImGui::Button("Destroy"))
         {
-            if (selectionContext && a->GetID() == selectionContext->GetID())
+            if (selectionContext && a->GetUUID()->Get() == selectionContext->GetUUID()->Get())
                 selectionContext = nullptr;
 
-            scene->RemoveActorByID(a->GetID());
+            scene->RemoveActorByUUID(a->GetUUID());
         }
 
         ImGui::SameLine();
@@ -199,6 +249,82 @@ namespace Core
                 selectionContext->AddComponent<AABBComponent>();
 
             ImGui::EndPopup();
+        }
+    }
+
+    Actor *SceneHierarchyPanel::GetChildInHierarchy(Actor *parent, UUID *uid)
+    {
+        Actor *returnValue = nullptr;
+        bool found = false;
+
+        if (!parent)
+        {
+            // Do the search in the scene first
+            bool foundInScene = false;
+
+            for (Actor *a : scene->GetActors())
+            {
+                if (a->GetUUID()->Get() == uid->Get())
+                {
+                    foundInScene = true;
+                    returnValue = Actor::From(a);
+                    break;
+                }
+            }
+
+            if (!foundInScene)
+            {
+
+                for (Actor *a : scene->GetActors())
+                {
+                    returnValue = GetChildInHierarchy(a, uid);
+                    if (returnValue)
+                        break; // Exit the loop early if a match is found.
+                }
+            }
+        }
+        else
+        {
+            for (Actor *a : parent->GetChildren())
+            {
+                if (a->GetUUID()->Get() == uid->Get())
+                {
+                    found = true;
+                    returnValue = Actor::From(a);
+                    CE_TRACE("%s got copyed.", returnValue->GetName().c_str());
+                    break;
+                }
+
+                if (!found)
+                    GetChildInHierarchy(a, uid);
+            }
+        }
+
+        return returnValue;
+    }
+
+    void SceneHierarchyPanel::RmChildInHierarchy(Actor *parent, UUID *uid)
+    {
+        bool found = false;
+
+        if (!parent)
+        {
+            scene->RemoveActorByUUID(uid);
+            found = true;
+        }
+        else
+        {
+            for (Actor *a : parent->GetChildren())
+            {
+                if (a->GetUUID()->Get() == uid->Get())
+                {
+                    parent->RemoveChildUUID(uid);
+                    found = true;
+                }
+
+                if (!found)
+                    RmChildInHierarchy(a, uid);
+            }
         }
     }
 

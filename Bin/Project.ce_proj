@@ -1,6 +1,6 @@
 Project:
   Name: Sandbox
-  StartScene: Assets/Scene/DVD.ce_scene
+  StartScene: Assets/Scene/Parenting.ce_scene
   AssetPath: Assets
   ScriptPath: GameLibrary.dll
   ScriptFilesPath: Assets/Scripts

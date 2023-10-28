@@ -27,6 +27,30 @@ namespace Core
         return m;
     }
 
+    void Matrix4::From(Matrix4 *other)
+    {
+        for (int i = 0; i < 16; i++)
+        {
+            data[i] = other->data[i];
+        }
+    }
+
+    void Matrix4::From(Matrix4 other)
+    {
+        for (int i = 0; i < 16; i++)
+        {
+            data[i] = other.data[i];
+        }
+    }
+
+    void Matrix4::From(float *data)
+    {
+        for (int i = 0; i < 16; i++)
+        {
+            this->data[i] = data[i];
+        }
+    }
+
     Matrix4 Matrix4::Perspective(float fov, float aspect, float near, float far)
     {
         Matrix4 m;

@@ -1,0 +1,21 @@
+Scene: Pong
+Sky:
+  Mode: Color
+  Color: [0, 0, 0, 255]
+DirectionalLight:
+  Color: [255, 255, 255, 255]
+  Direction: [0, 0, -1]
+Actors:
+  - Actor: 0
+    Name: Camera
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [0, 0, 10]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PerspectiveCameraComponent:
+      Fov: 2.09439516
+      Near: 0.00999999978
+      Far: 1000
+      Position: [0, 0, 10]
+      Rotation: [0, 0, 0]

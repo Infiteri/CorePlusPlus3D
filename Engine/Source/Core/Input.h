@@ -158,6 +158,11 @@ namespace Core
         /// @return True or False.
         static bool GetKey(Keys key);
 
+        /// @brief If true, the passed in key has just been pressed.
+        /// @param key A key from the Core::Keys enum to check for.
+        /// @return True or False
+        static bool GetKeyJustNow(Keys key);
+
         /// @brief If true, the passed in button is being held down.
         /// @param button A button from the Core::Buttons enum to check for.
         /// @return True or False.

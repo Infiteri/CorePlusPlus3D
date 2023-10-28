@@ -6,29 +6,32 @@
 #include "Renderer/Geometry/BoxGeometry.h"
 #include "Renderer/ShaderSystem.h"
 
+#include <algorithm>
+
 namespace Core
 {
-    static CeU32 GID = 0;
 
     Actor::Actor()
     {
         state = ActorState::Created;
         name = "Actor";
+        parent = nullptr;
 
-        id = GID;
-        GID++;
+        CE_TRACE("Made actor: %i", uuid.Get());
     }
 
     Actor::~Actor()
     {
-        id = 0;
-        GID--;
     }
 
     Actor *Actor::From(Actor *other)
     {
+        if (!other)
+            return nullptr;
+
         Actor *outActor = new Actor();
         outActor->SetName(other->GetName());
+        outActor->SetParent(other->GetParent());
 
         auto transform = other->GetTransform();
         auto mesh = other->GetComponent<MeshComponent>();
@@ -59,6 +62,11 @@ namespace Core
 
         for (Component *component : components)
             component->Init();
+
+        for (Actor *a : children)
+        {
+            a->Init();
+        }
     }
 
     void Actor::Destroy()
@@ -74,7 +82,14 @@ namespace Core
             delete component;
         }
 
+        for (Actor *a : children)
+        {
+            a->Destroy();
+            delete a;
+        }
+
         components.clear();
+        children.clear();
     }
 
     void Actor::Update()
@@ -89,6 +104,11 @@ namespace Core
             aabb->y = transform.GetPosition()->y;
             aabb->z = transform.GetPosition()->z;
         }
+
+        for (Actor *a : children)
+        {
+            a->Update();
+        }
     }
 
     void Actor::Render()
@@ -96,12 +116,21 @@ namespace Core
         if (state == ActorState::Created || state == ActorState::Destroyed) // Rendering can be done in most states
             return;
 
+        CalculateMatrices();
         Shader *shd = ShaderSystem::Get("EngineResources/Shaders/Object");
-        shd->Mat4(transform.GetMatrix(), "uTransform");
+        shd->Mat4(worldMatrix, "uTransform");
 
         for (Component *component : components)
         {
-            component->Render();
+            if (component)
+            {
+                component->Render();
+            }
+        }
+
+        for (Actor *a : children)
+        {
+            a->Render();
         }
     }
 
@@ -114,6 +143,11 @@ namespace Core
 
         for (Component *component : components)
             component->Start();
+
+        for (Actor *a : children)
+        {
+            a->Start();
+        }
     }
 
     void Actor::Stop()
@@ -123,6 +157,11 @@ namespace Core
         for (Component *component : components)
         {
             component->Stop();
+        }
+
+        for (Actor *a : children)
+        {
+            a->Stop();
         }
     }
 
@@ -136,4 +175,85 @@ namespace Core
         return name;
     }
 
+    void Actor::SetParent(Actor *a)
+    {
+        parent = a;
+    }
+
+    void Actor::AddChild(Actor *actor)
+    {
+        actor->parent = this;
+        children.push_back(actor);
+
+        if (state == ActorState::Init)
+        {
+            actor->Init();
+        }
+        else if (state == ActorState::Started)
+        {
+            actor->Start();
+        }
+    }
+
+    Actor *Actor::GetChildByName(const std::string &name)
+    {
+        // TODO: Hierarchy search.
+        for (Actor *a : children)
+        {
+            if (a->GetName() == name)
+                return a;
+        }
+
+        return nullptr;
+    }
+
+    void Actor::RemoveChildByName(const std::string &name)
+    {
+        // TODO: Hierarchy search.
+        auto it = std::remove_if(children.begin(), children.end(), [&name](Actor *actor)
+                                 { return actor->GetName() == name; });
+
+        if (it != children.end())
+        {
+            // Element with the specified name found, erase it from the vector
+            children.erase(it, children.end());
+        }
+    }
+
+    void Actor::RemoveChildUUID(UUID *uid)
+    {
+        for (int i = 0; i < children.size(); i++)
+        {
+            if (children[i]->GetUUID()->Get() == uid->Get())
+            {
+                children[i]->Destroy();
+                delete children[i];
+
+                //? Remove vector
+                auto it = children.begin();
+                std::advance(it, i);
+                children.erase(it);
+            }
+        }
+    }
+
+    void Actor::SetUUID(CeU64 uid)
+    {
+        uuid = uid;
+    };
+
+    void Actor::CalculateMatrices()
+    {
+        localMatrix = transform.GetMatrix();
+
+        //? Calculate the world matrix with the parent matrix if its parented
+        if (parent)
+        {
+            worldMatrix = Matrix4::Multiply(&parent->worldMatrix, &localMatrix);
+        }
+        else
+        {
+            worldMatrix = localMatrix;
+        }
+    }
 }

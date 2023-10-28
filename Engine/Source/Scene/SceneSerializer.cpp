@@ -15,6 +15,8 @@
 #include <yaml-cpp/yaml.h>
 #include <fstream>
 
+#define CE_NO_PARENT_NAME "__NO_PARENT_NAME_CE__"
+
 namespace Core
 {
     YAML::Emitter &operator<<(YAML::Emitter &out, Vector3 *v)
@@ -105,10 +107,20 @@ namespace Core
     {
         out << YAML::BeginMap;
         out << YAML::Key << "Actor";
-        out << YAML::Value << a->GetID();
+        out << YAML::Value << "Filed";
+
+        out << YAML::Key << "UUID";
+        out << YAML::Value << a->GetUUID()->Get();
 
         out << YAML::Key << "Name";
         out << YAML::Value << a->GetName().c_str();
+
+        out << YAML::Key << "ParentName";
+
+        if (parent != nullptr)
+            out << YAML::Value << parent->GetName().c_str();
+        else
+            out << YAML::Value << CE_NO_PARENT_NAME;
 
         // Ser. Transform
         Transform *transform = a->GetTransform();
@@ -192,8 +204,11 @@ namespace Core
             out << YAML::Key << "PY" << YAML::Value << aabb->padding.y;
             out << YAML::EndMap;
         }
-
         out << YAML::EndMap;
+
+        // NOTE: Serialize the children
+        for (Actor *child : a->GetChildren())
+            SerActor(child, a, out);
     }
 
     void SceneSerializer::SerCamera(std::string name, PerspectiveCamera *camera, YAML::Emitter &out)
@@ -254,7 +269,7 @@ namespace Core
 
         //
         for (Actor *a : scene->GetActors())
-            SerActor(a, nullptr, out);
+            SerActor(a, a->GetParent(), out);
 
         out << YAML::EndSeq;
         out << YAML::EndMap;
@@ -327,6 +342,7 @@ namespace Core
                 auto aabb = actor["AABBComponent"];
 
                 Actor *a = new Actor();
+                a->SetUUID(actor["UUID"].as<CeU64>());
 
                 a->SetName(actor["Name"].as<std::string>());
                 a->GetTransform()->GetPosition()->Set(transform["Position"][0].as<float>(), transform["Position"][1].as<float>(), transform["Position"][2].as<float>());
@@ -390,7 +406,24 @@ namespace Core
                     abc->padding.y = aabb["PY"].as<float>();
                 }
 
-                scene->AddActor(a);
+                // Deserialize the actor parent
+                if (actor["ParentName"])
+                {
+                    std::string parentName = actor["ParentName"].as<std::string>();
+                    if (parentName != CE_NO_PARENT_NAME)
+                    {
+                        Actor *par = scene->GetActorByName(parentName);
+                        par->AddChild(a);
+                    }
+                    else
+                    {
+                        scene->AddActor(a);
+                    }
+                }
+                else
+                {
+                    scene->AddActor(a);
+                }
             }
         }
     }

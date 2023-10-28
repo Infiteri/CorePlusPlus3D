@@ -12,3 +12,7 @@ Moved the editor state into a structure called EditorState, therefore the cpp fi
 ## 22 October 2023
 
 Okay so started working on a little pong clone, small problem, no collision detection and the scripts are in the bin folder witch get ignored.
+
+## 24 October 2023
+
+Made bin public yesterday, started to work on actor parenting.

@@ -127,16 +127,10 @@ namespace Core
         // Dupe an actor
         if (sceneHierarchyPanel.selectionContext != nullptr)
         {
-            if (ctrl && Input::GetKey(Keys::D) && !state.hasDupeOnce)
+            if (ctrl && Input::GetKeyJustNow(Keys::D))
             {
-                state.hasDupeOnce = true;
                 World::GetActive()->AddActor(Actor::From(sceneHierarchyPanel.selectionContext));
             }
-        }
-
-        if (!Input::GetKey(Keys::D))
-        {
-            state.hasDupeOnce = false;
         }
     }
     // --------------------------------
@@ -633,37 +627,70 @@ namespace Core
             if (actorContext != nullptr && camera != nullptr)
             {
                 auto tc = actorContext->GetTransform();
-                auto data = tc->GetMatrix().data;
-                DrawGizmo(camera, data);
+                auto delta = actorContext->GetParent() ? Matrix4::Invert(actorContext->GetParent()->GetWorldMatrix()).data : NULL;
+                auto data = actorContext->GetWorldMatrix()->data;
+                DrawGizmo(camera, data, delta);
 
                 if (ImGuizmo::IsUsing())
                 {
+                    Matrix4 dater;
+                    if (actorContext->GetParent() != nullptr)
+                    {
+                        Matrix4 dataMatrix = Matrix4();
+                        dataMatrix.From(actorContext->GetLocalMatrix());
+
+                        Matrix4 deltaMatrix = Matrix4();
+                        if (delta)
+                            deltaMatrix.From(delta);
+                        else
+                            deltaMatrix = Matrix4::Identity();
+
+                        dater = Matrix4::Multiply(dataMatrix, deltaMatrix);
+                    }
+                    else
+                    {
+                        dater.From(data);
+                    }
+
+                    // if (state.operation == ImGuizmo::TRANSLATE)
+                    // {
+                    //     Math::DecomposePosition(dater.data, tc->GetPosition());
+                    // }
+                    // else if (state.operation == ImGuizmo::ROTATE)
+                    // {
+                    //     Vector3 delta;
+                    //     Vector3 *old = tc->GetRotation();
+
+                    //     Math::DecomposeRotation(dater.data, &delta);
+
+                    //     old->x += delta.x - old->x;
+                    //     old->y += delta.y - old->y;
+                    //     old->z += delta.z - old->z;
+                    // }
+                    // else if (state.operation == ImGuizmo::SCALE)
+                    // {
+                    //     Math::DecomposeScale(dater.data, tc->GetScale());
+                    // }
+
+                    float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+                    ImGuizmo::DecomposeMatrixToComponents(dater.data, matrixTranslation, matrixRotation, matrixScale);
+                    ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, dater.data);
+
                     if (state.operation == ImGuizmo::TRANSLATE)
                     {
-                        Math::DecomposePosition(data, tc->GetPosition());
+                        matrixTranslation[0] = dater.data[12];
+                        matrixTranslation[1] = dater.data[13];
+                        matrixTranslation[2] = dater.data[14];
+                        tc->GetPosition()->Set(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]);
                     }
                     else if (state.operation == ImGuizmo::ROTATE)
                     {
-                        Vector3 delta;
-                        Vector3 *old = tc->GetRotation();
-
-                        Math::DecomposeRotation(data, &delta);
-
-                        old->x += delta.x - old->x;
-                        old->y += delta.y - old->y;
-                        old->z += delta.z - old->z;
+                        tc->GetRotation()->Set(Math::DegToRad(matrixRotation[0]), Math::DegToRad(matrixRotation[1]), Math::DegToRad(matrixRotation[2]));
                     }
                     else if (state.operation == ImGuizmo::SCALE)
                     {
-                        Math::DecomposeScale(data, tc->GetScale());
+                        tc->GetScale()->Set(matrixScale[0], matrixScale[1], matrixScale[2]);
                     }
-
-                    float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-                    ImGuizmo::DecomposeMatrixToComponents(data, matrixTranslation, matrixRotation, matrixScale);
-                    ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, data);
-
-                    tc->GetPosition()->Set(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]);
-                    tc->GetRotation()->Set(Math::DegToRad(matrixRotation[0]), Math::DegToRad(matrixRotation[1]), Math::DegToRad(matrixRotation[2]));
                 }
             }
         }
@@ -671,7 +698,7 @@ namespace Core
         ImGui::End();
     }
 
-    void EditorLayer::DrawGizmo(PerspectiveCamera *camera, float *data)
+    void EditorLayer::DrawGizmo(PerspectiveCamera *camera, float *data, float *deltaMatrix)
     {
         if (camera != nullptr && data != nullptr)
         {
@@ -679,7 +706,7 @@ namespace Core
             ImGuizmo::SetDrawlist();
             ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
 
-            ImGuizmo::Manipulate(camera->GetViewMatrix().data, camera->GetProjection()->data, state.operation, ImGuizmo::LOCAL, data);
+            ImGuizmo::Manipulate(camera->GetViewMatrix().data, camera->GetProjection()->data, state.operation, ImGuizmo::WORLD, data, deltaMatrix);
         }
     }
     // --------------------------------

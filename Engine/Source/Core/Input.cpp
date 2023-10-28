@@ -16,10 +16,16 @@ namespace Core
 
     static InputMouseState mouse_state;
     static std::unordered_map<Keys, bool> keys;
+    static std::unordered_map<Keys, bool> justKeys;
+    static std::unordered_map<Keys, bool> lastKeys;
     static std::unordered_map<Buttons, bool> buttons;
 
     void Input::Init()
     {
+        for (auto &keyState : keys)
+        {
+            lastKeys[keyState.first] = keyState.second;
+        }
     }
 
     void Input::Shutdown()
@@ -29,6 +35,11 @@ namespace Core
     bool Input::GetKey(Keys key)
     {
         return keys[key];
+    }
+
+    bool Input::GetKeyJustNow(Keys key)
+    {
+        return justKeys[key];
     }
 
     bool Input::GetButton(Buttons button)
@@ -81,10 +92,11 @@ namespace Core
 
         return mouse_state.delta.y < 0 ? -1 : 1;
     }
-
     void InputUpdateKey(Keys key, bool p)
     {
+        lastKeys[key] = keys[key];
         keys[key] = p;
+        justKeys[key] = (keys[key] && !lastKeys[key]);
     }
 
     void InputUpdateButton(Buttons button, bool p)

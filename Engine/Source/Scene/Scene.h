@@ -61,20 +61,23 @@ namespace Core
         void Stop();
 
         Actor *GetActorByName(const std::string &name);
+        Actor *GetActorByUUID(UUID *uid);
         void AddActor(Actor *a);
         void RemoveActorByName(const std::string &name);
-        void RemoveActorByID(CeU32 id);
+        void RemoveActorByUUID(UUID *id);
 
         // --- CAMERA ---
         void ActivateSceneCamera();
         PerspectiveCameraComponent *GetActorCameraComponent();
         // ------------
-
         inline std::string GetName() { return name; };
         void SetName(const std::string &_name);
 
         void MoveActorInHierarchy(const std::string &name, int index);
+        void MoveActorInHierarchy(UUID *uid, int index);
 
+        int GetActorCount() ;
+        Actor *GetActorAtIndex(int i);
         std::vector<Actor *> GetActors();
         SceneEnvironment *GetEnvironment();
         DirectionalLight *GetEnvironmentDirectionalLight();

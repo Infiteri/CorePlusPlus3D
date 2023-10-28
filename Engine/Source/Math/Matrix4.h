@@ -12,6 +12,9 @@ namespace Core
         ~Matrix4();
 
         float data[16];
+        void From(Matrix4 *other);
+        void From(Matrix4 other);
+        void From(float* data);
 
         static Matrix4 Identity();
         static Matrix4 Empty();
@@ -46,7 +49,7 @@ namespace Core
         static Vector3 Right(Matrix4 mat);
         static Vector3 Right(Matrix4 *mat);
 
-        static Matrix4 Scale(Vector3* vec);
+        static Matrix4 Scale(Vector3 *vec);
         static Matrix4 Scale(float x, float y, float z);
     };
 }

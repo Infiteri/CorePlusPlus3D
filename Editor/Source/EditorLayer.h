@@ -121,6 +121,6 @@ namespace Core
 
         /// @brief VALUES ARE PRE-SET
         void ResizeViewport();
-        void DrawGizmo(PerspectiveCamera *camera, float *data);
+        void DrawGizmo(PerspectiveCamera *camera, float *data, float *deltaMatrix = NULL);
     };
 }

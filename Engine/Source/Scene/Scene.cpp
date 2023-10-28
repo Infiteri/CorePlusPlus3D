@@ -14,6 +14,7 @@
 
 namespace Core
 {
+
     SceneEnvironment::~SceneEnvironment()
     {
         delete directionalLight;
@@ -105,7 +106,9 @@ namespace Core
         environment.Raw()->directionalLight->Update();
 
         for (Actor *a : actors)
+        {
             a->Render();
+        }
     }
 
     void Scene::Start()
@@ -148,6 +151,18 @@ namespace Core
         return nullptr;
     }
 
+    Actor *Scene::GetActorByUUID(UUID *uid)
+    {
+
+        for (Actor *a : actors)
+        {
+            if (a->GetUUID()->Get() == uid->Get())
+                return a;
+        }
+
+        return nullptr;
+    }
+
     void Scene::AddActor(Actor *a)
     {
         if (state == SceneState::Running)
@@ -160,6 +175,7 @@ namespace Core
             a->Init();
         }
 
+        RemoveActorByUUID(a->GetUUID());
         actors.push_back(a);
     }
 
@@ -168,24 +184,27 @@ namespace Core
         for (Actor *a : actors)
         {
             if (a->GetName() == name)
-                RemoveActorByID(a->GetID());
+                RemoveActorByUUID(a->GetUUID());
         }
     }
 
-    void Scene::RemoveActorByID(CeU32 id)
+    void Scene::RemoveActorByUUID(UUID *id)
     {
-        auto it = actors.begin();
-
-        // Iterate over the vector
-        while (it != actors.end())
+        for (int i = 0; i < actors.size(); i++)
         {
-            if ((*it)->GetID() == id)
+            if (actors[i]->GetUUID()->Get() == id->Get())
             {
-                delete *it;
-                it = actors.erase(it);
+                CE_DEBUG("Removing %s (%ull), %i.", actors[i]->GetName().c_str(), id->Get(), actors.size());
+                actors[i]->Destroy();
+                delete actors[i];
+
+                //? Remove vector
+                auto it = actors.begin();
+                std::advance(it, i);
+                actors.erase(it);
+
+                CE_DEBUG("Length %i.", actors.size());
             }
-            else
-                ++it;
         }
     }
 
@@ -248,6 +267,51 @@ namespace Core
             // Insert the actor at the new index
             actors.insert(actors.begin() + newIndex, actorToMove);
         }
+    }
+
+    void Scene::MoveActorInHierarchy(UUID *uid, int newIndex)
+    {
+        Actor *actorToMove = GetActorByUUID(uid);
+
+        if (!actorToMove)
+        {
+            return;
+        }
+
+        if (newIndex < 0 || newIndex >= actors.size())
+        {
+            return;
+        }
+
+        // Find the current index of the actor
+        auto actorIterator = std::find(actors.begin(), actors.end(), actorToMove);
+
+        if (actorIterator != actors.end())
+        {
+            size_t currentIndex = std::distance(actors.begin(), actorIterator);
+
+            // Remove the actor from the current position
+            actors.erase(actorIterator);
+
+            // Insert the actor at the new index
+            actors.insert(actors.begin() + newIndex, actorToMove);
+        }
+    }
+
+    int Scene::GetActorCount()
+    {
+        return actors.size();
+    }
+
+    Actor *Scene::GetActorAtIndex(int i)
+    {
+        if (i > actors.size())
+        {
+            CE_ERROR("Unable to get actor at index %i, out of bounds. (Actor count is %i.)", i, actors.size());
+            return nullptr;
+        }
+
+        return actors[i];
     }
 
     SceneEnvironment *Scene::GetEnvironment()

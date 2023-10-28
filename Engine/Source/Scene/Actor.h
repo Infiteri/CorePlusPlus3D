@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Base.h"
+#include "Core/UUID.h"
 #include "Math/Transform.h"
 #include "Renderer/Objects/Mesh.h"
 
@@ -35,17 +36,22 @@ namespace Core
     private:
         Transform transform;
         ActorState state;
-        CeU32 id;
-
-        // List of components
-        std::vector<Component *> components;
         std::string name;
+        Actor *parent;
+        UUID uuid;
+
+        // Lists
+        std::vector<Component *> components;
+        std::vector<Actor *> children;
+
+        Matrix4 localMatrix;
+        Matrix4 worldMatrix;
 
     public:
         Actor();
         ~Actor();
 
-        static Actor* From(Actor* other);
+        static Actor *From(Actor *other);
 
         /// @brief At the beginning of the actor.
         void Init();
@@ -66,9 +72,36 @@ namespace Core
         std::string GetName();
 
         std::vector<Component *> GetComponents() { return components; };
+        std::vector<Actor *> GetChildren() { return children; };
+
+        UUID *GetUUID() { return &uuid; };
+        void SetUUID(CeU64 uid);
+
+        // -- ACTOR RELATIONS ---------------
+
+        /// @brief If nullptr than there is no parent.
+        /// @return Actor* || nullptr.
+        Actor *GetParent() { return parent; };
+        void SetParent(Actor *a);
+
+        /// @brief Adds a child to the list and sets this as its parent.
+        /// @param actor Pointer ot an actor.
+        void AddChild(Actor *actor);
+
+        /// @brief Searches and returns a actor by this name.
+        /// @param name The name to check.
+        /// @return Actor* || nullptr;
+        Actor *GetChildByName(const std::string &name);
+
+        /// @brief Removes a child with this name.
+        /// @param name The name.
+        void RemoveChildByName(const std::string &name);
+
+        void RemoveChildUUID(UUID *uid);
+
+        // ----------------------------------
 
         // ---------- COMPONENTS ----------
-
         template <typename T, typename... Args>
         T *AddComponent(Args... args)
         {
@@ -124,9 +157,12 @@ namespace Core
             }
         };
 
+        void CalculateMatrices();
+
         // -------------------------------
 
         inline Transform *GetTransform() { return &transform; };
-        inline CeU32 GetID() { return id; };
+        inline Matrix4 *GetWorldMatrix() { return &worldMatrix; };
+        inline Matrix4 *GetLocalMatrix() { return &localMatrix; };
     };
 }
