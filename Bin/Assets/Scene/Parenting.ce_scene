@@ -1,4 +1,4 @@
-Scene: NewSceneCreate
+Scene: Pong
 Sky:
   Mode: Color
   Color: [0, 0, 0, 255]
@@ -7,36 +7,18 @@ DirectionalLight:
   Direction: [0, 0, -1]
 Actors:
   - Actor: Filed
-    UUID: 1275278976166057676
-    Name: Base
+    UUID: 14575463871798177882
+    Name: Actor
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
-      Position: [-1.83691406, 0, 0]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1.42999995]
-    MeshComponent:
-      Name: DefaultMaterial
-      Unique: Yes
-      Color: [255, 255, 255, 255]
-      ColorTextureName: ""
-      GeometryType: Box
-      W: 1
-      H: 1
-      D: 1
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
   - Actor: Filed
-    UUID: 15262350177463864069
-    Name: Actor
-    ParentName: Base
+    UUID: 11780478036175976053
+    Name: Actora
+    ParentName: Actor
     Transform:
-      Position: [5.36412668, -0.244928733, 0.885308564]
-      Rotation: [0, -0, 0]
-      Scale: [0.00417432422, 0.371608436, 0.116419047]
-    MeshComponent:
-      Name: DefaultMaterial
-      Unique: Yes
-      Color: [255, 255, 255, 255]
-      ColorTextureName: ""
-      GeometryType: Box
-      W: 1
-      H: 1
-      D: 1
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]

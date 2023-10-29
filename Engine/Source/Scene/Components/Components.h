@@ -4,6 +4,7 @@
 
 #include "Renderer/Objects/Mesh.h"
 #include "Renderer/Camera/CameraSystem.h"
+#include "Renderer/Light/PointLight.h"
 
 namespace Core
 {
@@ -91,6 +92,20 @@ namespace Core
         void From(AABBComponent *other);
 
         bool CollidesWith(AABBComponent *other);
-        bool PointInShape(Vector3 point);
+
+        bool CollidesX(AABBComponent *other);
+        bool CollidesY(AABBComponent *other);
+    };
+
+    class CE_API PointLightComponent : public Component
+    {
+    public:
+        PointLight *light;
+
+        PointLightComponent();
+        ~PointLightComponent();
+
+        void Destroy();
+        void Render();
     };
 }

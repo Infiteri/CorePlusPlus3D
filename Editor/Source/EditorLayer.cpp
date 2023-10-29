@@ -110,16 +110,16 @@ namespace Core
         case DropDownSettingNone:
         case DropDownSettingScene:
         default:
-            if (ctrl && Input::GetKey(Keys::N))
+            if (ctrl && Input::GetKeyJustNow(Keys::N))
                 New();
 
-            if (ctrl && Input::GetKey(Keys::O))
+            if (ctrl && Input::GetKeyJustNow(Keys::O))
                 Open();
 
-            if (ctrl && shift && Input::GetKey(Keys::S))
+            if (ctrl && shift && Input::GetKeyJustNow(Keys::S))
                 SaveAs();
 
-            if (ctrl && Input::GetKey(Keys::S))
+            if (ctrl && Input::GetKeyJustNow(Keys::S))
                 Save();
             break;
         }
@@ -365,8 +365,8 @@ namespace Core
     {
         World::StopActive();
         // TODO: Create scene window prompt with basic information.
-        World::Create("NewSceneCreate");
-        World::Activate("NewSceneCreate");
+        World::Create("Untitled Scene");
+        World::Activate("Untitled Scene");
         World::InitActive();
 
         SetContexts();
@@ -652,26 +652,6 @@ namespace Core
                         dater.From(data);
                     }
 
-                    // if (state.operation == ImGuizmo::TRANSLATE)
-                    // {
-                    //     Math::DecomposePosition(dater.data, tc->GetPosition());
-                    // }
-                    // else if (state.operation == ImGuizmo::ROTATE)
-                    // {
-                    //     Vector3 delta;
-                    //     Vector3 *old = tc->GetRotation();
-
-                    //     Math::DecomposeRotation(dater.data, &delta);
-
-                    //     old->x += delta.x - old->x;
-                    //     old->y += delta.y - old->y;
-                    //     old->z += delta.z - old->z;
-                    // }
-                    // else if (state.operation == ImGuizmo::SCALE)
-                    // {
-                    //     Math::DecomposeScale(dater.data, tc->GetScale());
-                    // }
-
                     float matrixTranslation[3], matrixRotation[3], matrixScale[3];
                     ImGuizmo::DecomposeMatrixToComponents(dater.data, matrixTranslation, matrixRotation, matrixScale);
                     ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, dater.data);
@@ -681,15 +661,15 @@ namespace Core
                         matrixTranslation[0] = dater.data[12];
                         matrixTranslation[1] = dater.data[13];
                         matrixTranslation[2] = dater.data[14];
-                        tc->GetPosition()->Set(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]);
+                        tc->position.Set(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]);
                     }
                     else if (state.operation == ImGuizmo::ROTATE)
                     {
-                        tc->GetRotation()->Set(Math::DegToRad(matrixRotation[0]), Math::DegToRad(matrixRotation[1]), Math::DegToRad(matrixRotation[2]));
+                        tc->rotation.Set(Math::DegToRad(matrixRotation[0]), Math::DegToRad(matrixRotation[1]), Math::DegToRad(matrixRotation[2]));
                     }
                     else if (state.operation == ImGuizmo::SCALE)
                     {
-                        tc->GetScale()->Set(matrixScale[0], matrixScale[1], matrixScale[2]);
+                        tc->scale.Set(matrixScale[0], matrixScale[1], matrixScale[2]);
                     }
                 }
             }

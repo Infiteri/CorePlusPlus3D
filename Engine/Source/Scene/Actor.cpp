@@ -53,6 +53,11 @@ namespace Core
         if (aabb)
             outActor->AddComponent<AABBComponent>()->From(aabb);
 
+        for (Actor *a : other->GetChildren())
+        {
+            outActor->AddChild(Actor::From(a));
+        }
+
         return outActor;
     }
 
@@ -100,9 +105,9 @@ namespace Core
         auto aabb = GetComponent<AABBComponent>();
         if (aabb)
         {
-            aabb->x = transform.GetPosition()->x;
-            aabb->y = transform.GetPosition()->y;
-            aabb->z = transform.GetPosition()->z;
+            aabb->x = transform.position.x;
+            aabb->y = transform.position.y;
+            aabb->z = transform.position.z;
         }
 
         for (Actor *a : children)

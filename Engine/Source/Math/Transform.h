@@ -8,26 +8,15 @@ namespace Core
 {
     class CE_API Transform
     {
-    private:
+    public:
         Vector3 position;
         Vector3 rotation;
         Vector3 scale;
 
-    public:
         Transform();
         ~Transform();
 
-        void From(Transform* other);
-
-        inline Vector3 *GetPosition() { return &position; };
-        inline Vector3 GetRawPosition() { return position; };
-
-        inline Vector3 *GetRotation() { return &rotation; };
-        inline Vector3 GetRawRotation() { return rotation; };
-
-        inline Vector3 *GetScale() { return &scale; };
-        inline Vector3 GetRawScale() { return scale; };
-
+        void From(Transform *other);
         Matrix4 GetMatrix();
     };
 }

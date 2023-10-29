@@ -1,9 +1,0 @@
-Scene: NewSceneCreate
-Sky:
-  Mode: Color
-  Color: [0, 0, 0, 255]
-DirectionalLight:
-  Color: [255, 255, 255, 255]
-  Direction: [0, 0, -1]
-Actors:
-  []

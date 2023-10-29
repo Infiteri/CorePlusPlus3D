@@ -120,15 +120,15 @@ namespace Core
 
     void PerspectiveCameraComponent::Render()
     {
-        camera->GetPosition()->Set(owner->GetTransform()->GetPosition());
-        camera->GetRotation()->Set(owner->GetTransform()->GetRotation());
+        camera->GetPosition()->Set(&owner->GetTransform()->position);
+        camera->GetRotation()->Set(&owner->GetTransform()->rotation);
     }
 
     void AABBComponent::Render()
     {
-        x = owner->GetTransform()->GetPosition()->x;
-        y = owner->GetTransform()->GetPosition()->y;
-        z = owner->GetTransform()->GetPosition()->z;
+        x = owner->GetTransform()->position.x;
+        y = owner->GetTransform()->position.y;
+        z = owner->GetTransform()->position.z;
     }
 
     void AABBComponent::From(AABBComponent *other)
@@ -145,25 +145,69 @@ namespace Core
     {
         if (!other)
         {
-            CE_ERROR("No other");
+            CE_ERROR("AABBComponent::CollidesWith: Other is nullptr.");
             return false;
         }
 
-        float left1 = x - width;
-        float right1 = x + width;
-        float top1 = y - height;
-        float bottom1 = y + height;
+        if (CollidesX(other) && CollidesY(other))
+            return true;
 
-        float left2 = other->x - other->width;
-        float right2 = other->x + other->width;
-        float top2 = other->y - other->height;
-        float bottom2 = other->y + other->height;
+        return false;
+    }
+
+    bool AABBComponent::CollidesX(AABBComponent *other)
+    {
+        if (!other)
+        {
+            CE_ERROR("AABBComponent::CollidesX: Other is nullptr.");
+            return false;
+        }
+
+        float left1 = x - width - padding.x;
+        float right1 = x + width + padding.x;
+
+        float left2 = other->x - other->width - other->padding.x;
+        float right2 = other->x + other->width + other->padding.x;
 
         bool horizontalOverlap = (left1 <= right2) && (right1 >= left2);
-        bool verticalOverlap = (top1 <= bottom2) && (bottom1 >= top2);
-        if (horizontalOverlap && verticalOverlap)
-            return true; // AABBs are colliding
+        return horizontalOverlap;
+    }
 
-        return false; // No collision detected
+    bool AABBComponent::CollidesY(AABBComponent *other)
+    {
+        if (!other)
+        {
+            CE_ERROR("AABBComponent::CollidesY: Other is nullptr.");
+            return false;
+        }
+
+        float top1 = y - height - padding.y;
+        float bottom1 = y + height + padding.y;
+        float top2 = other->y - other->height - other->padding.y;
+        float bottom2 = other->y + other->height + other->padding.y;
+        bool verticalOverlap = (top1 <= bottom2) && (bottom1 >= top2);
+
+        return verticalOverlap;
+    }
+
+    PointLightComponent::PointLightComponent()
+    {
+        light = new PointLight();
+    }
+
+    PointLightComponent::~PointLightComponent()
+    {
+        Destroy();
+    }
+
+    void PointLightComponent::Destroy()
+    {
+        delete light;
+    }
+
+    void PointLightComponent::Render()
+    {
+        light->GetPosition()->Set(&owner->GetTransform()->position);
+        light->Update();
     }
 }

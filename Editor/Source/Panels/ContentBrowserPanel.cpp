@@ -284,11 +284,15 @@ namespace Core
                     hFile << "class " << Name << " : public Core::ActorScript {\n";
                     hFile << "public:\n";
                     hFile << "\n";
-                    hFile << Name << "();\n";
-                    hFile << "~" << Name << "();\n";
+                    hFile << "    " << Name << "() {};\n";
+                    hFile << "    "
+                          << "~" << Name << "() {};\n";
+                    hFile << "\n";
+                    hFile << "    void OnStart();";
+                    hFile << "\n";
+                    hFile << "    void OnUpdate();";
                     hFile << "\n";
                     hFile << "};\n";
-                    hFile << "\n";
                     hFile << "\n";
                     hFile << "CE_DEFINE_ACTOR_SCRIPT(" << Name << ");\n";
                 }
@@ -302,12 +306,11 @@ namespace Core
                 std::ofstream cFile(NewName2.c_str());
                 if (cFile.is_open())
                 {
-                    cFile << "#include <" << Name << ".h>\n";
+                    cFile << "#include \"" << Name << ".h\"\n";
                     cFile << "\n";
-                    cFile << Name << "::" << Name << "() {}\n";
-                    cFile << Name << "::"
-                          << "~" << Name << "() {}\n";
-
+                    cFile << "void " << Name << "::OnStart() {}\n";
+                    cFile << "\n";
+                    cFile << "void " << Name << "::OnUpdate() {}\n";
                     cFile << "\n";
                     cFile << "CE_IMPLEMENT_ACTOR_SCRIPT_DEFINE(" << Name << ");\n";
                 }

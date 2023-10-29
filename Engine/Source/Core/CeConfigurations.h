@@ -36,8 +36,5 @@ namespace Core
     {
         /// @brief Basic window configuration of the engine
         WindowConfiguration windowConfig;
-
-        bool LoadGameLibrary = false;
-        std::string GameLibraryName = "";
     };
 }

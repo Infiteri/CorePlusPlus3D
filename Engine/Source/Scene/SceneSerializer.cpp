@@ -79,6 +79,16 @@ namespace Core
         }
     }
 
+    void YAMLToVcc3(YAML::Node node, Vector3 *out)
+    {
+        out->Set(node[0].as<float>(), node[1].as<float>(), node[2].as<float>());
+    };
+
+    void YAMLToColor(YAML::Node node, Color *out)
+    {
+        out->Set(node[0].as<float>(), node[1].as<float>(), node[2].as<float>(), node[3].as<float>());
+    };
+
     GeometryType StringToGeometryType(const std::string &value)
     {
         if (value.compare("Box") == 0)
@@ -126,15 +136,16 @@ namespace Core
         Transform *transform = a->GetTransform();
         out << YAML::Key << "Transform";
         out << YAML::BeginMap;
-        out << YAML::Key << "Position" << YAML::Value << transform->GetPosition();
-        out << YAML::Key << "Rotation" << YAML::Value << transform->GetRotation();
-        out << YAML::Key << "Scale" << YAML::Value << transform->GetScale();
+        out << YAML::Key << "Position" << YAML::Value << &transform->position;
+        out << YAML::Key << "Rotation" << YAML::Value << &transform->rotation;
+        out << YAML::Key << "Scale" << YAML::Value << &transform->scale;
         out << YAML::EndMap;
 
         auto mesh = a->GetComponent<MeshComponent>();
         auto actorScript = a->GetComponent<ActorScriptComponent>();
         auto camera = a->GetComponent<PerspectiveCameraComponent>();
         auto aabb = a->GetComponent<AABBComponent>();
+        auto pointLight = a->GetComponent<PointLightComponent>();
 
         if (mesh)
         {
@@ -204,6 +215,21 @@ namespace Core
             out << YAML::Key << "PY" << YAML::Value << aabb->padding.y;
             out << YAML::EndMap;
         }
+
+        if (pointLight)
+        {
+            out << YAML::Key << "PointLight";
+            out << YAML::BeginMap;
+            out << YAML::Key << "Position" << YAML::Value << &pointLight->light->GetTransform()->position;
+            out << YAML::Key << "Color" << YAML::Value << pointLight->light->GetColor();
+            out << YAML::Key << "Specular" << YAML::Value << pointLight->light->GetSpecular();
+            out << YAML::Key << "Constant" << YAML::Value << pointLight->light->GetConstant();
+            out << YAML::Key << "Linear" << YAML::Value << pointLight->light->GetLinear();
+            out << YAML::Key << "Intensity" << YAML::Value << pointLight->light->GetIntensity();
+            out << YAML::Key << "Radius" << YAML::Value << pointLight->light->GetRadius();
+            out << YAML::EndMap;
+        }
+
         out << YAML::EndMap;
 
         // NOTE: Serialize the children
@@ -340,14 +366,15 @@ namespace Core
                 auto actorScript = actor["ActorScriptComponent"];
                 auto camera = actor["PerspectiveCameraComponent"];
                 auto aabb = actor["AABBComponent"];
+                auto pLight = actor["PointLight"];
 
                 Actor *a = new Actor();
                 a->SetUUID(actor["UUID"].as<CeU64>());
 
                 a->SetName(actor["Name"].as<std::string>());
-                a->GetTransform()->GetPosition()->Set(transform["Position"][0].as<float>(), transform["Position"][1].as<float>(), transform["Position"][2].as<float>());
-                a->GetTransform()->GetRotation()->Set(transform["Rotation"][0].as<float>(), transform["Rotation"][1].as<float>(), transform["Rotation"][2].as<float>());
-                a->GetTransform()->GetScale()->Set(transform["Scale"][0].as<float>(), transform["Scale"][1].as<float>(), transform["Scale"][2].as<float>());
+                a->GetTransform()->position.Set(transform["Position"][0].as<float>(), transform["Position"][1].as<float>(), transform["Position"][2].as<float>());
+                a->GetTransform()->rotation.Set(transform["Rotation"][0].as<float>(), transform["Rotation"][1].as<float>(), transform["Rotation"][2].as<float>());
+                a->GetTransform()->scale.Set(transform["Scale"][0].as<float>(), transform["Scale"][1].as<float>(), transform["Scale"][2].as<float>());
 
                 if (mesh)
                 {
@@ -404,6 +431,18 @@ namespace Core
                     abc->depth = aabb["D"].as<float>();
                     abc->padding.x = aabb["PX"].as<float>();
                     abc->padding.y = aabb["PY"].as<float>();
+                }
+
+                if (pLight)
+                {
+                    auto c = a->AddComponent<PointLightComponent>();
+                    YAMLToVcc3(pLight["Position"], &c->light->GetTransform()->position);
+                    YAMLToColor(pLight["Color"], c->light->GetColor());
+                    YAMLToVcc3(pLight["Specular"], c->light->GetSpecular());
+                    c->light->SetConstant(pLight["Constant"].as<float>());
+                    c->light->SetLinear(pLight["Linear"].as<float>());
+                    c->light->SetIntensity(pLight["Intensity"].as<float>());
+                    c->light->SetRadius(pLight["Radius"].as<float>());
                 }
 
                 // Deserialize the actor parent

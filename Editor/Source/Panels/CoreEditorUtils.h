@@ -47,5 +47,8 @@ namespace Core
         std::string GeometryTypeToString(GeometryType t);
         GeometryType StringToGeometryType(const std::string &v);
         void MaterialToFile(const std::string &name, MaterialConfiguration *mat);
+
+        void ImGuiColor4Edit(const char*label,Color *color);
+        void ImGuiVec3Edit(const char*label,Vector3 *vec);
     }
 }

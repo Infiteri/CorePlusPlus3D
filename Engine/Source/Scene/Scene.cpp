@@ -7,6 +7,7 @@
 #include "Renderer/Camera/CameraSystem.h"
 #include "Renderer/Geometry/BoxGeometry.h"
 #include "Renderer/Geometry/PlaneGeometry.h"
+#include "Renderer/ShaderSystem.h"
 
 #include "Script/ScriptEngine.h"
 
@@ -109,6 +110,10 @@ namespace Core
         {
             a->Render();
         }
+
+        ShaderSystem::Get("EngineResources/Shaders/Object")->Int(environment.Raw()->pointLightCount, "uPointLightCount");
+
+        environment.Raw()->pointLightCount = 0;
     }
 
     void Scene::Start()
@@ -225,8 +230,8 @@ namespace Core
             auto comp = a->GetComponent<PerspectiveCameraComponent>();
             if (comp)
             {
-                comp->camera->GetPosition()->Set(a->GetTransform()->GetPosition());
-                comp->camera->GetRotation()->Set(a->GetTransform()->GetRotation());
+                comp->camera->GetPosition()->Set(&a->GetTransform()->position);
+                comp->camera->GetRotation()->Set(&a->GetTransform()->rotation);
                 return comp;
             }
         }

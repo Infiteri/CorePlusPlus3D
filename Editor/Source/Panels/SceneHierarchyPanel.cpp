@@ -172,6 +172,7 @@ namespace Core
     void DrawActorScriptUI(ActorScriptComponent *scr, Actor *a);
     void DrawCameraComponentUI(PerspectiveCameraComponent *c, Actor *a);
     void DrawAABBComponent(AABBComponent *comp, Actor *a);
+    void DrawPointLightComponent(PointLightComponent *comp, Actor *a);
     // ----------------------------------------
 
     void SceneHierarchyPanel::DrawActorComponents(Actor *a)
@@ -193,9 +194,9 @@ namespace Core
         bool transformOpen = ImGui::TreeNodeEx((void *)typeid(Transform).hash_code(), treeNodeFlags, "Transform");
         if (transformOpen)
         {
-            EditorUtils::ImGuiVector3Edit("Position", a->GetTransform()->GetPosition(), 0.0f);
-            EditorUtils::ImGuiVector3Edit("Rotation", a->GetTransform()->GetRotation(), 0.0f);
-            EditorUtils::ImGuiVector3Edit("Scale", a->GetTransform()->GetScale(), 1.0f);
+            EditorUtils::ImGuiVector3Edit("Position", &a->GetTransform()->position, 0.0f);
+            EditorUtils::ImGuiVector3Edit("Rotation", &a->GetTransform()->rotation, 0.0f);
+            EditorUtils::ImGuiVector3Edit("Scale", &a->GetTransform()->scale, 1.0f);
             ImGui::TreePop();
         }
 
@@ -212,6 +213,9 @@ namespace Core
         EditorUtils::DrawComponentUI<AABBComponent>("AABB", a, [&](AABBComponent *comp)
                                                     { DrawAABBComponent(comp, a); });
 
+        EditorUtils::DrawComponentUI<PointLightComponent>("Point Light", a, [&](PointLightComponent *comp)
+                                                          { DrawPointLightComponent(comp, a); });
+
         for (auto comp : selectionContext->GetComponents())
         {
             if (comp->custom)
@@ -224,7 +228,7 @@ namespace Core
             if (selectionContext && a->GetUUID()->Get() == selectionContext->GetUUID()->Get())
                 selectionContext = nullptr;
 
-            scene->RemoveActorByUUID(a->GetUUID());
+            RmChildInHierarchy(a->GetParent(), a->GetUUID());
         }
 
         ImGui::SameLine();
@@ -247,6 +251,9 @@ namespace Core
 
             if (ImGui::MenuItem("AABB"))
                 selectionContext->AddComponent<AABBComponent>();
+
+            if (ImGui::MenuItem("Point Light"))
+                selectionContext->AddComponent<PointLightComponent>();
 
             ImGui::EndPopup();
         }
@@ -333,7 +340,6 @@ namespace Core
     void DrawMeshUI(MeshComponent *m, Actor *a)
     {
         auto material = m->mesh->GetMaterial();
-        float colors[4] = {material->GetColor()->r / 255, material->GetColor()->g / 255, material->GetColor()->b / 255, material->GetColor()->a / 255};
 
         // -- Material --
         if (m->mesh->IsMaterialUnique())
@@ -348,11 +354,7 @@ namespace Core
             }
 
             Color *color = material->GetColor();
-            if (ImGui::ColorEdit4("Color", colors, colorEditFlags))
-            {
-                Color *color = material->GetColor();
-                color->Set4(colors, 255);
-            }
+            EditorUtils::ImGuiColor4Edit("Color", color);
 
             ImGui::Button("Texture");
 
@@ -491,6 +493,26 @@ namespace Core
         // Edit name
         if (ImGui::InputText("Script Class Name", NameBuffer, 256))
             scr->className = NameBuffer;
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+            if (payload)
+            {
+                const char *name = (const char *)payload->Data;
+                if (name)
+                {
+                    auto filename = StringUtils::GetFileName(name);
+                    filename = StringUtils::RemoveFileExtension(filename);
+                    if (!filename.empty())
+                    {
+                        scr->className = filename;
+                    }
+                }
+            }
+
+            ImGui::EndDragDropTarget();
+        }
     }
 
     void DrawCameraComponentUI(PerspectiveCameraComponent *c, Actor *a)
@@ -533,6 +555,42 @@ namespace Core
         ImGui::DragFloat("Padding Y", &comp->padding.y, 0.01, 0.1);
     }
 
-    // ----------------------------------------
+    void DrawPointLightComponent(PointLightComponent *comp, Actor *a)
+    {
+        // TODO: Gizmo position.
+        EditorUtils::ImGuiColor4Edit("Color", comp->light->GetColor());
+        EditorUtils::ImGuiVec3Edit("Specular", comp->light->GetSpecular());
 
+        float constant = comp->light->GetConstant();
+        float linear = comp->light->GetLinear();
+        float quadratic = comp->light->GetQuadratic();
+        float radius = comp->light->GetRadius();
+        float intensity = comp->light->GetIntensity();
+
+        if (ImGui::DragFloat("Constant", &constant, 0.01f, 0.0f))
+        {
+            comp->light->SetConstant(constant);
+        }
+
+        if (ImGui::DragFloat("Linear", &linear, 0.01f, 0.0f))
+        {
+            comp->light->SetLinear(linear);
+        }
+
+        if (ImGui::DragFloat("Quadratic", &quadratic, 0.01f, 0.0f))
+        {
+            comp->light->SetQuadratic(quadratic);
+        }
+
+        if (ImGui::DragFloat("Radius", &radius, 0.01f, 0.0f))
+        {
+            comp->light->SetRadius(radius);
+        }
+
+        if (ImGui::DragFloat("Intensity", &intensity, 0.01f, 0.0f))
+        {
+            comp->light->SetIntensity(intensity);
+        }
+    }
+    // ----------------------------------------
 }

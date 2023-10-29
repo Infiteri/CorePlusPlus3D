@@ -25,9 +25,9 @@ namespace Core
         virtual void Update();
 
         inline Matrix4 GetTransformMatrix() { return transform.GetMatrix(); };
-        inline Vector3 *GetPosition() { return transform.GetPosition(); };
-        inline Vector3 *GetRotation() { return transform.GetRotation(); };
-        inline Vector3 *GetScale() { return transform.GetScale(); };
+        inline Vector3 *GetPosition() { return &transform.position; };
+        inline Vector3 *GetRotation() { return &transform.rotation; };
+        inline Vector3 *GetScale() { return &transform.scale; };
         inline Transform *GetTransform() { return &transform; };
         inline bool GetInit() { return init; };
     };

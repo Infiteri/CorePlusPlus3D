@@ -125,5 +125,21 @@ namespace Core
                 CE_ERROR("File handle not open: %s", name);
             }
         }
+
+        void ImGuiColor4Edit(const char *label, Color *color)
+        {
+            float edit[4] = {color->r / 255, color->g / 255, color->b / 255, color->a / 255};
+
+            if (ImGui::ColorEdit4(label, edit))
+                color->Set4(edit, 255.0f);
+        }
+
+        void ImGuiVec3Edit(const char *label, Vector3 *vec)
+        {
+            float edit[3] = {vec->x, vec->y, vec->z};
+
+            if (ImGui::DragFloat3(label, edit, 0.05f))
+                vec->Set(edit[0], edit[1], edit[2]);
+        }
     }
 }

@@ -1,4 +1,4 @@
-Scene: Pong
+Scene: Untitled Scene
 Sky:
   Mode: Color
   Color: [0, 0, 0, 255]
@@ -6,16 +6,36 @@ DirectionalLight:
   Color: [255, 255, 255, 255]
   Direction: [0, 0, -1]
 Actors:
-  - Actor: 0
-    Name: Camera
+  - Actor: Filed
+    UUID: 9823208261777837817
+    Name: PointLight
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
-      Position: [0, 0, 10]
+      Position: [7.33789062, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    PerspectiveCameraComponent:
-      Fov: 2.09439516
-      Near: 0.00999999978
-      Far: 1000
-      Position: [0, 0, 10]
+    PointLight:
+      Position: [7.33789062, 0, 0]
+      Color: [255, 0, 0, 255]
+      Specular: [1, 1, 1]
+      Constant: 732
+      Linear: 2.08999991
+      Intensity: 256
+      Radius: 175
+  - Actor: Filed
+    UUID: 14575463871798177882
+    Name: Actor
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [-5, 0, 0]
       Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: DefaultMaterial
+      Unique: Yes
+      Color: [154.12088, 154.12088, 154.12088, 255]
+      ColorTextureName: ""
+      GeometryType: Box
+      W: 1
+      H: 1
+      D: 1

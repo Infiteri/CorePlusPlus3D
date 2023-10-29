@@ -17,6 +17,7 @@ namespace Core
     {
         DirectionalLight *directionalLight;
         Sky *sky;
+        int pointLightCount;
 
         ~SceneEnvironment();
     };
@@ -76,7 +77,7 @@ namespace Core
         void MoveActorInHierarchy(const std::string &name, int index);
         void MoveActorInHierarchy(UUID *uid, int index);
 
-        int GetActorCount() ;
+        int GetActorCount();
         Actor *GetActorAtIndex(int i);
         std::vector<Actor *> GetActors();
         SceneEnvironment *GetEnvironment();
