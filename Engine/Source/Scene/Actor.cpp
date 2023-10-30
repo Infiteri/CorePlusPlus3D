@@ -38,6 +38,7 @@ namespace Core
         auto script = other->GetComponent<ActorScriptComponent>();
         auto camera = other->GetComponent<PerspectiveCameraComponent>();
         auto aabb = other->GetComponent<AABBComponent>();
+        auto pLight = other->GetComponent<PointLightComponent>();
 
         outActor->GetTransform()->From(transform);
 
@@ -52,6 +53,9 @@ namespace Core
 
         if (aabb)
             outActor->AddComponent<AABBComponent>()->From(aabb);
+
+        if (pLight)
+            outActor->AddComponent<PointLightComponent>()->From(pLight);
 
         for (Actor *a : other->GetChildren())
         {

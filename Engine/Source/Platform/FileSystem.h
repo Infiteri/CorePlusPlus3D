@@ -24,8 +24,8 @@ namespace Core
         std::string Read();
         std::string ReadLine(int line);
     };
-
-    class FileSystem
+ 
+    class CE_API FileSystem
     {
     public:
         FileSystem(){};

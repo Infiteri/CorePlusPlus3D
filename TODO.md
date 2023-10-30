@@ -10,9 +10,9 @@
 ## Engine
 
 1. Use of Engine API in game code. [ - ]
-2. script "OnStop" called twice [ - ]
+2. script "OnStop" called twice [ + ]
 
 ### Scripting
 
 1. Add/Set/Get to the scripts. [ + ]
-2. Scene API on scripts. [ - ]
+2. Scene API on scripts. [ WIP ]

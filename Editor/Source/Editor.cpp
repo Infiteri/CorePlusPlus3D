@@ -21,8 +21,6 @@ namespace Core
     {
         config->windowConfig.title = "Core Editor";
         config->windowConfig.startMaximized = true;
-        config->LoadGameLibrary = true;
-        config->GameLibraryName = "GameLibrary.dll";
 
         return new Editor();
     };

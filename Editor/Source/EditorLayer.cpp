@@ -4,6 +4,8 @@
 
 #define CE_EDITOR_CAM_NAME "__EditorCamera__"
 
+#define IM_TEXT_UTIL(a, b, s) ImGui::InputText(b, a, s)
+
 namespace Core
 {
     //? EDITOR VARIABLES
@@ -40,6 +42,8 @@ namespace Core
         else
             New();
 
+        state.editProjectState.Clear();
+
         inst = this;
     }
 
@@ -75,6 +79,9 @@ namespace Core
         UI_DrawMainTopBar();
         UI_DrawTopPlayStopBar();
         UI_DrawImageViewer();
+        UI_DrawEditProjectConfiguration();
+        UI_DrawEditShaderFile();
+
         RenderSceneViewport();
 
         EndDockspace();
@@ -297,12 +304,67 @@ namespace Core
         ImGui::End();
     }
 
+    void EditorLayer::UI_DrawEditProjectConfiguration()
+    {
+        auto config = Project::GetConfig();
+        if (!state.editProjectState.Draw || !config) // NOTE: No config is no project.
+            return;
+
+        ImGui::Begin("Edit Project Configuration");
+
+        // WIP: Text fields
+        IM_TEXT_UTIL(state.editProjectState.Name, "Name", 256);
+        IM_TEXT_UTIL(state.editProjectState.AssetPath, "Asset Path", 256);
+        IM_TEXT_UTIL(state.editProjectState.StartScene, "Start Scene", 256);
+        IM_TEXT_UTIL(state.editProjectState.ScriptPath, "Script Path", 256);
+        IM_TEXT_UTIL(state.editProjectState.BuildScriptPath, "Build Script Path", 256);
+        IM_TEXT_UTIL(state.editProjectState.ScriptFilesPath, "Script Files Path", 256);
+
+        if (ImGui::Button("Done"))
+        {
+            //? Set project configs
+            config->name = state.editProjectState.Name;
+            config->assetPath = state.editProjectState.AssetPath;
+            config->startScene = state.editProjectState.StartScene;
+            config->scriptPath = state.editProjectState.ScriptPath;
+            config->buildScriptsPath = state.editProjectState.BuildScriptPath;
+            config->scriptFilesPath = state.editProjectState.ScriptFilesPath;
+
+            ProjectSerializer ser(Project::GetInstance());
+            ser.Serialize("Project.ce_proj");
+
+            Project::Load("Project.ce_proj");
+            state.editProjectState.Draw = false;
+            state.editProjectState.Clear();
+        }
+
+        ImGui::End();
+    }
+
+    void EditorLayer::UI_DrawEditShaderFile()
+    {
+        // if (!state.editShaderFile.Draw)
+        //     return;
+
+        // ImGui::Begin("Shader File Edit");
+
+        // ImGui::InputTextMultiline("Shader", state.editShaderFile.FileContent, sizeof(state.editShaderFile.FileContent) * sizeof(char), {1000, 500});
+
+        // if (ImGui::Button("Close"))
+        // {
+        //     state.editShaderFile.Draw = false;
+        // }
+
+        // ImGui::End();
+    }
+
     void EditorLayer::UI_DrawMainTopBar()
     {
 
         if (ImGui::BeginMainMenuBar())
         {
             if (ImGui::MenuItem("Scene"))
+
                 ImGui::OpenPopup("ScenePopup");
 
             if (ImGui::MenuItem("Project"))
@@ -337,6 +399,17 @@ namespace Core
 
                 if (ImGui::MenuItem("Save", "Ctrl+S"))
                     SaveProject();
+
+                if (ImGui::MenuItem("Edit Configuration"))
+                {
+                    state.editProjectState.Draw = true;
+                    CeMemory::Copy(&state.editProjectState.Name, Project::GetConfig()->name.c_str(), 256);
+                    CeMemory::Copy(&state.editProjectState.AssetPath, Project::GetConfig()->assetPath.c_str(), 256);
+                    CeMemory::Copy(&state.editProjectState.ScriptPath, Project::GetConfig()->scriptPath.c_str(), 256);
+                    CeMemory::Copy(&state.editProjectState.StartScene, Project::GetConfig()->startScene.c_str(), 256);
+                    CeMemory::Copy(&state.editProjectState.BuildScriptPath, Project::GetConfig()->buildScriptsPath.c_str(), 256);
+                    CeMemory::Copy(&state.editProjectState.ScriptFilesPath, Project::GetConfig()->scriptFilesPath.c_str(), 256);
+                }
 
                 ImGui::EndPopup();
 
@@ -614,6 +687,13 @@ namespace Core
 
                         state.drawImageViewer = true;
                     }
+                    else if (ext == "glsl")
+                    {
+                        //TODO: Fix-me
+                        // state.editShaderFile.FileName = (char *)name;
+                        // state.editShaderFile.FileContent = (char *)FileSystem::ReadFileContent(name).c_str();
+                        // state.editShaderFile.Draw = true;
+                    }
                 }
             }
 
@@ -689,5 +769,16 @@ namespace Core
             ImGuizmo::Manipulate(camera->GetViewMatrix().data, camera->GetProjection()->data, state.operation, ImGuizmo::WORLD, data, deltaMatrix);
         }
     }
+
+    void EditProjectState::Clear()
+    {
+        CeMemory::Zero(&this->Name, 256);
+        CeMemory::Zero(&this->AssetPath, 256);
+        CeMemory::Zero(&this->BuildScriptPath, 256);
+        CeMemory::Zero(&this->ScriptFilesPath, 256);
+        CeMemory::Zero(&this->ScriptPath, 256);
+        CeMemory::Zero(&this->StartScene, 256);
+    }
+
     // --------------------------------
 }

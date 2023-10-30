@@ -26,6 +26,7 @@ namespace Core
         // -- STATIC --
 
         static Project *New();
+        static Project *GetInstance();
         static Project *Load(const std::string &path);
         static void SaveActive(const std::string &path);
 

@@ -1,5 +1,6 @@
 #include "Sky.h"
 
+#include "Core/Logger.h"
 #include "Renderer/ShaderSystem.h"
 #include "Renderer/Camera/CameraSystem.h"
 #include "Renderer/Camera/PerspectiveCamera.h"
@@ -82,7 +83,7 @@ namespace Core
 
     void Sky::Render()
     {
-        // TODO: Shader
+        // WIP: Shader
 
         array->GetVertexBuffer()->Bind();
         auto shd = ShaderSystem::Get("EngineResources/Shaders/SkyBox");
@@ -106,6 +107,37 @@ namespace Core
             }
 
             break;
+
+        case SkyMode::Shader:
+        {
+            if (shaderName.empty())
+            {
+                CE_WARN("Sky::Render: Shader name is empty. (SkyMode = Shader).");
+                return;
+            }
+
+            Shader *shd = ShaderSystem::Get(shaderName);
+
+            if (!shd)
+            {
+                ShaderSystem::Load(shaderName);
+                shd = ShaderSystem::Get(shaderName);
+
+                if (!shd)
+                {
+                    CE_ERROR("Sky::Render: Shader '%s' is invalid.", shaderName.c_str());
+                    return;
+                }
+            }
+
+            shd->Use();
+            shd->Mat4(camera->GetProjection(), "uProjection");
+            shd->Mat4(camera->GetViewMatrix(), "uView");
+            shd->Mat4(Matrix4::Translate(camera->GetPosition()), "uModel");
+
+            // TODO: Basic matrices
+        }
+        break;
 
         case SkyMode::Color:
             // NOTE: Color handled by the renderer at the beginning of the frame.
@@ -131,6 +163,17 @@ namespace Core
         cubeTexture->Load(CubeMapConfigLoader::GetConfigFromFile(filepath));
     }
 
+    void Sky::SetShaderName(const std::string &name)
+    {
+        // NOTE: Delete the old one if exists.
+        if (!shaderName.empty())
+        {
+            ShaderSystem::DestroyShader(shaderName);
+        }
+
+        shaderName = name;
+    }
+
     void Sky::From(Sky *other)
     {
         SetMode(other->GetMode());
@@ -138,5 +181,7 @@ namespace Core
 
         if (other->GetMode() == SkyMode::CubeMap)
             CreateCubeTexture(other->GetCubeTexturePath());
+        else if (other->GetMode() == SkyMode::Shader)
+            SetShaderName(other->GetShaderName());
     }
 }

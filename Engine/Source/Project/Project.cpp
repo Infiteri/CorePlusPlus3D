@@ -25,6 +25,11 @@ namespace Core
         activeProject = new Project();
         return activeProject;
     }
+    
+    Project* Project::GetInstance()
+    {
+        return activeProject;
+    }
 
     Project *Project::Load(const std::string &path)
     {

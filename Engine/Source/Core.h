@@ -14,8 +14,10 @@
 #include "Event/CeEvents.h"
 
 #include "Platform/Platform.h"
+#include "Platform/FileSystem.h"
 
 #include "Project/Project.h"
+#include "Project/ProjectSerializer.h"
 
 #include "Math/Math.h"
 #include "Math/Vectors.h"

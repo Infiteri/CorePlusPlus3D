@@ -200,6 +200,18 @@ namespace Core
         Destroy();
     }
 
+    void PointLightComponent::From(PointLightComponent *other)
+    {
+        light->GetPosition()->Set(other->light->GetPosition());
+        light->GetColor()->Set(other->light->GetColor());
+        light->GetSpecular()->Set(other->light->GetSpecular());
+        light->SetQuadratic(other->light->GetQuadratic());
+        light->SetLinear(other->light->GetLinear());
+        light->SetConstant(other->light->GetConstant());
+        light->SetRadius(other->light->GetRadius());
+        light->SetIntensity(other->light->GetIntensity());
+    }
+
     void PointLightComponent::Destroy()
     {
         delete light;

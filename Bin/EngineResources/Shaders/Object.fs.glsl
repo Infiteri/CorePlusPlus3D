@@ -57,8 +57,7 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
     // Calculate attenuation based on radius and intensity
-    float radiusFactor = 1.0 - clamp(distance / light.radius, 0.0, 1.0);
-    attenuation *= radiusFactor * (1.0 / (1.0 + light.linear * distance + light.quadratic * (distance * distance))) * light.intensity;
+    attenuation *= (1.0 / (1.0 + light.linear * distance + light.quadratic * (distance * distance))) * light.intensity;
 
     // combine results
     vec3 diffuse = light.color.rgb * diff * light.intensity;

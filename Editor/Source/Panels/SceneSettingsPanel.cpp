@@ -81,12 +81,13 @@ namespace Core
             if (closeSky)
             {
                 // WIP: Sky select string
-                const char *skyTypeSelection[2] = {"Color", "Cube Map"};
+                const int skyTypeCount = 3;
+                const char *skyTypeSelection[skyTypeCount] = {"Color", "Cube Map", "Shader"};
                 const char *skyCurrent = skyTypeSelection[(int)sky->GetMode()];
 
                 if (ImGui::BeginCombo("Sky Mode", skyCurrent))
                 {
-                    for (int i = 0; i < 2; i++)
+                    for (int i = 0; i < skyTypeCount; i++)
                     {
                         bool isSelected = (skyCurrent == skyTypeSelection[i]);
 
@@ -130,6 +131,31 @@ namespace Core
                             if (ext == "ce_cubemap")
                             {
                                 sky->CreateCubeTexture(name);
+                            }
+                        }
+
+                        ImGui::EndDragDropTarget();
+                    }
+                }
+                else if (sky->GetMode() == SkyMode::Shader)
+                {
+                    if (ImGui::Button("Shader"))
+                    {
+                        // TODO: Display a shader info.
+                    }
+                    if (ImGui::BeginDragDropTarget())
+                    {
+                        const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+
+                        if (payload)
+                        {
+                            const char *name = (const char *)payload->Data;
+                            std::string ext = StringUtils::GetFileExtension(name);
+                            CE_TRACE(ext.c_str());
+                            if (ext == "glsl")
+                            {
+                                // ? Shader.vs.glsl = Shader
+                                sky->SetShaderName(StringUtils::RemoveFileExtension(StringUtils::RemoveFileExtension(name)));
                             }
                         }
 

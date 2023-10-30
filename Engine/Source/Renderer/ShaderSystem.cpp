@@ -54,4 +54,17 @@ namespace Core
 
         return false;
     }
+
+    void ShaderSystem::DestroyShader(const std::string &name)
+    {
+        if (shaders[name])
+        {
+            delete shaders[name];
+            shaders.erase(name);
+        }
+        else
+        {
+            CE_WARN("ShaderSystem::Destroy: No shader at name '%s'.", name.c_str());
+        }
+    }
 }

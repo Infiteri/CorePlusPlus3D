@@ -105,6 +105,8 @@ namespace Core
         PointLightComponent();
         ~PointLightComponent();
 
+        void From(PointLightComponent *other);
+
         void Destroy();
         void Render();
     };

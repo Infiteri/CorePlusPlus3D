@@ -11,17 +11,40 @@
 
 namespace Core
 {
+    struct EditProjectState
+    {
+        char Name[256];
+        char StartScene[256];
+        char AssetPath[256];
+        char ScriptPath[256];
+        char ScriptFilesPath[256];
+        char BuildScriptPath[256];
+        bool Draw = false;
+
+        void Clear();
+    };
+
+    struct EditShaderFile
+    {
+        char *FileName;
+        char *FileContent;
+        bool Draw = false;
+    };
+
     struct EditorState
     {
+        EditProjectState editProjectState;
+        EditShaderFile editShaderFile;
+
         bool drawEditMaterial = false;
         bool drawImageViewer = false;
+
         Texture *imageViewerImage;
         Texture *editMaterialTexture;
         float editMaterialTextureSizes;
         float imageViewerScale = 1.0f;
 
         std::string activeScenePath;
-        bool hasDupeOnce = false;
 
         MaterialConfiguration materialConfigurationToEdit;
         Scene *EditorScene;
@@ -105,6 +128,8 @@ namespace Core
         void UI_DrawTopPlayStopBar();
         void UI_DrawEditMaterial();
         void UI_DrawImageViewer();
+        void UI_DrawEditProjectConfiguration();
+        void UI_DrawEditShaderFile();
         // ------------------------------------
 
         void BeginDockspace();

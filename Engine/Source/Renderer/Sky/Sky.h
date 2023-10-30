@@ -16,6 +16,9 @@ namespace Core
 
         /// @brief Cube Map.
         CubeMap,
+
+        /// @brief Shader Mode.
+        Shader,
     };
 
     class CE_API Sky
@@ -24,8 +27,9 @@ namespace Core
         Color *color = nullptr;
         VertexArray *array = nullptr;
         CubeMapTexture *cubeTexture = nullptr;
-
         std::string cubeTextureConfigPath = "";
+        std::string shaderName = "";
+
         SkyMode mode;
 
     public:
@@ -47,6 +51,9 @@ namespace Core
         void CreateCubeTexture(const std::string &filepath);
         inline CubeMapTexture *GetCubeTexture() { return cubeTexture; };
         inline std::string GetCubeTexturePath() { return cubeTextureConfigPath; };
+
+        inline std::string GetShaderName() { return shaderName; };
+        void SetShaderName(const std::string &name);
 
         void From(Sky *other);
     };

@@ -95,7 +95,6 @@ namespace Core
         for (auto it = scripts.begin(); it != scripts.end(); it++)
         {
             auto script = it->second;
-            script->OnStop();
             CE_TRACE("Clearing script from list '%s'.", it->first.c_str());
 
             delete script;

@@ -5,7 +5,7 @@
 
 namespace Core
 {
-    class ProjectSerializer
+    class CE_API ProjectSerializer
     {
     public:
         Project *project;

@@ -1,5 +1,5 @@
 Project:
-  Name: Sandbox
+  Name: Test
   StartScene: Assets/Scene/Pong.ce_scene
   AssetPath: Assets
   ScriptPath: GameLibrary.dll

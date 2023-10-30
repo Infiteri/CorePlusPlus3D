@@ -45,6 +45,10 @@ namespace Core
             return "Color";
             break;
 
+        case SkyMode::Shader:
+            return "Shader";
+            break;
+
         default:
             return "Color";
             break;
@@ -57,6 +61,8 @@ namespace Core
             return SkyMode::CubeMap;
         else if (value.compare("Color") == 0)
             return SkyMode::Color;
+        else if (value.compare("Shader") == 0)
+            return SkyMode::Shader;
         else
             return SkyMode::Color;
     }
@@ -223,8 +229,9 @@ namespace Core
             out << YAML::Key << "Position" << YAML::Value << &pointLight->light->GetTransform()->position;
             out << YAML::Key << "Color" << YAML::Value << pointLight->light->GetColor();
             out << YAML::Key << "Specular" << YAML::Value << pointLight->light->GetSpecular();
-            out << YAML::Key << "Constant" << YAML::Value << pointLight->light->GetConstant();
+            out << YAML::Key << "Quadratic" << YAML::Value << pointLight->light->GetQuadratic();
             out << YAML::Key << "Linear" << YAML::Value << pointLight->light->GetLinear();
+            out << YAML::Key << "Constant" << YAML::Value << pointLight->light->GetConstant();
             out << YAML::Key << "Intensity" << YAML::Value << pointLight->light->GetIntensity();
             out << YAML::Key << "Radius" << YAML::Value << pointLight->light->GetRadius();
             out << YAML::EndMap;
@@ -273,6 +280,11 @@ namespace Core
         case SkyMode::CubeMap:
             out << YAML::Key << "Mode" << YAML::Value << "CubeMap";
             out << YAML::Key << "CubeMapPath" << YAML::Value << sky->GetCubeTexturePath();
+            break;
+
+        case SkyMode::Shader:
+            out << YAML::Key << "Mode" << YAML::Value << "Shader";
+            out << YAML::Key << "ShaderName" << YAML::Value << sky->GetShaderName().c_str();
             break;
 
         default:
@@ -336,6 +348,12 @@ namespace Core
         case SkyMode::CubeMap:
         {
             env->sky->CreateCubeTexture(data["Sky"]["CubeMapPath"].as<std::string>());
+        }
+        break;
+
+        case SkyMode::Shader:
+        {
+            env->sky->SetShaderName(data["Sky"]["ShaderName"].as<std::string>());
         }
         break;
 
@@ -441,6 +459,7 @@ namespace Core
                     YAMLToVcc3(pLight["Specular"], c->light->GetSpecular());
                     c->light->SetConstant(pLight["Constant"].as<float>());
                     c->light->SetLinear(pLight["Linear"].as<float>());
+                    c->light->SetQuadratic(pLight["Quadratic"].as<float>());
                     c->light->SetIntensity(pLight["Intensity"].as<float>());
                     c->light->SetRadius(pLight["Radius"].as<float>());
                 }
