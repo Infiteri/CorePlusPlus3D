@@ -111,10 +111,7 @@ namespace Core
         case SkyMode::Shader:
         {
             if (shaderName.empty())
-            {
-                CE_WARN("Sky::Render: Shader name is empty. (SkyMode = Shader).");
                 return;
-            }
 
             Shader *shd = ShaderSystem::Get(shaderName);
 
