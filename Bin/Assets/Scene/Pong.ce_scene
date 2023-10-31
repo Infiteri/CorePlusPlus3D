@@ -1,13 +1,20 @@
 Scene: Lights
 Sky:
-  Mode: Color
-  Color: [0, 0, 0, 255]
+  Mode: Shader
+  ShaderName: Assets/Shader/Sky
+  SkyShaderData:
+    - Name: color
+      Type: Color
+      Value: [27.9999981, 192.92308, 252, 255]
+    - Name: Time
+      Type: Vec2
+      Value: [3.6500001, 4.30000019]
 DirectionalLight:
   Color: [255, 255, 255, 255]
   Direction: [0, 0, -1]
 Actors:
   - Actor: Filed
-    UUID: 13709609483154390900
+    UUID: 18372707170111505855
     Name: Camera
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
@@ -21,7 +28,7 @@ Actors:
       Position: [0, 0, 6.39398718]
       Rotation: [0, 0, 0]
   - Actor: Filed
-    UUID: 15760543397631788998
+    UUID: 11780478036175976053
     Name: Actor
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
@@ -38,7 +45,7 @@ Actors:
       H: 1
       D: 1
   - Actor: Filed
-    UUID: 10763372506197583284
+    UUID: 16845372135043671065
     Name: Actor
     ParentName: __NO_PARENT_NAME_CE__
     Transform:

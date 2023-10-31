@@ -6,6 +6,15 @@
 #include <fstream>
 #include <ostream>
 
+#define CE_SWITCH_SHADER_UITL(a) \
+    case SkyShaderDataType::a:   \
+        return #a;               \
+        break;
+
+#define CE_SWITCH_SHADER_UITL_STRING(a, b) \
+    if (a == #b)                           \
+    return SkyShaderDataType::b
+
 namespace Core
 {
     namespace EditorUtils
@@ -134,6 +143,14 @@ namespace Core
                 color->Set4(edit, 255.0f);
         }
 
+        void ImGuiVec2Edit(const char *label, Vector2 *vec)
+        {
+            float edit[2] = {vec->x, vec->y};
+
+            if (ImGui::DragFloat2(label, edit, 0.05f))
+                vec->Set(edit[0], edit[1]);
+        }
+
         void ImGuiVec3Edit(const char *label, Vector3 *vec)
         {
             float edit[3] = {vec->x, vec->y, vec->z};
@@ -141,5 +158,43 @@ namespace Core
             if (ImGui::DragFloat3(label, edit, 0.05f))
                 vec->Set(edit[0], edit[1], edit[2]);
         }
+
+        void ImGuiVec4Edit(const char *label, Vector4 *vec)
+        {
+            float edit[4] = {vec->x, vec->y, vec->z, vec->w};
+
+            if (ImGui::DragFloat4(label, edit, 0.05f))
+                vec->Set(edit[0], edit[1], edit[2], edit[3]);
+        }
+
+        std::string ShaderDataTypeToString(SkyShaderDataType d)
+        {
+            switch (d)
+            {
+                CE_SWITCH_SHADER_UITL(Vec2);
+                CE_SWITCH_SHADER_UITL(Vec3);
+                CE_SWITCH_SHADER_UITL(Vec4);
+                CE_SWITCH_SHADER_UITL(Color);
+
+            case SkyShaderDataType::None:
+            default:
+                return "None";
+                break;
+            }
+        }
+
+        SkyShaderDataType StringToShaderDatatType(const std::string &val)
+        {
+            if (val == "None")
+                return SkyShaderDataType::None;
+
+            CE_SWITCH_SHADER_UITL_STRING(val, Vec2);
+            CE_SWITCH_SHADER_UITL_STRING(val, Vec3);
+            CE_SWITCH_SHADER_UITL_STRING(val, Vec4);
+            CE_SWITCH_SHADER_UITL_STRING(val, Color);
+
+            return SkyShaderDataType::None;
+        }
+
     }
 }

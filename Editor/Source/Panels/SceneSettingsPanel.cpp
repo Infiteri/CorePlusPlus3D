@@ -15,6 +15,7 @@ namespace Core
     static bool renderCreateCameraDisplay = false;
     static char createCameraNameBuffer[256];
     static char sceneNameBuffer[256];
+    static CeU32 shaderDataID = 0;
 
     SceneSettingsPanel::SceneSettingsPanel()
     {
@@ -139,7 +140,7 @@ namespace Core
                 }
                 else if (sky->GetMode() == SkyMode::Shader)
                 {
-                    if (ImGui::Button("Shader"))
+                    if (ImGui::Button("Drop Shader File (.vs.glsl || .fs.glsl)"))
                     {
                         // TODO: Display a shader info.
                     }
@@ -161,6 +162,94 @@ namespace Core
 
                         ImGui::EndDragDropTarget();
                     }
+
+                    ImGui::Separator();
+
+                    // Draw the shader data
+                    auto shaderData = sky->GetSkyShaderData();
+                    for (auto data : shaderData)
+                    {
+                        // TODO: This has to be pointer
+                        if (ImGui::TreeNodeEx((void *)(CeU64)(CeU32)shaderDataID, 0, data->Name.c_str()))
+                        {
+                            static char Name[256];
+                            CeMemory::Zero(&Name, 256);
+
+                            CeMemory::Copy(&Name, data->Name.c_str(), 256);
+
+                            if (ImGui::InputText("Name", Name, 256))
+                            {
+                                data->Name = Name;
+                            }
+
+                            // -- DATA TYPE SELECTION --
+                            const int maxSelections = 5;
+                            const char *selections[maxSelections] = {"None", "Vec2", "Vec3", "Vec4", "Color"};
+                            const char *current = selections[(int)data->type];
+
+                            if (ImGui::BeginCombo("Sky Mode", current))
+                            {
+                                for (int i = 0; i < maxSelections; i++)
+                                {
+                                    bool isSelected = (current == selections[i]);
+
+                                    if (ImGui::Selectable(selections[i], isSelected))
+                                    {
+                                        current = selections[i];
+                                        data->ClearDataBasedOnCurrentType();
+                                        data->type = (SkyShaderDataType)i;
+                                        data->SetupDefaultValuesBaseOnCurrentType();
+                                    }
+
+                                    if (isSelected)
+                                        ImGui::SetItemDefaultFocus();
+                                }
+
+                                ImGui::EndCombo();
+                            }
+                            // -------------------------
+
+                            // -- EDIT VALUES ----------
+                            switch (data->type)
+                            {
+                            case SkyShaderDataType::Vec2:
+                                EditorUtils::ImGuiVec2Edit("Value", (Vector2 *)data->Data);
+                                break;
+
+                            case SkyShaderDataType::Vec3:
+                                EditorUtils::ImGuiVec3Edit("Value", (Vector3 *)data->Data);
+                                break;
+
+                            case SkyShaderDataType::Vec4:
+                                EditorUtils::ImGuiVec4Edit("Value", (Vector4 *)data->Data);
+                                break;
+
+                            case SkyShaderDataType::Color:
+                                EditorUtils::ImGuiColor4Edit("Value", (Color *)data->Data);
+                                break;
+
+                            case SkyShaderDataType::None:
+                            default:
+                                break;
+                            }
+                            // -------------------------
+
+                            if (ImGui::Button("Remove"))
+                            {
+                                sky->RemoveSkyShaderDataByName(data->Name);
+                            }
+
+                            ImGui::TreePop();
+                        }
+                        shaderDataID++;
+                    }
+
+                    shaderDataID = 0;
+                }
+
+                if (ImGui::Button("Add"))
+                {
+                    sky->AddShaderData(sizeof(Vector2), new Vector2(), SkyShaderDataType::Vec2, "Value");
                 }
 
                 ImGui::TreePop();

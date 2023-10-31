@@ -689,10 +689,10 @@ namespace Core
                     }
                     else if (ext == "glsl")
                     {
-                        //TODO: Fix-me
-                        // state.editShaderFile.FileName = (char *)name;
-                        // state.editShaderFile.FileContent = (char *)FileSystem::ReadFileContent(name).c_str();
-                        // state.editShaderFile.Draw = true;
+                        // TODO: Fix-me
+                        //  state.editShaderFile.FileName = (char *)name;
+                        //  state.editShaderFile.FileContent = (char *)FileSystem::ReadFileContent(name).c_str();
+                        //  state.editShaderFile.Draw = true;
                     }
                 }
             }

@@ -25,6 +25,10 @@ namespace Core
         void Mat4(Matrix4 *m, const char *name);
         void Mat4(Matrix4 m, const char *name);
 
+        void Vec2(float x, float y, const char *name);
+        void Vec2(Vector2 *m, const char *name);
+        void Vec2(Vector2 m, const char *name);
+
         void Vec3(float x, float y, float z, const char *name);
         void Vec3(Vector3 *m, const char *name);
         void Vec3(Vector3 m, const char *name);

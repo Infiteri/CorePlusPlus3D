@@ -111,6 +111,22 @@ namespace Core
         Mat4(m.data, name);
     }
 
+    void Shader::Vec2(float x, float y, const char *name)
+    {
+        Use();
+        glUniform2f(GetUniLoc(name), x, y);
+    }
+
+    void Shader::Vec2(Vector2 *m, const char *name)
+    {
+        Vec2(m->x, m->y, name);
+    }
+
+    void Shader::Vec2(Vector2 m, const char *name)
+    {
+        Vec2(m.x, m.y, name);
+    }
+
     void Shader::Vec3(float x, float y, float z, const char *name)
     {
         Use();
@@ -142,12 +158,12 @@ namespace Core
     {
         Vec4(v.x, v.y, v.z, v.w, name);
     }
-    
+
     void Shader::Float(float f, const char *name)
     {
-        
+
         Use();
-        glUniform1f(GetUniLoc(name),f);
+        glUniform1f(GetUniLoc(name), f);
     }
 
     CeU32 Shader::GetID()

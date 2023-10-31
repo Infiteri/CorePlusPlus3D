@@ -48,7 +48,12 @@ namespace Core
         GeometryType StringToGeometryType(const std::string &v);
         void MaterialToFile(const std::string &name, MaterialConfiguration *mat);
 
-        void ImGuiColor4Edit(const char*label,Color *color);
-        void ImGuiVec3Edit(const char*label,Vector3 *vec);
+        void ImGuiColor4Edit(const char *label, Color *color);
+        void ImGuiVec2Edit(const char *label, Vector2 *vec);
+        void ImGuiVec3Edit(const char *label, Vector3 *vec);
+        void ImGuiVec4Edit(const char *label, Vector4 *vec);
+
+        std::string ShaderDataTypeToString(SkyShaderDataType d);
+        SkyShaderDataType StringToShaderDatatType(const std::string &val);
     }
 }
