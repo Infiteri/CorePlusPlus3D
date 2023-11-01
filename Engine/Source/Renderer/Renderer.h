@@ -23,7 +23,8 @@ namespace Core
         Full,
         Color,
         Texture,
-        Normal
+        Normal,
+        Light
     };
 
     /// @brief Enumeration that represents the common depth modes.

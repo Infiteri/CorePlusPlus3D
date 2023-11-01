@@ -100,6 +100,7 @@ namespace Core
         // After objects creation
         RegenerateObjectsWithNewViewport();
         SetDepthMode(DepthMode::Lequal);
+        SetRenderMode(RenderMode::Full);
     }
 
     void Renderer::Shutdown()
@@ -162,6 +163,7 @@ namespace Core
             ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(camera->GetProjection(), "uProjection");
             ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(camera->GetViewMatrix(), "uView");
             ShaderSystem::Get("EngineResources/Shaders/Object")->Vec3(camera->GetPosition(), "uCameraPosition");
+            ShaderSystem::Get("EngineResources/Shaders/Object")->Int((int)state->renderMode, "uRenderMode");
         }
         else
         {

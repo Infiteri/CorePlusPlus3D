@@ -5,10 +5,22 @@
 #include "Platform/Platform.h"
 
 #include <string>
+#include <vector>
 
 namespace Core
 {
-    static std::unordered_map<std::string, ActorScript *> scripts;
+    struct ScriptInfo
+    {
+        ActorScript *script;
+        std::string name;
+
+        ScriptInfo(const std::string &n, ActorScript *inst)
+        {
+            name = n;
+            script = inst;
+        };
+    };
+    static std::vector<ScriptInfo *> scripts;
 
     class CE_API ScriptEngine
     {

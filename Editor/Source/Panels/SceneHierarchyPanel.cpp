@@ -68,6 +68,27 @@ namespace Core
             if (ImGui::MenuItem("Add New Actor"))
                 scene->AddActor(new Actor());
 
+            if (ImGui::MenuItem("Add Mesh Actor"))
+            {
+                Actor *a = new Actor();
+                a->AddComponent<MeshComponent>();
+                scene->AddActor(a);
+            }
+
+            if (ImGui::MenuItem("Add Camera Actor"))
+            {
+                Actor *a = new Actor();
+                a->AddComponent<PerspectiveCameraComponent>();
+                scene->AddActor(a);
+            }
+
+            if (ImGui::MenuItem("Add Point Light Actor"))
+            {
+                Actor *a = new Actor();
+                a->AddComponent<PointLightComponent>();
+                scene->AddActor(a);
+            }
+
             ImGui::EndPopup();
         }
 

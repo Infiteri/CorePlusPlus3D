@@ -67,10 +67,10 @@ namespace Core
                     color->Set(directionalLightColors[0] * 255, directionalLightColors[1] * 255, directionalLightColors[1] * 255, directionalLightColors[3] * 255);
                 }
 
-                float directionArray[3] = {environment->directionalLight->GetDirection()->x, environment->directionalLight->GetDirection()->y, environment->directionalLight->GetDirection()->z};
+                float directionArray[3] = {Math::RadToDeg(environment->directionalLight->GetDirection()->x), Math::RadToDeg(environment->directionalLight->GetDirection()->y), Math::RadToDeg(environment->directionalLight->GetDirection()->z)};
                 if (ImGui::DragFloat3("Direction", directionArray, 0.1))
                 {
-                    environment->directionalLight->GetDirection()->Set(directionArray[0], directionArray[1], directionArray[2]);
+                    environment->directionalLight->GetDirection()->Set(Math::DegToRad(directionArray[0]), Math::DegToRad(directionArray[1]), Math::DegToRad(directionArray[2]));
                 }
 
                 ImGui::TreePop();

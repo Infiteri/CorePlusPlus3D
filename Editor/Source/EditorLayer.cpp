@@ -137,7 +137,7 @@ namespace Core
             {
                 World::GetActive()->AddActor(Actor::From(sceneHierarchyPanel.selectionContext));
                 sceneHierarchyPanel.selectionContext = nullptr;
-                }
+            }
 
             if (Input::GetKeyJustNow(Keys::Delete))
             {
@@ -370,6 +370,31 @@ namespace Core
         ImGui::Begin("Engine Stats");
         ImGui::Text("%.3f : DeltaTime", delta);
         ImGui::Text("%i : FPS", (int)fps);
+
+        // Popup for viewing things
+        const int selCount = 5;
+        const char *selections[] = {"Full", "Color", "Texture", "Normal", "Light"};
+        const char *selection = selections[(int)Renderer::GetRenderMode()];
+
+        if (ImGui::BeginCombo("Render Mode", selection))
+        {
+            for (int i = 0; i < selCount; i++)
+            {
+                bool isSelected = (selection == selections[i]);
+
+                if (ImGui::Selectable(selections[i], isSelected))
+                {
+                    selection = selections[i];
+                    Renderer::SetRenderMode((RenderMode)i);
+                }
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+
+            ImGui::EndCombo();
+        }
+
         ImGui::End();
     }
 

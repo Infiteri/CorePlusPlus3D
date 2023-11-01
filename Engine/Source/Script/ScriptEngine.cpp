@@ -2,7 +2,6 @@
 
 #include "Core/Logger.h"
 
-#include <unordered_map>
 #include <algorithm>
 
 namespace Core
@@ -29,32 +28,27 @@ namespace Core
 
     void ScriptEngine::UpdateRuntime()
     {
-        for (auto it = scripts.begin(); it != scripts.end(); it++)
+        for (auto &script : scripts)
         {
-            auto script = it->second;
-            script->OnUpdate();
+            script->script->OnUpdate();
         }
     }
 
     void ScriptEngine::StartRuntime()
     {
-        for (auto it = scripts.begin(); it != scripts.end(); it++)
+        for (auto &script : scripts)
         {
-            auto script = it->second;
-            script->OnStart();
-
-            CE_TRACE("Starting script '%s'.", it->first.c_str());
+            script->script->OnStart();
+            CE_TRACE("Starting script.");
         }
     }
 
     void ScriptEngine::StopRuntime()
     {
-        for (auto it = scripts.begin(); it != scripts.end(); it++)
+        for (auto &script : scripts)
         {
-            auto script = it->second;
-            script->OnStop();
-
-            CE_TRACE("Stopping script '%s'.", it->first.c_str());
+            script->script->OnStop();
+            CE_TRACE("Stopping script.");
         }
 
         ClearScriptList();
@@ -63,18 +57,18 @@ namespace Core
     void ScriptEngine::RegisterScript(const std::string &name, ActorScript *script, Actor *parent)
     {
         script->owner = parent;
-        scripts[name] = script;
+        scripts.push_back(new ScriptInfo(name, script));
 
-        CE_TRACE("Script registered '%s' to parent/owner '%s'.", name.c_str(), parent->GetName().c_str());
+        CE_TRACE("Script registered to parent.");
     }
 
     void ScriptEngine::RegisterScript(const std::string &name, const std::string &scriptLoadName, Actor *parent)
     {
         GetActorScriptPFN pfn = Platform::LibraryGetFunction<GetActorScriptPFN>(&library, scriptLoadName + "Create");
 
-        if (pfn == NULL)
+        if (pfn == nullptr)
         {
-            CE_FATAL("Unable to Load PFN for creating actor script.");
+            CE_FATAL("Unable to load PFN for creating actor script.");
             return;
         }
 
@@ -83,20 +77,22 @@ namespace Core
 
     void ScriptEngine::DeleteScript(const std::string &name)
     {
-        if (scripts[name] != nullptr)
+        for (auto &script : scripts)
         {
-            delete scripts[name];
-            scripts.erase(name);
+            if (script->name == name)
+            {
+                delete script->script;
+                delete script;
+            }
         }
     }
 
     void ScriptEngine::ClearScriptList()
     {
-        for (auto it = scripts.begin(); it != scripts.end(); it++)
+        for (auto &script : scripts)
         {
-            auto script = it->second;
-            CE_TRACE("Clearing script from list '%s'.", it->first.c_str());
-
+            CE_TRACE("Clearing script from list.");
+            delete script->script;
             delete script;
         }
 
@@ -123,14 +119,14 @@ namespace Core
 
     ActorScript *ScriptEngine::GetScriptByNameT(const std::string &name)
     {
-        for (auto it = scripts.begin(); it != scripts.end(); it++)
+        auto it = std::find_if(scripts.begin(), scripts.end(), [name](ScriptInfo *script)
+                               { return (script->name == name); });
+
+        if (it != scripts.end())
         {
-            if (it->first == name)
-            {
-                return it->second;
-            }
+            return (*it)->script;
         }
 
         return nullptr;
-    };
+    }
 }

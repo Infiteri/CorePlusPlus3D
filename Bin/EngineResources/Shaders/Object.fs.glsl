@@ -28,6 +28,7 @@ uniform sampler2D uColorTexture;
 
 // World related
 uniform vec3 uCameraPosition;
+uniform int uRenderMode;
 
 // Point Light stuff
 #define CE_NR_POINT_LIGHTS 24  
@@ -71,21 +72,48 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 }
 
 void main() {
+    if(uRenderMode == 0) {
+
     // Sample the normal texture and normalize it
-    vec3 normal = normalize(vNormal); // Normalize the normal
-    vec3 viewDirection = normalize(uCameraPosition - vFragPos);
+        vec3 normal = normalize(vNormal); // Normalize the normal
+        vec3 viewDirection = normalize(uCameraPosition - vFragPos);
 
-    vec3 directionalLightResult = CalcDirLight(directionalLight, normal, viewDirection);
-    vec3 pointLightResult = vec3(0);
+        vec3 directionalLightResult = CalcDirLight(directionalLight, normal, viewDirection);
+        vec3 pointLightResult = vec3(0);
 
-    for(int i = 0; i < uPointLightCount; i++) {
-        pointLightResult += CalculatePointLight(pointLights[i], normal, vFragPos, viewDirection);
-    }
+        for(int i = 0; i < uPointLightCount; i++) {
+            pointLightResult += CalculatePointLight(pointLights[i], normal, vFragPos, viewDirection);
+        }
 
     // Combine the lighting result with object color
-    vec4 objectColor = texture(uColorTexture, vUV) * uColor;
-    vec4 result = vec4(1.0, 1.0, 1.0, 1.0) + vec4(directionalLightResult, 1.0) + vec4(pointLightResult, 1.0);
-    result *= objectColor;
+        vec4 objectColor = texture(uColorTexture, vUV) * uColor;
+        vec4 result = vec4(1.0, 1.0, 1.0, 1.0) + vec4(directionalLightResult, 1.0) + vec4(pointLightResult, 1.0);
+        result *= objectColor;
 
-    outColor = result;
+        outColor = result;
+
+    } else if(uRenderMode == 1) {
+        outColor = uColor;
+    } else if(uRenderMode == 2) {
+        outColor = texture2D(uColorTexture, vUV);
+    } else if(uRenderMode == 3) {
+        outColor = vec4(vNormal * 0.5 + 0.5, 1.0);
+    } else if(uRenderMode == 4) {
+        vec3 normal = normalize(vNormal); // Normalize the normal
+        vec3 viewDirection = normalize(uCameraPosition - vFragPos);
+
+        vec3 directionalLightResult = CalcDirLight(directionalLight, normal, viewDirection);
+        vec3 pointLightResult = vec3(0);
+
+        for(int i = 0; i < uPointLightCount; i++) {
+            pointLightResult += CalculatePointLight(pointLights[i], normal, vFragPos, viewDirection);
+        }
+
+        vec4 result = vec4(1.0, 1.0, 1.0, 1.0) + vec4(directionalLightResult, 1.0) + vec4(pointLightResult, 1.0);
+        vec4 objectColor = uColor;
+        result *= objectColor;
+        result -= (objectColor / 2);
+        outColor = result;
+    }
+
 }

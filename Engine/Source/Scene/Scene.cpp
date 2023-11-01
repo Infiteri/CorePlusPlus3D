@@ -180,7 +180,6 @@ namespace Core
             a->Init();
         }
 
-        RemoveActorByUUID(a->GetUUID());
         actors.push_back(a);
     }
 
