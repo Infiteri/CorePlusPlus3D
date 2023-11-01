@@ -1,6 +1,6 @@
 Project:
   Name: Test
-  StartScene: Assets/Scene/Pong.ce_scene
+  StartScene: Assets/Scene/ManyLights.ce_scene
   AssetPath: Assets
   ScriptPath: GameLibrary.dll
   ScriptFilesPath: Assets/Scripts

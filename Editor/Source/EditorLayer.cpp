@@ -36,9 +36,7 @@ namespace Core
 
         // Runtime loading from project
         if (Project::GetConfig() != nullptr)
-        {
             OpenScene(Project::GetConfig()->startScene);
-        }
         else
             New();
 
@@ -81,6 +79,7 @@ namespace Core
         UI_DrawImageViewer();
         UI_DrawEditProjectConfiguration();
         UI_DrawEditShaderFile();
+        UI_DrawEngineStats();
 
         RenderSceneViewport();
 
@@ -131,12 +130,19 @@ namespace Core
             break;
         }
 
-        // Dupe an actor
+        // Dupe an actor`
         if (sceneHierarchyPanel.selectionContext != nullptr)
         {
             if (ctrl && Input::GetKeyJustNow(Keys::D))
             {
                 World::GetActive()->AddActor(Actor::From(sceneHierarchyPanel.selectionContext));
+                sceneHierarchyPanel.selectionContext = nullptr;
+                }
+
+            if (Input::GetKeyJustNow(Keys::Delete))
+            {
+                sceneHierarchyPanel.RmChildInHierarchy(sceneHierarchyPanel.selectionContext->GetParent(), sceneHierarchyPanel.selectionContext->GetUUID());
+                sceneHierarchyPanel.selectionContext = nullptr;
             }
         }
     }
@@ -200,8 +206,7 @@ namespace Core
                 const char *name = (const char *)payload->Data;
                 if (name)
                 {
-                    std::string ext = StringUtils::GetFileExtension(name);
-                    if (ext == "png" || ext == "jpg" || ext == "ce_image")
+                    if (StringUtils::FileExtIsImage(name))
                     {
                         state.materialConfigurationToEdit.colorTextureName = name;
                         if (!state.materialConfigurationToEdit.colorTextureName.empty())
@@ -288,8 +293,7 @@ namespace Core
                 const char *name = (const char *)payload->Data;
                 if (name)
                 {
-                    auto ext = StringUtils::GetFileExtension(name);
-                    if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "ce_image")
+                    if (StringUtils::FileExtIsImage(name))
                     {
                         state.imageViewerImage = new Texture();
                         state.imageViewerImage->Load(name);
@@ -356,6 +360,17 @@ namespace Core
         // }
 
         // ImGui::End();
+    }
+
+    void EditorLayer::UI_DrawEngineStats()
+    {
+        float delta = Engine::GetDeltaTime();
+        float fps = Engine::GetFPS();
+
+        ImGui::Begin("Engine Stats");
+        ImGui::Text("%.3f : DeltaTime", delta);
+        ImGui::Text("%i : FPS", (int)fps);
+        ImGui::End();
     }
 
     void EditorLayer::UI_DrawMainTopBar()
@@ -680,7 +695,7 @@ namespace Core
 
                         state.drawEditMaterial = true;
                     }
-                    else if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "ce_image")
+                    else if (StringUtils::FileExtIsImage(name))
                     {
                         state.imageViewerImage = new Texture();
                         state.imageViewerImage->Load(name);

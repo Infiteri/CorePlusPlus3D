@@ -21,6 +21,7 @@ namespace Core
     {
         config->windowConfig.title = "Core Editor";
         config->windowConfig.startMaximized = true;
+        config->windowConfig.VSync = true;
 
         return new Editor();
     };

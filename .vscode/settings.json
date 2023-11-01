@@ -58,7 +58,8 @@
     "sparse": "cpp",
     "dense": "cpp",
     "numeric": "cpp",
-    "random": "cpp"
+    "random": "cpp",
+    "thread": "cpp"
   },
   "editor.cursorBlinking": "blink",
   "editor.cursorSmoothCaretAnimation": "off",

@@ -35,7 +35,11 @@ namespace Core
 
         glfwSetWindowPos(handle, config.x, config.y);
         glfwMakeContextCurrent(handle);
-        glfwSwapInterval(1);
+
+        if (config.VSync)
+            glfwSwapInterval(1);
+        else 
+            glfwSwapInterval(0);
 
         if (config.startMaximized)
         {

@@ -69,5 +69,10 @@ namespace Core
         /// @brief Returns a copy of the user data.
         /// @return void*
         static void *GetCopyOfUserData();
+
+        static float GetDeltaTime();
+        static float GetFPS();
+        static void SetWantedFPS(float fpsValue);
+        static float GetWantedFPS();
     };
 }

@@ -1,0 +1,127 @@
+Scene: Untitled Scene
+Sky:
+  Mode: CubeMap
+  CubeMapPath: Assets/CubeMaps/PadNight.ce_cubemap
+DirectionalLight:
+  Color: [255, 255, 255, 255]
+  Direction: [0, 0, 0]
+Actors:
+  - Actor: Filed
+    UUID: 9823208261777837817
+    Name: Floor
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [0, -1.99956322, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: DefaultMaterial
+      Unique: Yes
+      Color: [19.6153831, 19.6153831, 19.6153831, 255]
+      ColorTextureName: ""
+      GeometryType: Box
+      W: 10
+      H: 0.5
+      D: 10
+  - Actor: Filed
+    UUID: 14575463871798177882
+    Name: Wall
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [0, -1.16796708, -3.35098648]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: DefaultMaterial
+      Unique: Yes
+      Color: [19.6153831, 19.6153831, 19.6153831, 255]
+      ColorTextureName: ""
+      GeometryType: Box
+      W: 10
+      H: 10
+      D: 0.5
+  - Actor: Filed
+    UUID: 18372707170111505855
+    Name: Light1
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [-0.0234837532, 3.61538363, 2.25589371]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [-0.0234837532, 3.61538363, 2.25589371]
+      Color: [255, 255, 255, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 0.0320000015
+      Linear: 0.0900000036
+      Constant: 1
+      Intensity: 6.98000002
+      Radius: 100
+  - Actor: Filed
+    UUID: 11780478036175976053
+    Name: Light2
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [7.05771685, 3.61538363, 2.25589371]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [7.05771685, 3.61538363, 2.25589371]
+      Color: [255, 47.6373596, 47.6373596, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 0.0320000015
+      Linear: 0.0900000036
+      Constant: 1
+      Intensity: 6.98000002
+      Radius: 100
+  - Actor: Filed
+    UUID: 16845372135043671065
+    Name: Light3
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [7.05771685, 3.61538363, 9.27574062]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [7.05771685, 3.61538363, 9.27574062]
+      Color: [127.392204, 255, 47.6373596, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 0.0320000015
+      Linear: 0.0900000036
+      Constant: 1
+      Intensity: 6.98000002
+      Radius: 100
+  - Actor: Filed
+    UUID: 5730567359334639028
+    Name: Light4
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [-2.69132733, 3.61538363, 9.27574062]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [-2.69132733, 3.61538363, 9.27574062]
+      Color: [47.6373596, 220.819336, 255, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 0.0320000015
+      Linear: 0.0900000036
+      Constant: 1
+      Intensity: 6.98000002
+      Radius: 100
+  - Actor: Filed
+    UUID: 16235078023566875402
+    Name: Light4
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [-7.00163937, 3.61538363, 2.02354193]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [-7.00163937, 3.61538363, 2.02354193]
+      Color: [47.6373596, 220.819336, 255, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 0.0320000015
+      Linear: 0.0900000036
+      Constant: 1
+      Intensity: 6.98000002
+      Radius: 100

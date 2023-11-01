@@ -18,6 +18,14 @@ namespace Core
         int height = 720;
     };
 
+    enum class RenderMode
+    {
+        Full,
+        Color,
+        Texture,
+        Normal
+    };
+
     /// @brief Enumeration that represents the common depth modes.
     enum class DepthMode
     {
@@ -48,7 +56,12 @@ namespace Core
         static void Resize(CeU64 w, CeU64 h);
 
         static Shader *GetObjectShader();
+
+        static DepthMode GetDepthMode();
         static void SetDepthMode(DepthMode mode);
+
+        static RenderMode GetRenderMode();
+        static void SetRenderMode(RenderMode mode);
 
         static FrameBuffer *GetFrameBuffer();
     };

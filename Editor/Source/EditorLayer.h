@@ -130,6 +130,7 @@ namespace Core
         void UI_DrawImageViewer();
         void UI_DrawEditProjectConfiguration();
         void UI_DrawEditShaderFile();
+        void UI_DrawEngineStats();
         // ------------------------------------
 
         void BeginDockspace();

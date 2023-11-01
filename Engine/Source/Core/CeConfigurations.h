@@ -29,6 +29,9 @@ namespace Core
 
         /// @brief Use top bar.
         bool decorated = true;
+
+        /// @brief Use top bar.
+        bool VSync = true;
     };
 
     /// @brief Setup engine configuration.

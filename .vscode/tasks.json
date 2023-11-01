@@ -7,11 +7,12 @@
       "type": "shell",
       "command": "${workspaceFolder}/Build.bat",
       "label": "Build",
-      "problemMatcher": [], 
+      "problemMatcher": [],
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+
     },
     {
       "type": "shell",

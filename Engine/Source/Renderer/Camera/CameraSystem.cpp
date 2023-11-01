@@ -78,6 +78,17 @@ namespace Core
             activeCamera->UpdateProjection(aspect);
     }
 
+    void CameraSystem::UpdateProjectionForAll(float aspect)
+    {
+        UpdateProjectionForActiveCamera(aspect);
+
+        for (auto it = perspectives.begin(); it != perspectives.end(); it++)
+        {
+            auto camera = it->second;
+            camera->UpdateProjection(aspect);
+        }
+    }
+
     bool CameraSystem::DoesCameraExist(const std::string &name)
     {
         return perspectives[name] != nullptr;

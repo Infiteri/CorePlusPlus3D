@@ -50,5 +50,7 @@ namespace Core
 
         CE_API bool Equal(const std::string &a, const std::string &b);
         CE_API bool EqualI(const std::string &a, const std::string &b);
+
+        CE_API bool FileExtIsImage(const std::string& fullFileName);
     };
 }

@@ -4,6 +4,8 @@
 #include "Core/Engine.h"
 #include "Core/CeConfigurations.h"
 
+#include <GLFW/glfw3.h>
+
 namespace Core
 {
     EngineLoop::EngineLoop()
@@ -31,8 +33,21 @@ namespace Core
 
     void EngineLoop::Tick()
     {
-        Engine::Update();
+        if (Engine::GetWantedFPS() > 0)
+        {
+            double currentTime = glfwGetTime();
+            double deltaTime = currentTime - lastFrameTime;
 
+            if (deltaTime < (1.0 / Engine::GetWantedFPS()))
+            {
+                double remainingTime = (1.0 / Engine::GetWantedFPS()) - deltaTime;
+                glfwWaitEventsTimeout(remainingTime);
+                currentTime = glfwGetTime();
+            }
+            lastFrameTime = currentTime;
+        }
+
+        Engine::Update();
         Engine::Render();
     }
 

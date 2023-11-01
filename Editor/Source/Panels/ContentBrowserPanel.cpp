@@ -213,8 +213,7 @@ namespace Core
                 if (payload)
                 {
                     const char *name = (const char *)payload->Data;
-                    std::string ext = StringUtils::GetFileExtension(name);
-                    if (ext == "png" || ext == "jpg" || ext == "ce_image")
+                    if (StringUtils::FileExtIsImage(name))
                         MaterialConfig.colorTextureName = name;
                 }
 

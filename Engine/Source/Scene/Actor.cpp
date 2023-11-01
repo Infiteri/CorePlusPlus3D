@@ -206,7 +206,6 @@ namespace Core
 
     Actor *Actor::GetChildByName(const std::string &name)
     {
-        // TODO: Hierarchy search.
         for (Actor *a : children)
         {
             if (a->GetName() == name)

@@ -37,6 +37,11 @@ namespace Core
     static Window *GWindowInstance;
     static Application *GApp;
     static CeUserDataStructure GUserData;
+    static float lastTime;
+    static float deltaTime;
+
+    // Dont skip frames
+    static float wantedFPS = 0.0f;
 
     bool Engine::ShouldTick()
     {
@@ -112,6 +117,10 @@ namespace Core
 
     void Engine::Update()
     {
+        double currentFrameTime = glfwGetTime();
+        deltaTime = static_cast<float>(currentFrameTime - lastTime);
+        lastTime = static_cast<float>(currentFrameTime);
+
         GWindowInstance->Update();
         GApp->Update();
 
@@ -207,5 +216,25 @@ namespace Core
         void *block = CeMemory::Allocate(GUserData.Size);
         CeMemory::Copy(block, GUserData.Data, GUserData.Size);
         return block;
+    }
+
+    float Engine::GetDeltaTime()
+    {
+        return deltaTime;
+    }
+
+    float Engine::GetFPS()
+    {
+        return 1.0f / deltaTime;
+    }
+
+    void Engine::SetWantedFPS(float fpsValue)
+    {
+        wantedFPS = fpsValue;
+    }
+
+    float Engine::GetWantedFPS()
+    {
+        return wantedFPS;
     }
 }

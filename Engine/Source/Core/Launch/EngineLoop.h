@@ -4,18 +4,19 @@
 #include "Core/Application.h"
 #include "Core/CeConfigurations.h"
 
-
-
 namespace Core
 {
     /// @brief Wrapper around the engine class.
     class CE_API EngineLoop
     {
+    private:
+        double lastFrameTime;
+
     public:
         EngineLoop();
         ~EngineLoop();
 
-        void PreInit(Application* app,EngineConfiguration* config);
+        void PreInit(Application *app, EngineConfiguration *config);
 
         void Init();
 

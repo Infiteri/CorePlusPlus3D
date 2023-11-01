@@ -151,5 +151,11 @@ namespace Core
 
             return lowercaseA == lowercaseB;
         }
+
+        bool FileExtIsImage(const std::string &fullFileName)
+        {
+            std::string ext = GetFileExtension(fullFileName);
+            return (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "ce_image");
+        }
     }
 }

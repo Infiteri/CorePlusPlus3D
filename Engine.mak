@@ -5,7 +5,7 @@ OBJ_DIR := Bin-Obj
 ASSEMBLY := Engine
 EXTENSION := .dll
 VP = Engine/Vendor
-COMPILER_FLAGS := -g #-fPIC
+COMPILER_FLAGS := -g -std=c++2a #-fPIC
 INCLUDE_FLAGS := -IEngine\Source -IEngine/Vendor/GLFW -IEngine/Vendor/glad/include -IEngine/Vendor/stb -IEngine/Vendor/ImGui -IEngine/Vendor/ImGuizmo -IEngine/Vendor/YAML/include
 LINKER_FLAGS := -g -shared -LBin -lglfw3 -lglad -lImGui -lyaml -lcomdlg32 -lShlwapi -lImGuizmo
 DEFINES := -D_DEBUG -DCORE_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS

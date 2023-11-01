@@ -41,7 +41,7 @@ namespace Core
         /// @brief ACtivates a camera. Outputs a error message if the camera isn't found.
         /// @param name The name of the camera to search for.
         static void Activate(const std::string &name);
-        static void Activate(PerspectiveCamera* camera);
+        static void Activate(PerspectiveCamera *camera);
 
         /// @brief Updates to projection of the camera under this name. Outputs a error message if the camera isn't found.
         /// @param name The name of the camera to search for.
@@ -52,8 +52,10 @@ namespace Core
         /// @param aspect A float that represents the camera's new aspect. Use Engine::GetWindowAspect() to get the window aspect.
         static void UpdateProjectionForActiveCamera(float aspect);
 
+        static void UpdateProjectionForAll(float aspect);
+
         /// @brief Checks and returns if a camera exists based on the name.
-        /// @param name The camera name. 
+        /// @param name The camera name.
         /// @return Bool, true if exists
         static bool DoesCameraExist(const std::string &name);
 

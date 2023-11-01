@@ -144,6 +144,7 @@ namespace Core
                     {
                         // TODO: Display a shader info.
                     }
+
                     if (ImGui::BeginDragDropTarget())
                     {
                         const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
@@ -152,10 +153,8 @@ namespace Core
                         {
                             const char *name = (const char *)payload->Data;
                             std::string ext = StringUtils::GetFileExtension(name);
-                            CE_TRACE(ext.c_str());
                             if (ext == "glsl")
                             {
-                                // ? Shader.vs.glsl = Shader
                                 sky->SetShaderName(StringUtils::RemoveFileExtension(StringUtils::RemoveFileExtension(name)));
                             }
                         }

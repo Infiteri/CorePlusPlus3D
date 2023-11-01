@@ -11,7 +11,7 @@ Sky:
       Value: [3.6500001, 4.30000019]
 DirectionalLight:
   Color: [255, 255, 255, 255]
-  Direction: [0, 0, -1]
+  Direction: [0, -0.400000006, -1.20000005]
 Actors:
   - Actor: Filed
     UUID: 18372707170111505855
@@ -49,15 +49,15 @@ Actors:
     Name: Actor
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
-      Position: [10.3335094, 0, 0]
+      Position: [-2.60351586, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     PointLight:
-      Position: [10.3335094, 0, 0]
-      Color: [255, 255, 255, 255]
+      Position: [-2.60351586, 0, 0]
+      Color: [255, 0, 0, 255]
       Specular: [1, 1, 1]
-      Quadratic: 0.0320000015
-      Linear: 0.0900000036
-      Constant: 1
-      Intensity: 10
-      Radius: 100
+      Quadratic: 1.44200003
+      Linear: 5.23999977
+      Constant: 0.810000002
+      Intensity: 22.1700001
+      Radius: 0

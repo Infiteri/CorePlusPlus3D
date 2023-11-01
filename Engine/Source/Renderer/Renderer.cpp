@@ -48,8 +48,10 @@ namespace Core
         // Screen related
         FrameBuffer *ScreenFramebuffer;
         VertexArray *ScreenVertexArray;
+
         // End screen related
         GLenum depthType = GL_LEQUAL;
+        RenderMode renderMode = RenderMode::Full;
     };
 
     static RendererState *state;
@@ -183,7 +185,7 @@ namespace Core
 
     void Renderer::RegenerateObjectsWithNewViewport()
     {
-        CameraSystem::UpdateProjectionForActiveCamera((float)state->viewport.width / (float)state->viewport.height);
+        CameraSystem::UpdateProjectionForAll((float)state->viewport.width / (float)state->viewport.height);
 
         state->ScreenFramebuffer->Resize(state->viewport.width, state->viewport.height);
 
@@ -228,6 +230,27 @@ namespace Core
         return ShaderSystem::Get("EngineResources/Shaders/Object");
     }
 
+    DepthMode Renderer::GetDepthMode()
+    {
+        switch (state->depthType)
+        {
+        case GL_ALWAYS:
+            return DepthMode::Always;
+            break;
+
+        case GL_LESS:
+            return DepthMode::Less;
+            break;
+
+        case GL_LEQUAL:
+        default:
+            return DepthMode::Lequal;
+            break;
+        }
+
+        return DepthMode::Lequal;
+    }
+
     void Renderer::SetDepthMode(DepthMode mode)
     {
         switch (mode)
@@ -245,6 +268,16 @@ namespace Core
             state->depthType = GL_LEQUAL;
             break;
         }
+    }
+
+    RenderMode Renderer::GetRenderMode()
+    {
+        return state->renderMode;
+    }
+
+    void Renderer::SetRenderMode(RenderMode mode)
+    {
+        state->renderMode = mode;
     }
 
     FrameBuffer *Renderer::GetFrameBuffer()
