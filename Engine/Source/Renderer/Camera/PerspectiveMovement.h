@@ -14,7 +14,9 @@ namespace Core
         PerspectiveMovement();
         ~PerspectiveMovement();
 
-        void Update(PerspectiveCamera *camera);
+        void UpdateRotation(PerspectiveCamera *camera);
+        void UpdatePosition(PerspectiveCamera *camera);
+        void UpdateWithMouse(PerspectiveCamera *camera);
     };
 
 }

@@ -472,7 +472,7 @@ namespace Core
                 case SkyShaderDataType::Vec2:
                 {
                     Vector2 *data = new Vector2(skyShaderData["Value"][0].as<float>(), skyShaderData["Value"][1].as<float>());
-                    env->sky->AddShaderData(sizeof(data), data, type, name.c_str());
+                    env->sky->AddShaderData(sizeof(data), data, type, name);
                     delete data;
                 }
                 break;
@@ -480,7 +480,7 @@ namespace Core
                 case SkyShaderDataType::Vec3:
                 {
                     Vector3 *data = new Vector3(skyShaderData["Value"][0].as<float>(), skyShaderData["Value"][1].as<float>(), skyShaderData["Value"][2].as<float>());
-                    env->sky->AddShaderData(sizeof(data), data, type, name.c_str());
+                    env->sky->AddShaderData(sizeof(data), data, type, name);
                     delete data;
                 }
                 break;
@@ -488,7 +488,7 @@ namespace Core
                 case SkyShaderDataType::Vec4:
                 {
                     Vector4 *data = new Vector4(skyShaderData["Value"][0].as<float>(), skyShaderData["Value"][1].as<float>(), skyShaderData["Value"][2].as<float>(), skyShaderData["Value"][3].as<float>());
-                    env->sky->AddShaderData(sizeof(data), data, type, name.c_str());
+                    env->sky->AddShaderData(sizeof(data), data, type, name);
                     delete data;
                 }
                 break;
@@ -496,7 +496,7 @@ namespace Core
                 case SkyShaderDataType::Color:
                 {
                     Color *data = new Color(skyShaderData["Value"][0].as<float>(), skyShaderData["Value"][1].as<float>(), skyShaderData["Value"][2].as<float>(), skyShaderData["Value"][3].as<float>());
-                    env->sky->AddShaderData(sizeof(data), data, type, name.c_str());
+                    env->sky->AddShaderData(sizeof(data), data, type, name);
                     delete data;
                 }
                 break;

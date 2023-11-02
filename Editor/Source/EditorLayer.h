@@ -57,6 +57,12 @@ namespace Core
         ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
         ImVec2 lastFrameViewportSize;
+        CeU32 lastPLightCount;
+
+        ImVec2 viewportLeftTop;
+        ImVec2 viewportRightBottom;
+
+        bool updateCameraWithMouse = false;
     };
 
     class EditorLayer : public Layer
@@ -131,6 +137,7 @@ namespace Core
         void UI_DrawEditProjectConfiguration();
         void UI_DrawEditShaderFile();
         void UI_DrawEngineStats();
+        void UI_DrawTestButtons();
         // ------------------------------------
 
         void BeginDockspace();

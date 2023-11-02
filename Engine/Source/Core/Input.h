@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Base.h"
+#include "Math/Vectors.h"
 
 namespace Core
 {
@@ -144,6 +145,13 @@ namespace Core
         Middle = 2
     };
 
+    enum class MouseMode
+    {
+        Visible,
+        Hidden,
+        Locked
+    };
+
     class CE_API Input
     {
     public:
@@ -199,6 +207,11 @@ namespace Core
         /// @brief Returns the mouse movement direction on the Y axis, from -1 to 1.
         /// @return Integer.
         static int GetMouseMovementDirectionY();
+
+        static void SetMouseMode(MouseMode mode);
+
+        static Vector2 GetMousePosition();
+        static void SetMousePosition(const Vector2 &pos);
     };
 
     void InputUpdateKey(Keys key, bool p);

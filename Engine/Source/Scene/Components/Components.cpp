@@ -214,6 +214,7 @@ namespace Core
 
     void PointLightComponent::Destroy()
     {
+        CE_TRACE("PointLightComponent::Destroy");
         delete light;
     }
 

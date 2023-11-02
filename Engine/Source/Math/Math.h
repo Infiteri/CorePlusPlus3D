@@ -32,5 +32,7 @@ namespace Core
 
         CE_API float RandomFloat();
         CE_API float RandomFloat(float min, float max);
+        CE_API float Lerp(float min, float max, float t);
+        CE_API float Clamp(float min, float max, float t);
     }
 }

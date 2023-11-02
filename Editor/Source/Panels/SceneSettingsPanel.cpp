@@ -244,11 +244,11 @@ namespace Core
                     }
 
                     shaderDataID = 0;
-                }
 
-                if (ImGui::Button("Add"))
-                {
-                    sky->AddShaderData(sizeof(Vector2), new Vector2(), SkyShaderDataType::Vec2, "Value");
+                    if (ImGui::Button("Add"))
+                    {
+                        sky->AddShaderData(sizeof(Vector2), new Vector2(), SkyShaderDataType::Vec2, "Value");
+                    }
                 }
 
                 ImGui::TreePop();

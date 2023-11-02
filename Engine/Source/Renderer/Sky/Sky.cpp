@@ -63,9 +63,13 @@ namespace Core
     void SkyShaderData::ClearDataBasedOnCurrentType()
     {
         if (!shouldClear)
+        {
+            CE_WARN("SkyShaderData::ClearDataBasedOnCurrentType: Should not be called.");
             return;
+        }
 
         shouldClear = false;
+#if 1
         switch (type)
         {
         case SkyShaderDataType::Vec2:
@@ -101,6 +105,10 @@ namespace Core
             shouldClear = true;
             break;
         }
+#else
+        CeMemory::TracePrintSize("Data: ", sizeof(Data));
+        CeMemory::Free(Data);
+#endif
     }
 
     void SkyShaderData::SetupDefaultValuesBaseOnCurrentType()
@@ -279,7 +287,7 @@ namespace Core
         shaderName = name;
     }
 
-    void Sky::AddShaderData(CeU32 dataSize, void *Data, SkyShaderDataType dataType, const char *name)
+    void Sky::AddShaderData(CeU32 dataSize, void *Data, SkyShaderDataType dataType, const std::string &name)
     {
         shaderData.push_back(new SkyShaderData(dataSize, Data, dataType, name));
     }

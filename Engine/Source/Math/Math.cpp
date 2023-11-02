@@ -133,5 +133,19 @@ namespace Core
             return dist(gen);
         }
 
+        float Lerp(float min, float max, float t)
+        {
+            return min + (max - min) * t;
+        }
+
+        float Clamp(float min, float max, float t)
+        {
+            if (t < min)
+                return min;
+            else if (t > max)
+                return max;
+            else
+                return t;
+        }
     }
 }

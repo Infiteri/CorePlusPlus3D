@@ -587,27 +587,27 @@ namespace Core
         float radius = comp->light->GetRadius();
         float intensity = comp->light->GetIntensity();
 
-        if (ImGui::DragFloat("Constant", &constant, 0.01f, 0.0f))
+        if (ImGui::DragFloat("Constant", &constant, 0.01f, 0.01f, 100.0f))
         {
             comp->light->SetConstant(constant);
         }
 
-        if (ImGui::DragFloat("Linear", &linear, 0.01f, 0.0f))
+        if (ImGui::DragFloat("Linear", &linear, 0.01f, 0.01f, 100.0f))
         {
             comp->light->SetLinear(linear);
         }
 
-        if (ImGui::DragFloat("Quadratic", &quadratic, 0.01f, 0.0f))
+        if (ImGui::DragFloat("Quadratic", &quadratic, 0.01f, 0.01f, 100.0f))
         {
             comp->light->SetQuadratic(quadratic);
         }
 
-        if (ImGui::DragFloat("Radius", &radius, 0.01f, 0.0f))
+        if (ImGui::DragFloat("Radius", &radius, 0.01f, 0.01f, 100.0f))
         {
             comp->light->SetRadius(radius);
         }
 
-        if (ImGui::DragFloat("Intensity", &intensity, 0.01f, 0.0f))
+        if (ImGui::DragFloat("Intensity", &intensity, 0.01f, 0.01f, 100.0f))
         {
             comp->light->SetIntensity(intensity);
         }

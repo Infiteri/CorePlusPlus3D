@@ -38,5 +38,11 @@ namespace Core
 
         inline float GetRadius() { return radius; };
         inline void SetRadius(float v) { radius = v; };
+
+        static void IncremenetGolbalID();
+        static void SetGlobalID0();
+        static void DecremenetGolbalID();
+        static CeU32 GetPointLightGID();
     };
+
 }

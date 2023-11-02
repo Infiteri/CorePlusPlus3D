@@ -1,4 +1,5 @@
 #include "PointLight.h"
+#include "Core/Logger.h"
 
 #include <sstream>
 
@@ -24,7 +25,7 @@ namespace Core
     PointLight::~PointLight()
     {
         GID--;
-        id = 0;
+        id = -1;
     }
 
     void PointLight::Update()
@@ -62,5 +63,25 @@ namespace Core
 
         std::string intensityName = "pointLights[" + indexStr.str() + "].intensity";
         shd->Float(intensity, intensityName.c_str());
+    }
+
+    void PointLight::IncremenetGolbalID()
+    {
+        GID++;
+    }
+
+    void PointLight::SetGlobalID0()
+    {
+        GID = 0;
+    }
+
+    void PointLight::DecremenetGolbalID()
+    {
+        GID--;
+    }
+
+    CeU32 PointLight::GetPointLightGID()
+    {
+        return GID;
     }
 }

@@ -80,6 +80,7 @@ namespace Core
         UI_DrawEditProjectConfiguration();
         UI_DrawEditShaderFile();
         UI_DrawEngineStats();
+        UI_DrawTestButtons();
 
         RenderSceneViewport();
 
@@ -98,7 +99,16 @@ namespace Core
     void EditorLayer::OnUpdateEditor()
     {
         if (activeCameraType == CameraEditor)
-            state.movement->Update(CameraSystem::GetActive());
+        {
+            state.movement->UpdateRotation(CameraSystem::GetActive());
+
+            // TODO: Check if the mouse is in the viewport
+            if (state.updateCameraWithMouse)
+            {
+                state.movement->UpdatePosition(CameraSystem::GetActive());
+                state.movement->UpdateWithMouse(CameraSystem::GetActive());
+            }
+        }
 
         // key binds
         bool shift = Input::GetKey(Keys::LeftShift);
@@ -128,6 +138,23 @@ namespace Core
             if (ctrl && Input::GetKeyJustNow(Keys::S))
                 Save();
             break;
+        }
+
+        if (Input::GetButton(Buttons::Right))
+        {
+            if (!state.updateCameraWithMouse)
+            {
+                Vector2 position = Input::GetMousePosition();
+                if (position.x > state.viewportLeftTop.x &&
+                    position.y > state.viewportLeftTop.y &&
+                    position.x < state.viewportRightBottom.x + state.viewportLeftTop.x &&
+                    position.y < state.viewportRightBottom.y + state.viewportLeftTop.y)
+                    state.updateCameraWithMouse = true;
+            }
+        }
+        else
+        {
+            state.updateCameraWithMouse = false;
         }
 
         // Dupe an actor`
@@ -371,6 +398,10 @@ namespace Core
         ImGui::Text("%.3f : DeltaTime", delta);
         ImGui::Text("%i : FPS", (int)fps);
 
+        auto pos = Input::GetMousePosition();
+        ImGui::Text("%i / %i : Mouse Position", (int)pos.x, (int)pos.y);
+        ImGui::Text("%i / %i by %i / %i : Bounds", (int)state.viewportLeftTop.x, (int)state.viewportLeftTop.y, (int)state.viewportRightBottom.x, (int)state.viewportRightBottom.y);
+
         // Popup for viewing things
         const int selCount = 5;
         const char *selections[] = {"Full", "Color", "Texture", "Normal", "Light"};
@@ -393,6 +424,30 @@ namespace Core
             }
 
             ImGui::EndCombo();
+        }
+
+        ImGui::End();
+    }
+
+    void EditorLayer::UI_DrawTestButtons()
+    {
+        ImGui::Begin("Tests");
+
+        int shaderAddCount = 999;
+        if (ImGui::Button("Start The Shader Test"))
+        {
+            for (int i = 0; i < shaderAddCount; i++)
+            {
+                World::GetActive()->GetEnvironment()->sky->AddShaderData(sizeof(Color), new Color(255, 255, 255, 255), SkyShaderDataType::Color, std::string("Test" + i));
+            }
+        }
+
+        if (ImGui::Button("Stop The Shader Test"))
+        {
+            for (int i = 0; i < shaderAddCount; i++)
+            {
+                World::GetActive()->GetEnvironment()->sky->RemoveSkyShaderDataByName(std::string("Test" + i));
+            }
         }
 
         ImGui::End();
@@ -555,6 +610,9 @@ namespace Core
 
     void EditorLayer::StartSceneRuntime()
     {
+        state.lastPLightCount = PointLight::GetPointLightGID();
+        PointLight::SetGlobalID0();
+
         currentSceneState = SceneStatePlay;
         state.EditorScene = World::CopyActive();
         SwapActiveCameraTo(CameraGamePlay);
@@ -563,14 +621,21 @@ namespace Core
 
     void EditorLayer::StopSceneRuntime()
     {
+
         currentSceneState = SceneStateStop;
         World::StopActive();
 
         if (state.EditorScene != nullptr)
         {
             World::CopyToActive(state.EditorScene);
+
             state.EditorScene->Destroy();
+
             delete state.EditorScene;
+            PointLight::SetGlobalID0();
+            for (int i = 0; i < state.lastPLightCount; i++)
+                PointLight::IncremenetGolbalID();
+
             SetContexts();
         }
 
@@ -687,6 +752,10 @@ namespace Core
             state.lastFrameViewportSize = viewportSize;
             ResizeViewport();
         }
+
+        state.viewportLeftTop = ImGui::GetWindowPos();
+        state.viewportRightBottom = ImGui::GetWindowSize();
+
         // End update renderer viewport
         ImGui::Image((void *)(CeU64)(CeU32)(Renderer::GetFrameBuffer()->GetRenderPass(0)->id), viewportSize, ImVec2{0, 1}, ImVec2{1, 0});
 

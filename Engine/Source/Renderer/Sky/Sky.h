@@ -39,7 +39,7 @@ namespace Core
         void *Data;
         bool shouldClear = false;
 
-        SkyShaderData(CeU32 dataSize, void *_Data, SkyShaderDataType dataType, const char *_name)
+        SkyShaderData(CeU32 dataSize, void *_Data, SkyShaderDataType dataType, const std::string &_name)
         {
             shouldClear = true;
             type = dataType;
@@ -123,7 +123,7 @@ namespace Core
 
         inline std::string GetShaderName() { return shaderName; };
         void SetShaderName(const std::string &name);
-        void AddShaderData(CeU32 dataSize, void *Data, SkyShaderDataType dataType, const char *name);
+        void AddShaderData(CeU32 dataSize, void *Data, SkyShaderDataType dataType, const std::string &name);
 
         inline std::vector<SkyShaderData *> GetSkyShaderData() { return shaderData; };
         void RemoveSkyShaderDataByName(const std::string &name);

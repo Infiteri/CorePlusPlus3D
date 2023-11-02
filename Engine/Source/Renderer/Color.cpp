@@ -1,4 +1,5 @@
 #include "Color.h"
+#include "Core/Logger.h"
 
 namespace Core
 {
