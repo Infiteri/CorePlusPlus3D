@@ -25,7 +25,7 @@ namespace Core
 
         if (Input::GetKey(Keys::W))
         {
-            Matrix4 cameraMatrixRotation = Matrix4::RotationXYZ(camera->GetRotation());
+            Matrix4 cameraMatrixRotation = Matrix4::RotationZYX(camera->GetRotation());
             Vector3 way = Matrix4::Forward(&cameraMatrixRotation);
             camera->GetPosition()->x += way.x * speed * dt;
             camera->GetPosition()->y += way.y * speed * dt;
@@ -34,7 +34,7 @@ namespace Core
 
         if (Input::GetKey(Keys::S))
         {
-            Matrix4 cameraMatrixRotation = Matrix4::RotationXYZ(camera->GetRotation());
+            Matrix4 cameraMatrixRotation = Matrix4::RotationZYX(camera->GetRotation());
             Vector3 way = Matrix4::Forward(&cameraMatrixRotation);
             camera->GetPosition()->x -= way.x * speed * dt;
             camera->GetPosition()->y -= way.y * speed * dt;
@@ -43,7 +43,7 @@ namespace Core
 
         if (Input::GetKey(Keys::A))
         {
-            Matrix4 cameraMatrixRotation = Matrix4::RotationXYZ(camera->GetRotation());
+            Matrix4 cameraMatrixRotation = Matrix4::RotationZYX(camera->GetRotation());
             Vector3 way = Matrix4::Right(&cameraMatrixRotation);
             camera->GetPosition()->x -= way.x * speed * dt;
             camera->GetPosition()->y -= way.y * speed * dt;
@@ -52,7 +52,7 @@ namespace Core
 
         if (Input::GetKey(Keys::D))
         {
-            Matrix4 cameraMatrixRotation = Matrix4::RotationXYZ(camera->GetRotation());
+            Matrix4 cameraMatrixRotation = Matrix4::RotationZYX(camera->GetRotation());
             Vector3 way = Matrix4::Right(&cameraMatrixRotation);
             camera->GetPosition()->x += way.x * speed * dt;
             camera->GetPosition()->y += way.y * speed * dt;
