@@ -24,14 +24,27 @@ namespace Core
         shininess = config.shininess;
 
         if (config.colorTextureName.empty())
+        {
             texture = TextureManager::GetNewEmpty();
+        }
         else
-            texture = TextureManager::Get(config.colorTextureName);
+        {
+            if (!TextureManager::Exist(config.colorTextureName))
+                TextureManager::Load(config.colorTextureName, config.colorTextureConfig);
 
+            texture = TextureManager::Get(config.colorTextureName);
+        }
         if (config.normalTextureName.empty())
+        {
             normalTexture = TextureManager::GetNewEmpty();
+        }
         else
+        {
+            if (!TextureManager::Exist(config.normalTextureName))
+                TextureManager::Load(config.normalTextureName, config.normalTextureConfig);
+
             normalTexture = TextureManager::Get(config.normalTextureName);
+        }
     }
 
     Material::~Material()

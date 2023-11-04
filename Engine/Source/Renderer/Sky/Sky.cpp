@@ -2,6 +2,7 @@
 
 #include "Core/Logger.h"
 #include "Renderer/ShaderSystem.h"
+#include "Renderer/Texture/CubeMapTexture.h"
 #include "Renderer/Camera/CameraSystem.h"
 #include "Renderer/Camera/PerspectiveCamera.h"
 
@@ -9,8 +10,14 @@
 
 #include <glad/glad.h>
 
+#define CE_SKY_DEBUG_TEXTURE 0
+
 namespace Core
 {
+#if CE_SKY_DEBUG_TEXTURE
+    static CubeMapTexture *DEBUG = nullptr;
+#endif
+
     static float cubeVertices[] = {
         // Front face
         -1.0f, 1.0f, 1.0f,
@@ -170,12 +177,14 @@ namespace Core
         CE_PROFILE_FUNCTION();
 
         array->GetVertexBuffer()->Bind();
-        auto shd = ShaderSystem::Get("EngineResources/Shaders/SkyBox");
         PerspectiveCamera *camera = CameraSystem::GetActive();
 
         switch (mode)
         {
         case SkyMode::CubeMap:
+
+        {
+            auto shd = ShaderSystem::Get("EngineResources/Shaders/SkyBox");
 
             if (camera && shd && shd->IsValid())
             {
@@ -189,8 +198,8 @@ namespace Core
 
                 shd->Int(cubeTexture->GetGeneration(), "uSkybox");
             }
-
-            break;
+        }
+        break;
 
         case SkyMode::Shader:
         {
@@ -212,9 +221,6 @@ namespace Core
             }
 
             shd->Use();
-            shd->Mat4(camera->GetProjection(), "uProjection");
-            shd->Mat4(camera->GetViewMatrix(), "uView");
-            shd->Mat4(Matrix4::Translate(camera->GetPosition()), "uModel");
 
             // Wip Shader data
             for (auto data : shaderData)
@@ -250,6 +256,20 @@ namespace Core
                     break;
                 }
             }
+
+#if CE_SKY_DEBUG_TEXTURE
+            if (!DEBUG)
+            {
+                DEBUG = new CubeMapTexture();
+                DEBUG->Load("Assets/CubeMaps/Nicer.ce_cubemap");
+            }
+            DEBUG->Use();
+            shd->Int(DEBUG->GetGeneration(), "uID");
+#endif
+
+            shd->Mat4(camera->GetProjection(), "uProjection");
+            shd->Mat4(camera->GetViewMatrix(), "uView");
+            shd->Mat4(Matrix4::Translate(camera->GetPosition()), "uModel");
         }
         break;
 

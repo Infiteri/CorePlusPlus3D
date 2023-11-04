@@ -47,6 +47,11 @@ namespace Core
 
     void TextureManager::Load(const std::string &path)
     {
+        Load(path, {});
+    }
+
+    void TextureManager::Load(const std::string &path, TextureConfiguration config)
+    {
         if (references[path])
         {
             CE_WARN("Image with path '%s' already exists, not overriding.", path.c_str());
@@ -56,7 +61,7 @@ namespace Core
         references[path] = new TextureRef;
         references[path]->count = 0;
         references[path]->texture = new Texture();
-        references[path]->texture->Load(path);
+        references[path]->texture->Load(path, config);
         CE_TRACE("Loaded texture: '%s', reference count is 0.", path.c_str());
     }
 
@@ -98,6 +103,11 @@ namespace Core
             delete references[path];
             references[path] = nullptr;
         }
+    }
+
+    bool TextureManager::Exist(const std::string &name)
+    {
+        return references[name] != nullptr;
     }
 
     int TextureManager::GetGlobalTextureCount()

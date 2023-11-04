@@ -6,6 +6,8 @@ namespace Core
 {
     class CE_API PerspectiveMovement
     {
+        private:
+        float speedActual = 1.0f;
     public:
         float speed = 0.02f;
         float rotation = 0.01f;

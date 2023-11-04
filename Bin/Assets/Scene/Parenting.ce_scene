@@ -1,17 +1,10 @@
 Scene: Lights
 Sky:
-  Mode: Shader
-  ShaderName: Assets/Shader/Sky
-  SkyShaderData:
-    - Name: color
-      Type: Color
-      Value: [212.720215, 212.720215, 212.720215, 255]
-    - Name: Time
-      Type: Vec2
-      Value: [0, 2.58999991]
+  Mode: CubeMap
+  CubeMapPath: Assets/CubeMaps/PadNight.ce_cubemap
 DirectionalLight:
-  Color: [255, 0, 0, 255]
-  Direction: [2.19387889, 0, -1.57079637]
+  Color: [255, 255, 255, 255]
+  Direction: [0, 0, -1.57079637]
 Actors:
   - Actor: Filed
     UUID: 5730567359334639028
@@ -60,7 +53,7 @@ Actors:
     MeshComponent:
       Name: DefaultMaterial
       Unique: Yes
-      Color: [255, 255, 255, 255]
+      Color: [92.4870529, 92.4870529, 92.4870529, 255]
       ColorTextureName: Assets/Images/Paving/paving2.png
       NormalTextureName: Assets/Images/Paving/paving2_NRM.png
       GeometryType: Box
@@ -81,3 +74,37 @@ Actors:
       Far: 1000
       Position: [0, 1.78499997, 7.82939816]
       Rotation: [-0.0700000003, 0, 0]
+  - Actor: Filed
+    UUID: 9823208261777837817
+    Name: Actor
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [7.0808239, 1.44583404, 0.174452692]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [7.0808239, 1.44583404, 0.174452692]
+      Color: [81.917099, 255, 0, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 0.202000007
+      Linear: 3.80999994
+      Constant: 1
+      Intensity: 3.43000007
+      Radius: 100
+  - Actor: Filed
+    UUID: 14575463871798177882
+    Name: Actor
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [6.23248243, 0.77835542, 2.61215854]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [6.23248243, 0.77835542, 2.61215854]
+      Color: [81.917099, 255, 0, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 0.0320000015
+      Linear: 0.0900000036
+      Constant: 1
+      Intensity: 1.22000003
+      Radius: 100

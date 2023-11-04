@@ -29,7 +29,8 @@ namespace Core
         Vec2,
         Vec3,
         Vec4,
-        Color
+        Color,
+        Texture
     };
 
     struct SkyShaderData
@@ -72,6 +73,11 @@ namespace Core
             {
                 Color *other = static_cast<Color *>(_Data);
                 Data = new Color(other->r, other->g, other->b, other->a);
+                break;
+            }
+
+            case SkyShaderDataType::Texture:
+                {
                 break;
             }
 

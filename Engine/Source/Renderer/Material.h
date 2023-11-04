@@ -22,10 +22,11 @@ namespace Core
 
         /// @brief Leave empty for default
         std::string colorTextureName;
+        TextureConfiguration colorTextureConfig;
 
-        
         /// @brief Leave empty for default
         std::string normalTextureName;
+        TextureConfiguration normalTextureConfig;
 
         float shininess;
     };
