@@ -24,7 +24,9 @@ struct PointLight {
 
 uniform DirectionalLight directionalLight;
 uniform vec4 uColor;
+uniform float uShininess;
 uniform sampler2D uColorTexture;
+uniform sampler2D uNormalTexture;
 
 // World related
 uniform vec3 uCameraPosition;
@@ -40,9 +42,10 @@ vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir) {
     vec3 lightDir = normalize(-light.direction);
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
 
-    vec3 diffuse = diff * light.color.rgb * light.intensity; // DONE: Strength
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), uShininess);
+    
+    vec3 diffuse = diff * light.color.rgb; // DONE: Strength
     vec3 specular = spec * light.specular;//* vec3(texture(uNormalTexture, vUVs));
 
     return diffuse + specular;
@@ -52,8 +55,8 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
     vec3 lightDir = normalize(light.position - fragPos);
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
-
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), uShininess);
+    
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
@@ -74,8 +77,10 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 void main() {
     if(uRenderMode == 0) {
 
-    // Sample the normal texture and normalize it
-        vec3 normal = normalize(vNormal); // Normalize the normal
+        vec3 normal;
+        normal = texture(uNormalTexture, vUV).rgb;
+        normal = normalize(normal * 2.0 - 1.0);
+
         vec3 viewDirection = normalize(uCameraPosition - vFragPos);
 
         vec3 directionalLightResult = CalcDirLight(directionalLight, normal, viewDirection);
@@ -98,6 +103,7 @@ void main() {
         outColor = texture2D(uColorTexture, vUV);
     } else if(uRenderMode == 3) {
         outColor = vec4(vNormal * 0.5 + 0.5, 1.0);
+        outColor *= texture2D(uNormalTexture, vUV);
     } else if(uRenderMode == 4) {
         vec3 normal = normalize(vNormal); // Normalize the normal
         vec3 viewDirection = normalize(uCameraPosition - vFragPos);

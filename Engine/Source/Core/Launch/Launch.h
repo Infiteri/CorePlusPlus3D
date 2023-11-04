@@ -8,6 +8,8 @@ extern Core::Application *Core::CreateApplication(Core::EngineConfiguration *con
 
 int main(int argc, char const *argv[])
 {
+    CE_PROFILE_BEGIN_SESSION_FILE("Game", "Debug/Core-Profile_Game.json");
+
     Core::EngineConfiguration config;
 
     // Setup default config
@@ -26,18 +28,21 @@ int main(int argc, char const *argv[])
 
     // pre Init stage
     GEngineLoop.PreInit(application, &config);
-
-    // Init stage
     GEngineLoop.Init();
+    // CE_PROFILE_END_SESSION();
 
     // Tick stage
+    // CE_PROFILE_BEGIN_SESSION_FILE("Tick", "Debug/Core-Profile_Tick.json");
     while (GEngineLoop.ShouldTick())
     {
         GEngineLoop.Tick();
     }
+    // CE_PROFILE_END_SESSION();
 
     // Exit / Shutdown stage
+    // CE_PROFILE_BEGIN_SESSION_FILE("Shutdown", "Debug/Core-Profile_Tick.json");
     GEngineLoop.Shutdown();
+    CE_PROFILE_END_SESSION();
 
     return 0;
 }

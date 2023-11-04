@@ -360,146 +360,156 @@ namespace Core
 
     void DrawMeshUI(MeshComponent *m, Actor *a)
     {
-        auto material = m->mesh->GetMaterial();
-
-        // -- Material --
-        if (m->mesh->IsMaterialUnique())
+        if (ImGui::TreeNodeEx("Material"))
         {
-            static char NameBuffer[256];
-            CeMemory::Zero(&NameBuffer, 256);
-            CeMemory::Copy(&NameBuffer, material->GetName().c_str(), 256);
 
-            if (ImGui::InputText("Name", NameBuffer, 256))
+            auto material = m->mesh->GetMaterial();
+
+            // -- Material --
+            if (m->mesh->IsMaterialUnique())
             {
-                material->SetName(NameBuffer);
-            }
+                static char NameBuffer[256];
+                CeMemory::Zero(&NameBuffer, 256);
+                CeMemory::Copy(&NameBuffer, material->GetName().c_str(), 256);
 
-            Color *color = material->GetColor();
-            EditorUtils::ImGuiColor4Edit("Color", color);
-
-            ImGui::Button("Texture");
-
-            if (ImGui::BeginDragDropTarget())
-            {
-                const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
-
-                if (payload)
+                if (ImGui::InputText("Name", NameBuffer, 256))
                 {
-                    const char *name = (const char *)payload->Data;
-                    if (StringUtils::FileExtIsImage(name))
-                    {
-                        material->SetColorTexture(name);
-                    }
+                    material->SetName(NameBuffer);
                 }
 
-                ImGui::EndDragDropTarget();
-            }
-
-            ImGui::Separator();
-
-            ImGui::InputText("File Name", FileMaterialNameBuffer, 256);
-
-            if (ImGui::Button("Form File"))
-            {
-                m->mesh->SetMaterial(FileMaterialNameBuffer);
-                CeMemory::Zero(&FileMaterialNameBuffer, 256);
-            }
-
-            if (ImGui::BeginDragDropTarget())
-            {
-                const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
-
-                if (payload)
+                float shiny = material->GetShininess();
+                if (ImGui::DragFloat("Shininess", &shiny, 0.01f, 0.01f))
                 {
-                    const char *name = (const char *)payload->Data;
-                    if (StringUtils::GetFileExtension(name).compare("ce_mat") == 0)
-                    {
-                        m->mesh->SetMaterial(name);
-                        CeMemory::Zero(&name, 256);
-                    }
+                    material->SetShininess(shiny);
                 }
 
-                ImGui::EndDragDropTarget();
+                Color *color = material->GetColor();
+                EditorUtils::ImGuiColor4Edit("Color", color);
+
+                if (ImGui::TreeNodeEx("Color Texture"))
+                {
+                    EditorUtils::DrawMeshTextureUI(EditorUtils::TextureColor, material);
+
+                    ImGui::TreePop();
+                }
+
+                if (ImGui::TreeNodeEx("Normal Texture"))
+                {
+                    EditorUtils::DrawMeshTextureUI(EditorUtils::TextureNormal, material);
+                    ImGui::TreePop();
+                }
+
+                ImGui::Separator();
+
+                ImGui::InputText("File Name", FileMaterialNameBuffer, 256);
+
+                if (ImGui::Button("Form File"))
+                {
+                    m->mesh->SetMaterial(FileMaterialNameBuffer);
+                    CeMemory::Zero(&FileMaterialNameBuffer, 256);
+                }
+
+                if (ImGui::BeginDragDropTarget())
+                {
+                    const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+
+                    if (payload)
+                    {
+                        const char *name = (const char *)payload->Data;
+                        if (StringUtils::GetFileExtension(name).compare("ce_mat") == 0)
+                        {
+                            m->mesh->SetMaterial(name);
+                            CeMemory::Zero(&name, 256);
+                        }
+                    }
+
+                    ImGui::EndDragDropTarget();
+                }
             }
+            else
+            {
+                ImGui::Text(material->GetName().c_str());
+
+                if (ImGui::Button("Make Unique"))
+                {
+                    m->mesh->MakeMaterialUnique();
+                }
+
+                if (ImGui::BeginDragDropTarget())
+                {
+                    const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+
+                    if (payload)
+                    {
+                        const char *name = (const char *)payload->Data;
+                        if (StringUtils::GetFileExtension(name).compare("ce_mat") == 0)
+                        {
+                            m->mesh->SetMaterial(name);
+                            CeMemory::Zero(&name, 256);
+                        }
+                    }
+
+                    ImGui::EndDragDropTarget();
+                }
+            }
+
+            ImGui::TreePop();
         }
-        else
-        {
-            ImGui::Text(material->GetName().c_str());
-
-            if (ImGui::Button("Make Unique"))
-            {
-                m->mesh->MakeMaterialUnique();
-            }
-
-            if (ImGui::BeginDragDropTarget())
-            {
-                const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
-
-                if (payload)
-                {
-                    const char *name = (const char *)payload->Data;
-                    if (StringUtils::GetFileExtension(name).compare("ce_mat") == 0)
-                    {
-                        m->mesh->SetMaterial(name);
-                        CeMemory::Zero(&name, 256);
-                    }
-                }
-
-                ImGui::EndDragDropTarget();
-            }
-        }
-
-        ImGui::Separator();
 
         // -- Geometry --
-
-        const char *geometryTypeStrings[] = {"None", "Box", "Plane"};
-        const char *geometryTypeCurrent = geometryTypeStrings[(int)m->mesh->GetGeometry()->GetType()];
-
-        if (ImGui::BeginCombo("Geometry", geometryTypeCurrent))
+        if (ImGui::TreeNodeEx("Geometry"))
         {
-            for (int i = 0; i < 3; i++)
+
+            const char *geometryTypeStrings[] = {"None", "Box", "Plane"};
+            const char *geometryTypeCurrent = geometryTypeStrings[(int)m->mesh->GetGeometry()->GetType()];
+
+            if (ImGui::BeginCombo("Geometry", geometryTypeCurrent))
             {
-                bool isSelected = (geometryTypeCurrent == geometryTypeStrings[i]);
-
-                if (ImGui::Selectable(geometryTypeStrings[i], isSelected))
+                for (int i = 0; i < 3; i++)
                 {
-                    geometryTypeCurrent = geometryTypeStrings[i];
+                    bool isSelected = (geometryTypeCurrent == geometryTypeStrings[i]);
 
-                    if (geometryTypeCurrent == "Box")
-                        m->mesh->SetGeometry(new BoxGeometry(1, 1, 1));
-                    else if (geometryTypeCurrent == "Plane")
-                        m->mesh->SetGeometry(new PlaneGeometry(1, 1));
-                    else
-                        m->mesh->SetGeometry(new Geometry());
+                    if (ImGui::Selectable(geometryTypeStrings[i], isSelected))
+                    {
+                        geometryTypeCurrent = geometryTypeStrings[i];
+
+                        if (geometryTypeCurrent == "Box")
+                            m->mesh->SetGeometry(new BoxGeometry(1, 1, 1));
+                        else if (geometryTypeCurrent == "Plane")
+                            m->mesh->SetGeometry(new PlaneGeometry(1, 1));
+                        else
+                            m->mesh->SetGeometry(new Geometry());
+                    }
+
+                    if (isSelected)
+                        ImGui::SetItemDefaultFocus();
                 }
 
-                if (isSelected)
-                    ImGui::SetItemDefaultFocus();
+                ImGui::EndCombo();
             }
 
-            ImGui::EndCombo();
-        }
+            // Edit geometry props
+            Geometry *geometry = m->mesh->GetGeometry();
+            if (geometry->GetType() == GeometryType::Box)
+            {
+                BoxGeometry *geo = (BoxGeometry *)geometry;
 
-        // Edit geometry props
-        Geometry *geometry = m->mesh->GetGeometry();
-        if (geometry->GetType() == GeometryType::Box)
-        {
-            BoxGeometry *geo = (BoxGeometry *)geometry;
+                float edit[3] = {geo->width, geo->height, geo->depth};
 
-            float edit[3] = {geo->width, geo->height, geo->depth};
+                if (ImGui::DragFloat3("Sizes", edit, 0.1, 0))
+                    m->mesh->SetGeometry(new BoxGeometry(edit[0], edit[1], edit[2]));
+            }
+            else if (geometry->GetType() == GeometryType::Plane)
+            {
+                PlaneGeometry *geo = (PlaneGeometry *)geometry;
 
-            if (ImGui::DragFloat3("Sizes", edit, 0.1, 0))
-                m->mesh->SetGeometry(new BoxGeometry(edit[0], edit[1], edit[2]));
-        }
-        else if (geometry->GetType() == GeometryType::Plane)
-        {
-            PlaneGeometry *geo = (PlaneGeometry *)geometry;
+                float edit[2] = {geo->width, geo->height};
 
-            float edit[2] = {geo->width, geo->height};
+                if (ImGui::DragFloat2("Sizes", edit, 0.1, 0.0))
+                    m->mesh->SetGeometry(new PlaneGeometry(edit[0], edit[1]));
+            }
 
-            if (ImGui::DragFloat2("Sizes", edit, 0.1, 0.0))
-                m->mesh->SetGeometry(new PlaneGeometry(edit[0], edit[1]));
+            ImGui::TreePop();
         }
     }
 

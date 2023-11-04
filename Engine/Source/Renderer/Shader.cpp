@@ -40,6 +40,8 @@ namespace Core
 
     Shader::Shader(const std::string &vertex, const std::string &fragment)
     {
+        CE_PROFILE_FUNCTION();
+
         CeU32 vertexShader = LoadShader(FileSystem::ReadFileContent(vertex).c_str(), GL_VERTEX_SHADER);
         CeU32 fragmentShader = LoadShader(FileSystem::ReadFileContent(fragment).c_str(), GL_FRAGMENT_SHADER);
 

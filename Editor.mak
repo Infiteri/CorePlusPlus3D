@@ -7,7 +7,7 @@ EXTENSION := .exe
 COMPILER_FLAGS := -g -std=c++17 #-fPIC
 INCLUDE_FLAGS := -IEditor\Source -IEngine/Source -IEngine/Vendor/ImGui -IEngine/Vendor/ImGuizmo
 LINKER_FLAGS := -g -lEngine -L$(BUILD_DIR) -lImGui -lImGuizmo 
-DEFINES := -D_DEBUG -D_CRT_SECURE_NO_WARNINGS 
+DEFINES := -D_DEBUG -D_CRT_SECURE_NO_WARNINGS -DCE_WITH_EDITOR
 
 # Make does not offer a recursive wildcard function, so here's one:
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))

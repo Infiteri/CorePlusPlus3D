@@ -10,6 +10,8 @@ namespace Core
 {
     void LayerStack::Init()
     {
+        CE_PROFILE_FUNCTION();
+
         insert = layers.begin();
     }
 
@@ -24,6 +26,8 @@ namespace Core
 
     void LayerStack::Update()
     {
+        CE_PROFILE_FUNCTION();
+
         for (Layer *layer : layers)
             layer->OnUpdate();
     }

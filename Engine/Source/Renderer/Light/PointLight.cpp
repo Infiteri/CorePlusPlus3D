@@ -30,6 +30,8 @@ namespace Core
 
     void PointLight::Update()
     {
+        CE_PROFILE_FUNCTION();
+
         Shader *shd = ShaderSystem::Get("EngineResources/Shaders/Object");
 
         if (!shd || !World::GetActive())

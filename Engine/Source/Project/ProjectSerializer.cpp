@@ -16,6 +16,8 @@ namespace Core
 
     void ProjectSerializer::Serialize(const std::string &path)
     {
+        CE_PROFILE_FUNCTION();
+
         auto config = Project::GetConfig();
 
         YAML::Emitter out;
@@ -41,6 +43,8 @@ namespace Core
 
     void ProjectSerializer::Deserialize(const std::string &path)
     {
+        CE_PROFILE_FUNCTION();
+
         auto config = Project::GetConfig();
 
         YAML::Node data = YAML::LoadFile(path.c_str());

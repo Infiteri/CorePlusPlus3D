@@ -88,6 +88,14 @@ namespace Core
         Bind();
     }
 
+    void Texture::Load(CeU8 *data, int channel, CeU32 w, CeU32 h)
+    {
+        glGenTextures(1, &id);
+        Bind();
+        TextureLoadUtils(w, h, data, ChannelToGL(channel), {});
+        Unbind();
+    }
+
     int Texture::GetWidth()
     {
         if (!image || image == nullptr)

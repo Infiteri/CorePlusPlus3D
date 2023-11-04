@@ -38,6 +38,8 @@ namespace Core
 
     Scene *Scene::GetCopyOfScene(Scene *other)
     {
+        CE_PROFILE_FUNCTION();
+
         Scene *scene = new Scene();
 
         scene->SetName(other->GetName());
@@ -64,6 +66,8 @@ namespace Core
 
     void Scene::Init()
     {
+        CE_PROFILE_FUNCTION();
+
         state = SceneState::Init;
 
         for (Actor *a : actors)
@@ -72,6 +76,8 @@ namespace Core
 
     void Scene::Destroy()
     {
+        CE_PROFILE_FUNCTION();
+
         if (state == SceneState::Destroyed)
             return;
 
@@ -87,6 +93,8 @@ namespace Core
 
     void Scene::Update()
     {
+        CE_PROFILE_FUNCTION();
+
         if (state != SceneState::Running)
             return;
 
@@ -98,6 +106,8 @@ namespace Core
 
     void Scene::Render()
     {
+        CE_PROFILE_FUNCTION();
+
         if (state == SceneState::Created) // Rendering can be done in most states
             return;
 
@@ -118,6 +128,8 @@ namespace Core
 
     void Scene::Start()
     {
+        CE_PROFILE_FUNCTION();
+
         state = SceneState::Running;
 
         for (Actor *a : actors)
@@ -137,6 +149,8 @@ namespace Core
 
     void Scene::Stop()
     {
+        CE_PROFILE_FUNCTION();
+
         state = SceneState::Stopped;
 
         for (Actor *a : actors)
@@ -147,6 +161,8 @@ namespace Core
 
     Actor *Scene::GetActorByName(const std::string &name)
     {
+        CE_PROFILE_FUNCTION();
+
         for (Actor *a : actors)
         {
             if (a->GetName() == name)
@@ -158,6 +174,7 @@ namespace Core
 
     Actor *Scene::GetActorByUUID(UUID *uid)
     {
+        CE_PROFILE_FUNCTION();
 
         for (Actor *a : actors)
         {
@@ -185,6 +202,8 @@ namespace Core
 
     void Scene::RemoveActorByName(const std::string &name)
     {
+        CE_PROFILE_FUNCTION();
+
         for (Actor *a : actors)
         {
             if (a->GetName() == name)
@@ -194,6 +213,8 @@ namespace Core
 
     void Scene::RemoveActorByUUID(UUID *id)
     {
+        CE_PROFILE_FUNCTION();
+
         for (int i = 0; i < actors.size(); i++)
         {
             if (actors[i]->GetUUID()->Get() == id->Get())
@@ -214,6 +235,8 @@ namespace Core
 
     void Scene::ActivateSceneCamera()
     {
+        CE_PROFILE_FUNCTION();
+
         auto comp = GetActorCameraComponent();
 
         if (comp)
@@ -224,6 +247,8 @@ namespace Core
 
     PerspectiveCameraComponent *Scene::GetActorCameraComponent()
     {
+        CE_PROFILE_FUNCTION();
+
         for (Actor *a : actors)
         {
             auto comp = a->GetComponent<PerspectiveCameraComponent>();
@@ -245,6 +270,8 @@ namespace Core
 
     void Scene::MoveActorInHierarchy(const std::string &name, int newIndex)
     {
+        CE_PROFILE_FUNCTION();
+
         // Find the actor by name
         Actor *actorToMove = GetActorByName(name);
 
@@ -275,6 +302,8 @@ namespace Core
 
     void Scene::MoveActorInHierarchy(UUID *uid, int newIndex)
     {
+        CE_PROFILE_FUNCTION();
+
         Actor *actorToMove = GetActorByUUID(uid);
 
         if (!actorToMove)
@@ -309,6 +338,8 @@ namespace Core
 
     Actor *Scene::GetActorAtIndex(int i)
     {
+        CE_PROFILE_FUNCTION();
+
         if (i > actors.size())
         {
             CE_ERROR("Unable to get actor at index %i, out of bounds. (Actor count is %i.)", i, actors.size());

@@ -12,6 +12,14 @@ namespace Core
 {
     namespace EditorUtils
     {
+        enum TexType
+        {
+            TextureColor,
+            TextureNormal
+        };
+
+        void InitAssets();
+
         void ImGuiVector3Edit(const char *label, Vector3 *vec, float valueDefault = 0.0f);
         template <typename T, typename UIFun>
         void DrawComponentUI(const std::string &name, Actor *a, UIFun fun)
@@ -55,5 +63,7 @@ namespace Core
 
         std::string ShaderDataTypeToString(SkyShaderDataType d);
         SkyShaderDataType StringToShaderDatatType(const std::string &val);
+
+        void DrawMeshTextureUI(TexType type, Core::Material *material);
     }
 }

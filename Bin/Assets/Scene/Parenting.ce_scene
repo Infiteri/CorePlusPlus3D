@@ -1,13 +1,20 @@
 Scene: Lights
 Sky:
-  Mode: CubeMap
-  CubeMapPath: Assets/CubeMaps/PadNight.ce_cubemap
+  Mode: Shader
+  ShaderName: Assets/Shader/Sky
+  SkyShaderData:
+    - Name: color
+      Type: Color
+      Value: [212.720215, 212.720215, 212.720215, 255]
+    - Name: Time
+      Type: Vec2
+      Value: [0, 2.58999991]
 DirectionalLight:
-  Color: [255, 255, 255, 255]
-  Direction: [0, 0, 2.79999995]
+  Color: [255, 0, 0, 255]
+  Direction: [2.19387889, 0, -1.57079637]
 Actors:
   - Actor: Filed
-    UUID: 16235078023566875402
+    UUID: 5730567359334639028
     Name: Floor
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
@@ -17,48 +24,51 @@ Actors:
     MeshComponent:
       Name: DefaultMaterial
       Unique: Yes
-      Color: [19.6153831, 19.6153831, 19.6153831, 255]
-      ColorTextureName: ""
+      Color: [255, 255, 255, 255]
+      ColorTextureName: Assets/Images/Paving/paving2.png
+      NormalTextureName: Assets/Images/Paving/paving2_NRM.png
       GeometryType: Box
       W: 10
       H: 0.5
       D: 10
   - Actor: Filed
-    UUID: 311787520746423562
+    UUID: 8279685334796349381
     Name: Wall
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
-      Position: [0, -1.16796708, -3.35098648]
+      Position: [-0.276810646, 6.34070969, -3.35098648]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     MeshComponent:
       Name: DefaultMaterial
       Unique: Yes
-      Color: [19.6153831, 19.6153831, 19.6153831, 255]
-      ColorTextureName: ""
+      Color: [255, 255, 255, 255]
+      ColorTextureName: Assets/Images/Paving/paving2.png
+      NormalTextureName: Assets/Images/Paving/paving2_NRM.png
       GeometryType: Box
       W: 10
       H: 10
       D: 0.5
   - Actor: Filed
-    UUID: 14212679730748768951
+    UUID: 15690817201535237022
     Name: Box
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
-      Position: [5.70214844, -1.24166679, 2.84261656]
+      Position: [5.70214844, 0.553490102, 1.49392605]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     MeshComponent:
       Name: DefaultMaterial
       Unique: Yes
-      Color: [98.0769196, 98.0769196, 98.0769196, 255]
-      ColorTextureName: Assets/CeImage/crate.ce_image
+      Color: [255, 255, 255, 255]
+      ColorTextureName: Assets/Images/Paving/paving2.png
+      NormalTextureName: Assets/Images/Paving/paving2_NRM.png
       GeometryType: Box
       W: 1
       H: 1
       D: 1
   - Actor: Filed
-    UUID: 8704173794336279050
+    UUID: 17995714989864800573
     Name: Camera
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
@@ -71,97 +81,3 @@ Actors:
       Far: 1000
       Position: [0, 1.78499997, 7.82939816]
       Rotation: [-0.0700000003, 0, 0]
-  - Actor: Filed
-    UUID: 5123554997200247413
-    Name: Point Light
-    ParentName: __NO_PARENT_NAME_CE__
-    Transform:
-      Position: [-5.73634386, 1.33386505, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 0.931142509, 1]
-    PointLight:
-      Position: [-5.73634386, 1.33386505, 0]
-      Color: [255, 255, 255, 255]
-      Specular: [1, 1, 1]
-      Quadratic: 0.0320000015
-      Linear: 0.0900000036
-      Constant: 1
-      Intensity: 5
-      Radius: 100
-  - Actor: Filed
-    UUID: 10433996206603023485
-    Name: Point Light
-    ParentName: __NO_PARENT_NAME_CE__
-    Transform:
-      Position: [4.62303066, 1.39648426, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    ActorScriptComponent:
-      ClassName: FunnyLight
-      OwnerName: Point Light
-    PointLight:
-      Position: [4.62303066, 1.39648426, 0]
-      Color: [255, 255, 255, 255]
-      Specular: [1, 1, 1]
-      Quadratic: 0.0320000015
-      Linear: 0.0900000036
-      Constant: 1
-      Intensity: 5
-      Radius: 100
-  - Actor: Filed
-    UUID: 10269984331725641502
-    Name: Point Light
-    ParentName: __NO_PARENT_NAME_CE__
-    Transform:
-      Position: [-1.05860996, 4.69335938, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    ActorScriptComponent:
-      ClassName: FunnyLight
-      OwnerName: Point Light
-    PointLight:
-      Position: [-1.05860996, 4.69335938, 0]
-      Color: [255, 255, 255, 255]
-      Specular: [1, 1, 1]
-      Quadratic: 0.0320000015
-      Linear: 0.349999994
-      Constant: 0.0199999996
-      Intensity: 5
-      Radius: 100
-  - Actor: Filed
-    UUID: 9563147931252970231
-    Name: Point Light
-    ParentName: __NO_PARENT_NAME_CE__
-    Transform:
-      Position: [2.83933926, 2.984375, 7.53052187]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    ActorScriptComponent:
-      ClassName: FunnyLight
-      OwnerName: Point Light
-    PointLight:
-      Position: [2.83933926, 2.984375, 7.53052187]
-      Color: [255, 255, 255, 255]
-      Specular: [1, 1, 1]
-      Quadratic: 0.0320000015
-      Linear: 0.0900000036
-      Constant: 1
-      Intensity: 5
-      Radius: 100
-  - Actor: Filed
-    UUID: 2100390218332248231
-    Name: Point Light
-    ParentName: __NO_PARENT_NAME_CE__
-    Transform:
-      Position: [3.93078732, 1.81470513, 3.00855207]
-      Rotation: [0, 0, 0]
-      Scale: [1, 0.931142509, 1]
-    PointLight:
-      Position: [3.93078732, 1.81470513, 3.00855207]
-      Color: [255, 0, 0, 255]
-      Specular: [1, 1, 1]
-      Quadratic: 0.0199999996
-      Linear: 0.00999999978
-      Constant: 9.60000038
-      Intensity: 5.55999994
-      Radius: 100

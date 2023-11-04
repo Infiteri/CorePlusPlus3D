@@ -13,6 +13,8 @@ namespace Core
 
     void ScriptEngine::Init()
     {
+        CE_PROFILE_FUNCTION();
+
         hasLibrary = false;
     }
 
@@ -28,6 +30,8 @@ namespace Core
 
     void ScriptEngine::UpdateRuntime()
     {
+        CE_PROFILE_FUNCTION();
+
         for (auto &script : scripts)
         {
             script->script->OnUpdate();
@@ -36,19 +40,21 @@ namespace Core
 
     void ScriptEngine::StartRuntime()
     {
+        CE_PROFILE_FUNCTION();
+
         for (auto &script : scripts)
         {
             script->script->OnStart();
-            CE_TRACE("Starting script.");
         }
     }
 
     void ScriptEngine::StopRuntime()
     {
+        CE_PROFILE_FUNCTION();
+
         for (auto &script : scripts)
         {
             script->script->OnStop();
-            CE_TRACE("Stopping script.");
         }
 
         ClearScriptList();
@@ -56,14 +62,16 @@ namespace Core
 
     void ScriptEngine::RegisterScript(const std::string &name, ActorScript *script, Actor *parent)
     {
+        CE_PROFILE_FUNCTION();
+
         script->owner = parent;
         scripts.push_back(new ScriptInfo(name, script));
-
-        CE_TRACE("Script registered to parent.");
     }
 
     void ScriptEngine::RegisterScript(const std::string &name, const std::string &scriptLoadName, Actor *parent)
     {
+        CE_PROFILE_FUNCTION();
+
         GetActorScriptPFN pfn = Platform::LibraryGetFunction<GetActorScriptPFN>(&library, scriptLoadName + "Create");
 
         if (pfn == nullptr)
@@ -77,6 +85,8 @@ namespace Core
 
     void ScriptEngine::DeleteScript(const std::string &name)
     {
+        CE_PROFILE_FUNCTION();
+
         for (auto &script : scripts)
         {
             if (script->name == name)
@@ -89,9 +99,10 @@ namespace Core
 
     void ScriptEngine::ClearScriptList()
     {
+        CE_PROFILE_FUNCTION();
+
         for (auto &script : scripts)
         {
-            CE_TRACE("Clearing script from list.");
             delete script->script;
             delete script;
         }
@@ -106,6 +117,8 @@ namespace Core
 
     void ScriptEngine::LoadGameLibrary(const std::string &name)
     {
+        CE_PROFILE_FUNCTION();
+
         library = Platform::CreateLibrary(name);
 
         if (library.valid)
@@ -114,11 +127,15 @@ namespace Core
 
     void ScriptEngine::UnloadLibrary()
     {
+        CE_PROFILE_FUNCTION();
+
         Platform::DestroyLibrary(&library);
     }
 
     ActorScript *ScriptEngine::GetScriptByNameT(const std::string &name)
     {
+        CE_PROFILE_FUNCTION();
+
         auto it = std::find_if(scripts.begin(), scripts.end(), [name](ScriptInfo *script)
                                { return (script->name == name); });
 

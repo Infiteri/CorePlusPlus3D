@@ -228,6 +228,7 @@ namespace Core
             {
                 out << YAML::Key << "Color" << YAML::Value << material->GetColor();
                 out << YAML::Key << "ColorTextureName" << YAML::Value << material->GetColorTexture()->GetImagePath().c_str();
+                out << YAML::Key << "NormalTextureName" << YAML::Value << material->GetNormalTexture()->GetImagePath().c_str();
             }
 
             out << YAML::Key << "GeometryType" << YAML::Value << GeometryTypeToString(geometry->GetType()).c_str();
@@ -315,6 +316,8 @@ namespace Core
 
     void SceneSerializer::Serialize(const std::string &name)
     {
+        CE_PROFILE_FUNCTION();
+
         auto camera = scene->GetActorCameraComponent();
         auto env = scene->GetEnvironment();
 
@@ -425,6 +428,8 @@ namespace Core
 
     void SceneSerializer::Deserialize(const std::string &name)
     {
+        CE_PROFILE_FUNCTION();
+
         CE_ASSERT_IF(name.empty() && "SceneSerializer::Deserialize: Name cannot be empty.");
 
         std::ifstream stream(name);
@@ -559,6 +564,12 @@ namespace Core
                         if (!colorTexture.empty())
                         {
                             c->mesh->GetMaterial()->SetColorTexture(colorTexture);
+                        }
+
+                        std::string normalTexture = mesh["NormalTextureName"] ? mesh["NormalTextureName"].as<std::string>() : "";
+                        if (!normalTexture.empty())
+                        {
+                            c->mesh->GetMaterial()->SetNormalTexture(normalTexture);
                         }
                     }
                     else

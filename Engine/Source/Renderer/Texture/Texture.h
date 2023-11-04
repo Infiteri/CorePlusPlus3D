@@ -33,6 +33,8 @@ namespace Core
         void Destroy();
         void Use();
 
+        void Load(CeU8 *data, int channel, CeU32 w, CeU32 h);
+
         int GetWidth();
         int GetHeight();
 

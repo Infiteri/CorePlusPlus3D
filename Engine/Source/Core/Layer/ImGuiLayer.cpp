@@ -12,6 +12,9 @@ namespace Core
 {
     void ImGuiLayer::Init()
     {
+        CE_PROFILE_FUNCTION();
+
+
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
@@ -21,7 +24,7 @@ namespace Core
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-        io.Fonts->AddFontFromFileTTF("EngineResources/Fonts/Open_Sans/static/OpenSans-Bold.ttf", 11.0f);
+        io.Fonts->AddFontFromFileTTF("EngineResources/Fonts/Open_Sans/static/OpenSans-Bold.ttf", 12.0f);
 
         // Styling
         ImGui::StyleColorsDark();

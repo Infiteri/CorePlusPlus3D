@@ -3,11 +3,18 @@
 #include "Base.h"
 #include "CeAssert.h"
 
+#include <string>
+#include <vector>
+
 #define CE_ENABLE_INFO_LOGGING 1
 #define CE_ENABLE_WARN_LOGGING 1
 #define CE_ENABLE_TRACE_LOGGING 1
 #define CE_ENABLE_DEBUG_LOGGING 1
 #define CE_LOGGER_MAX_MESSAGE_LENGTH 32000
+
+#ifdef CE_WITH_EDITOR
+#include <imgui.h>
+#endif
 
 namespace Core
 {
@@ -21,6 +28,12 @@ namespace Core
         Debug,
     };
 
+    struct LogInfo
+    {
+        std::string Message;
+        LoggingLevel Level;
+    };
+
     class CE_API Logger
     {
     public:
@@ -31,6 +44,16 @@ namespace Core
         static void Shutdown();
 
         static void Log(LoggingLevel level, const char *fmt, ...);
+
+        static std::vector<LogInfo> GetLogInfos();
+        static void ClearLogInfos();
+
+        static void OnLoggerLogGeneral()
+        {
+#ifdef CE_WITH_EDITOR
+            ImGui::SetScrollHereY(1.0f);
+#endif
+        };
     };
 }
 

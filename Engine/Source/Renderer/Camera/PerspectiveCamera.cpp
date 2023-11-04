@@ -32,6 +32,8 @@ namespace Core
 
     void PerspectiveCamera::UpdateProjection(float aspect)
     {
+        CE_PROFILE_FUNCTION();
+
         this->aspect = aspect;
 
         projection = Matrix4::Perspective(FOV, aspect, near, far);
@@ -39,6 +41,8 @@ namespace Core
 
     void PerspectiveCamera::UpdateProjection()
     {
+        CE_PROFILE_FUNCTION();
+
         projection = Matrix4::Perspective(FOV, aspect, near, far);
     }
 

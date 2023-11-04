@@ -4,11 +4,11 @@
 
 #include <cstdarg>
 #include <unordered_map>
-#include <string>
 
 namespace Core
 {
     static std::unordered_map<LoggingLevel, std::string> levelToStringMap;
+    static std::vector<LogInfo> logs;
 
     Logger::Logger()
     {
@@ -20,6 +20,8 @@ namespace Core
 
     void Logger::Init()
     {
+        CE_PROFILE_FUNCTION();
+
         levelToStringMap[LoggingLevel::Info] = "Info";
         levelToStringMap[LoggingLevel::Warn] = "Warn";
         levelToStringMap[LoggingLevel::Error] = "Error";
@@ -88,5 +90,22 @@ namespace Core
         // Done: Platform code
         Platform::SetConsoleColor(color);
         Platform::LogMessage(OutMessageWithLevels);
+
+        LogInfo inf;
+        inf.Level = level;
+        inf.Message = OutMessageWithLevels;
+        logs.push_back(inf);
+
+        OnLoggerLogGeneral();
+    }
+
+    std::vector<LogInfo> Logger::GetLogInfos()
+    {
+        return logs;
+    }
+
+    void Logger::ClearLogInfos()
+    {
+        logs.clear();
     }
 }

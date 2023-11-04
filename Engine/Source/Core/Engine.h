@@ -4,8 +4,11 @@
 #include "Application.h"
 #include "Core/CeConfigurations.h"
 #include "Core/Window.h"
+#include "Timer.h"
 
 #include "Event/Event.h"
+
+#include <vector>
 
 namespace Core
 {
@@ -74,5 +77,8 @@ namespace Core
         static float GetFPS();
         static void SetWantedFPS(float fpsValue);
         static float GetWantedFPS();
+
+        static void PushTimerInfoForThisFrame(TimerInfo info);
+        static std::vector<TimerInfo> GetTimerInfoForThisFrame();
     };
 }

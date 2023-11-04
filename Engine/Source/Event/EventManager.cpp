@@ -27,6 +27,7 @@ namespace Core
 
     void EventManager::Init()
     {
+        CE_PROFILE_FUNCTION();
     }
 
     void EventManager::Shutdown()
@@ -35,6 +36,8 @@ namespace Core
 
     void EventManager::Update()
     {
+        CE_PROFILE_FUNCTION();
+
         if (events.empty() || EventsPerFrame == 0)
             return;
 

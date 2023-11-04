@@ -57,7 +57,7 @@ namespace Core
         references[path]->count = 0;
         references[path]->texture = new Texture();
         references[path]->texture->Load(path);
-        CE_INFO("Loaded texture: '%s', reference count is 0.", path.c_str());
+        CE_TRACE("Loaded texture: '%s', reference count is 0.", path.c_str());
     }
 
     Texture *TextureManager::Get(const std::string &path)
@@ -68,7 +68,7 @@ namespace Core
         }
 
         references[path]->count++;
-        CE_INFO("Found texture: '%s', reference count is %i.", path.c_str(), references[path]->count);
+        CE_TRACE("Found texture: '%s', reference count is %i.", path.c_str(), references[path]->count);
 
         return references[path]->texture;
     }
@@ -91,10 +91,10 @@ namespace Core
             return;
 
         references[path]->count--;
-        CE_INFO("Found texture: '%s', reference count is %i.", path.c_str(), references[path]->count);
+        CE_TRACE("Found texture: '%s', reference count is %i.", path.c_str(), references[path]->count);
         if (references[path]->count == 0)
         {
-            CE_INFO("Texture: '%s' with reference count of %i is getting deleted.", path.c_str(), references[path]->count);
+            CE_TRACE("Texture: '%s' with reference count of %i is getting deleted.", path.c_str(), references[path]->count);
             delete references[path];
             references[path] = nullptr;
         }

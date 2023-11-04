@@ -69,9 +69,17 @@ namespace Core
                 {
                     config.colorTextureName = value;
                 }
+                else if (StringUtils::EqualI(key, "normalTextureName"))
+                {
+                    config.normalTextureName = value;
+                }
                 else if (StringUtils::EqualI(key, "color"))
                 {
                     config.color = StringToColor(value);
+                }
+                else if (StringUtils::EqualI(key, "shininess"))
+                {
+                    config.shininess = std::stof(value);
                 }
             }
         }

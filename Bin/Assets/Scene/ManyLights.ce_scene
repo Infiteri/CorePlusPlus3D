@@ -67,7 +67,7 @@ Actors:
       Scale: [1, 1, 1]
     PointLight:
       Position: [-4.06236362, 7.12654305, 8.31867981]
-      Color: [240.989029, 0, 255, 255]
+      Color: [10.5698776, 0, 255, 255]
       Specular: [0, 0, 0]
       Quadratic: 0.0299999993
       Linear: 0.0599999987
@@ -124,10 +124,10 @@ Actors:
       Radius: 100
   - Actor: Filed
     UUID: 16845372135043671065
-    Name: Actor
+    Name: Mesh
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
-      Position: [-3.37616062, 0.463994026, 3.96984386]
+      Position: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     MeshComponent:
@@ -139,3 +139,71 @@ Actors:
       W: 1
       H: 1
       D: 1
+  - Actor: Filed
+    UUID: 16845372135043671065
+    Name: Actor
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [5.60858583, 4.98736858, 3.40004301]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [5.60858583, 4.98736858, 3.40004301]
+      Color: [14.010973, 255, 0, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 0.0320000015
+      Linear: 0.0900000036
+      Constant: 1
+      Intensity: 1
+      Radius: 100
+  - Actor: Filed
+    UUID: 5730567359334639028
+    Name: Actor
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [-0.765824974, 1.70846701, 3.40004301]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [-0.765824974, 1.70846701, 3.40004301]
+      Color: [14.010973, 255, 0, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 0.0320000015
+      Linear: 0.0900000036
+      Constant: 1
+      Intensity: 1
+      Radius: 100
+  - Actor: Filed
+    UUID: 8279685334796349381
+    Name: Actor
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [-5.73864126, 1.70846701, -5.90945673]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [-5.73864126, 1.70846701, -5.90945673]
+      Color: [14.010973, 255, 0, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 0.0320000015
+      Linear: 0.0900000036
+      Constant: 1
+      Intensity: 2.8599999
+      Radius: 100
+  - Actor: Filed
+    UUID: 15690817201535237022
+    Name: Actor
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [-0.765824974, 1.70846701, 3.40004301]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [-0.765824974, 1.70846701, 3.40004301]
+      Color: [14.010973, 255, 0, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 0.0320000015
+      Linear: 0.0900000036
+      Constant: 1
+      Intensity: 1
+      Radius: 100

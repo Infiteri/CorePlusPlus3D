@@ -50,17 +50,25 @@ namespace Core
         VertexArray *ScreenVertexArray;
 
         // End screen related
+
         GLenum depthType = GL_LEQUAL;
         RenderMode renderMode = RenderMode::Full;
+
+        RenderOutputMode renderOutputMode = RenderOutputMode::Full;
+        RenderOutputMode lastRenderOutputMode = RenderOutputMode::Full;
     };
 
     static RendererState *state;
 
     void Renderer::Init()
     {
-        // ! LOAD GLAD
-        gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-        // ! END LOAD GLAD
+        CE_PROFILE_FUNCTION();
+
+        {
+            // ! LOAD GLAD
+            CE_PROFILE_SCOPE("Renderer::Init: Initialize GLAD.");
+            gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+        }
 
         // Setup systems related to rendering
         TextureManager::Init();
@@ -77,9 +85,13 @@ namespace Core
         state->viewport.height = Engine::GetWindowInstance()->GetHeight();
 
         // Load up shaders
-        ShaderSystem::Load("EngineResources/Shaders/Object");
-        ShaderSystem::Load("EngineResources/Shaders/Screen");
-        ShaderSystem::Load("EngineResources/Shaders/SkyBox");
+        {
+            CE_PROFILE_SCOPE("Renderer::Init: Loaded Shaders.");
+
+            ShaderSystem::Load("EngineResources/Shaders/Object");
+            ShaderSystem::Load("EngineResources/Shaders/Screen");
+            ShaderSystem::Load("EngineResources/Shaders/SkyBox");
+        }
 
         FrameBufferSpecification spec;
         spec.width = state->viewport.width;
@@ -101,10 +113,13 @@ namespace Core
         RegenerateObjectsWithNewViewport();
         SetDepthMode(DepthMode::Lequal);
         SetRenderMode(RenderMode::Full);
+        SetRenderOutputMode(RenderOutputMode::Full);
     }
 
     void Renderer::Shutdown()
     {
+        CE_PROFILE_FUNCTION();
+
         MaterialManager::Shutdown();
         TextureManager::Shutdown();
         CameraSystem::Shutdown();
@@ -115,6 +130,7 @@ namespace Core
 
     void Renderer::BeginFrame()
     {
+        CE_PROFILE_FUNCTION();
         state->ScreenFramebuffer->Bind();
 
         glEnable(GL_DEPTH_TEST);
@@ -141,6 +157,8 @@ namespace Core
 
     void Renderer::Render()
     {
+        CE_PROFILE_FUNCTION();
+
         if (!ShaderSystem::UseShaderIfExists("EngineResources/Shaders/Object"))
         {
             CE_FATAL("Unable to use object shader.");
@@ -151,9 +169,31 @@ namespace Core
         {
             if (World::GetActive()->GetEnvironment()->sky->GetMode() != SkyMode::Color)
             {
+                CE_PROFILE_SCOPE("Renderer::Render Sky");
                 glDepthMask(false);
                 World::GetActive()->GetEnvironment()->sky->Render();
                 glDepthMask(true);
+            }
+        }
+
+        if (state->lastRenderOutputMode != state->renderOutputMode)
+        {
+            state->lastRenderOutputMode = state->renderOutputMode;
+
+            switch (state->renderOutputMode)
+            {
+            case RenderOutputMode::Points:
+                glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+                break;
+
+            case RenderOutputMode::WireFrame:
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                break;
+
+            case RenderOutputMode::Full:
+            default:
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                break;
             }
         }
 
@@ -171,11 +211,14 @@ namespace Core
             ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(Matrix4::Empty(), "uProjection");
             ShaderSystem::Get("EngineResources/Shaders/Object")->Mat4(Matrix4::Empty(), "uView");
             ShaderSystem::Get("EngineResources/Shaders/Object")->Vec3(vec, "uCameraPosition");
+            ShaderSystem::Get("EngineResources/Shaders/Object")->Int(999999, "uRenderMode");
         }
     }
 
     void Renderer::EndFrame()
     {
+        CE_PROFILE_FUNCTION();
+
         state->ScreenFramebuffer->Unbind();
 
         glDisable(GL_DEPTH_TEST);
@@ -187,6 +230,8 @@ namespace Core
 
     void Renderer::RegenerateObjectsWithNewViewport()
     {
+        CE_PROFILE_FUNCTION();
+
         CameraSystem::UpdateProjectionForAll((float)state->viewport.width / (float)state->viewport.height);
 
         state->ScreenFramebuffer->Resize(state->viewport.width, state->viewport.height);
@@ -196,6 +241,8 @@ namespace Core
 
     void Renderer::DrawImageToScreen()
     {
+        CE_PROFILE_FUNCTION();
+
         if (!ShaderSystem::UseShaderIfExists("EngineResources/Shaders/Screen"))
         {
             CE_FATAL("Unable to use screen shader.");
@@ -216,6 +263,8 @@ namespace Core
 
     void Renderer::Resize(CeU64 w, CeU64 h)
     {
+        CE_PROFILE_FUNCTION();
+
         if (!state)
             return;
 
@@ -280,6 +329,16 @@ namespace Core
     void Renderer::SetRenderMode(RenderMode mode)
     {
         state->renderMode = mode;
+    }
+
+    RenderOutputMode Renderer::GetRenderOutputMode()
+    {
+        return state->renderOutputMode;
+    }
+
+    void Renderer::SetRenderOutputMode(RenderOutputMode mode)
+    {
+        state->renderOutputMode = mode;
     }
 
     FrameBuffer *Renderer::GetFrameBuffer()

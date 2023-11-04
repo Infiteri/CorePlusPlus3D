@@ -22,6 +22,12 @@ namespace Core
 
         /// @brief Leave empty for default
         std::string colorTextureName;
+
+        
+        /// @brief Leave empty for default
+        std::string normalTextureName;
+
+        float shininess;
     };
 
     class CE_API Material
@@ -30,6 +36,8 @@ namespace Core
         Color color;
         std::string name;
         Texture *texture;
+        Texture *normalTexture;
+        float shininess;
 
     public:
         Material();
@@ -50,13 +58,18 @@ namespace Core
         /// @brief Returns a pointer to the color texture, could be empty, default or custom. (Based on the colorTextureName)
         /// @return A pointer to a Texture object.
         Texture *GetColorTexture();
-
         void SetColorTexture(const std::string &name);
+
+        Texture *GetNormalTexture();
+        void SetNormalTexture(const std::string &name);
 
         /// @brief Do not call yourself.
         void Use();
 
         /// @brief Called in the destructor, could have uses of its own.
         void Destroy();
+
+        float GetShininess();
+        void SetShininess(float a);
     };
 }

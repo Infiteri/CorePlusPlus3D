@@ -12,11 +12,15 @@ namespace Core
 
     void World::Init()
     {
+        CE_PROFILE_FUNCTION();
+
         activeScene = nullptr;
     }
 
     void World::Shutdown()
     {
+        CE_PROFILE_FUNCTION();
+
         for (auto it = scenes.begin(); it != scenes.end(); it++)
         {
             auto scene = it->second;
@@ -47,16 +51,22 @@ namespace Core
 
     Scene *World::Get(const std::string &name)
     {
+        CE_PROFILE_FUNCTION();
+
         return scenes[name];
     }
 
     Scene *World::GetActive()
     {
+        CE_PROFILE_FUNCTION();
+
         return activeScene;
     }
 
     Scene *World::Create(const std::string &name)
     {
+        CE_PROFILE_FUNCTION();
+
         CE_ASSERT_IF(name.empty() && "Name cannot be empty.");
 
         if (scenes[name] != nullptr)
@@ -76,6 +86,8 @@ namespace Core
 
     void World::Activate(const std::string &name)
     {
+        CE_PROFILE_FUNCTION();
+
         CE_ASSERT_IF(name.empty() && "Name cannot be empty.");
 
         if (!scenes[name])
@@ -96,6 +108,8 @@ namespace Core
 
     Scene *World::CopyActive()
     {
+        CE_PROFILE_FUNCTION();
+
         if (!activeScene)
             return nullptr;
 
@@ -104,6 +118,8 @@ namespace Core
 
     void World::CopyToActive(Scene *scene)
     {
+        CE_PROFILE_FUNCTION();
+
         if (!scene)
         {
             CE_ERROR("World::CopyToActive: Scene cannot be a nullptr.");
@@ -121,6 +137,8 @@ namespace Core
 
     void World::Delete(const std::string &name)
     {
+        CE_PROFILE_FUNCTION();
+
         CE_ASSERT_IF(name.empty() && "Name cannot be empty.");
 
         if (activeScene->GetName().compare(name) == 0)
@@ -142,18 +160,24 @@ namespace Core
 
     void World::InitActive()
     {
+        CE_PROFILE_FUNCTION();
+
         if (activeScene)
             activeScene->Init();
     }
 
     void World::StartActive()
     {
+        CE_PROFILE_FUNCTION();
+
         if (activeScene)
             activeScene->Start();
     }
 
     void World::UpdateActive()
     {
+        CE_PROFILE_FUNCTION();
+
         if (activeScene)
             activeScene->Update();
     }

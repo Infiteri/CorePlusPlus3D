@@ -167,6 +167,7 @@ namespace Core
     void Sky::Render()
     {
         // WIP: Shader
+        CE_PROFILE_FUNCTION();
 
         array->GetVertexBuffer()->Bind();
         auto shd = ShaderSystem::Get("EngineResources/Shaders/SkyBox");
@@ -194,7 +195,7 @@ namespace Core
         case SkyMode::Shader:
         {
             if (shaderName.empty())
-                return;
+                break;
 
             Shader *shd = ShaderSystem::Get(shaderName);
 

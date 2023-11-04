@@ -46,3 +46,17 @@ typedef signed long long CeI64;
 
 #define CE_IMPLEMENT_ACTOR_SCRIPT_DEFINE(className) \
     extern "C" __declspec(dllexport) Core::ActorScript *className##Create() { return new className(); }
+
+#define CE_FUNCTION_SIGNATURE
+
+#ifdef _MSVC_VER_
+#undef CE_FUNCTION_SIGNATURE
+#define CE_FUNCTION_SIGNATURE __FUNCSIG__
+#else
+#undef CE_FUNCTION_SIGNATURE
+#define CE_FUNCTION_SIGNATURE __PRETTY_FUNCTION__
+#endif
+
+#define CE_PROFILE 1
+
+#include "Core/Instrumentation.h"

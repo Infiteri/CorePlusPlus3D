@@ -79,6 +79,8 @@ namespace Core
 
     void Mesh::Render()
     {
+        CE_PROFILE_FUNCTION();
+
         // If no geometry then there is nothing to render
         if (!init || !geometry)
             return;

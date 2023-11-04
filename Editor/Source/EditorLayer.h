@@ -5,6 +5,7 @@
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SceneSettingsPanel.h"
 #include "Panels/ContentBrowserPanel.h"
+#include "Panels/LoggerPanel.h"
 
 #include <vector>
 #include <ImGuizmo.h>
@@ -72,6 +73,7 @@ namespace Core
         SceneHierarchyPanel sceneHierarchyPanel;
         SceneSettingsPanel sceneSettingsPanel;
         ContentBrowserPanel contentBrowserPanel;
+        LoggerPanel loggerPanel;
 
         EditorLayer(){};
         ~EditorLayer(){};

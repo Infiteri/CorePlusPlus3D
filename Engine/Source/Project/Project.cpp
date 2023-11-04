@@ -17,6 +17,8 @@ namespace Core
 
     Project *Project::New()
     {
+        CE_PROFILE_FUNCTION();
+
         if (activeProject)
         {
             delete activeProject;
@@ -33,6 +35,8 @@ namespace Core
 
     Project *Project::Load(const std::string &path)
     {
+        CE_PROFILE_FUNCTION();
+
         if (!activeProject)
             New();
 
@@ -44,6 +48,8 @@ namespace Core
 
     void Project::SaveActive(const std::string &path)
     {
+        CE_PROFILE_FUNCTION();
+
         if (!activeProject)
         {
             CE_ERROR("Unable to save active project, no project loaded.");

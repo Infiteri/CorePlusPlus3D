@@ -17,6 +17,8 @@ namespace Core
 
     void DirectionalLight::Update()
     {
+        CE_PROFILE_FUNCTION();
+
         Shader *shd = ShaderSystem::Get("EngineResources/Shaders/Object");
 
         if (!shd)

@@ -37,7 +37,13 @@ namespace Core
 
     bool TextureBase::HasImage()
     {
-        return image != nullptr;
+        if (!image)
+            return false;
+
+        if (!image->IsValid())
+            return false;
+
+        return true;
     }
 
     std::string TextureBase::GetImagePath()

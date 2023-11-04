@@ -1,4 +1,5 @@
 #include "CoreEditorUtils.h"
+#include "Utils/StringUtils.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -17,8 +18,34 @@
 
 namespace Core
 {
+    static Texture *PlaceHolderTexture;
+    static const CeU32 size = 50;
+
     namespace EditorUtils
     {
+        void InitAssets()
+        {
+            CeU8 *data;
+
+            data = new CeU8[size * size * 4];
+            for (CeU32 y = 0; y < size; ++y)
+            {
+                for (CeU32 x = 0; x < size; ++x)
+                {
+                    CeU8 color = ((x / 5) + (y / 5)) % 2 == 0 ? 255 : 200; // Alternate between white (255) and light gray (200)
+                    CeU32 pixelOffset = (y * size + x) * 4;
+                    data[pixelOffset] = color;     // Red
+                    data[pixelOffset + 1] = color; // Green
+                    data[pixelOffset + 2] = color; // Blue
+                    data[pixelOffset + 3] = 255;   // Alpha (fully opaque)
+                }
+            }
+            PlaceHolderTexture = new Texture();
+            PlaceHolderTexture->Load(data, 4, size, size);
+
+            delete[] data;
+        };
+
         void ImGuiVector3Edit(const char *label, Vector3 *vec, float valueDefault)
         {
             ImGui::PushID(label);
@@ -147,7 +174,7 @@ namespace Core
         {
             float edit[2] = {vec->x, vec->y};
 
-            if (ImGui::DragFloat2(label, edit, 0.05f))
+            if (ImGui::DragFloat2(label, edit, 0.01f))
                 vec->Set(edit[0], edit[1]);
         }
 
@@ -155,7 +182,7 @@ namespace Core
         {
             float edit[3] = {vec->x, vec->y, vec->z};
 
-            if (ImGui::DragFloat3(label, edit, 0.05f))
+            if (ImGui::DragFloat3(label, edit, 0.01f))
                 vec->Set(edit[0], edit[1], edit[2]);
         }
 
@@ -163,7 +190,7 @@ namespace Core
         {
             float edit[4] = {vec->x, vec->y, vec->z, vec->w};
 
-            if (ImGui::DragFloat4(label, edit, 0.05f))
+            if (ImGui::DragFloat4(label, edit, 0.01f))
                 vec->Set(edit[0], edit[1], edit[2], edit[3]);
         }
 
@@ -196,5 +223,62 @@ namespace Core
             return SkyShaderDataType::None;
         }
 
+        void DrawMeshTextureUI(TexType type, Core::Material *material)
+        {
+
+            Core::Texture *texture;
+
+            switch (type)
+            {
+            case TextureColor:
+                texture = material->GetColorTexture();
+                break;
+
+            case TextureNormal:
+                texture = material->GetNormalTexture();
+                break;
+            }
+
+            if (texture->HasImage())
+            {
+                float imgW = texture->GetWidth();
+                float imgH = texture->GetHeight();
+                ImGui::Text("Image: %s.", texture->GetImagePath().c_str());
+                ImGui::Text("Size: %f width by %f height.", imgW, imgH);
+
+                // NOTE: Should be last for the drag-drop feature.
+                float div = 5.0f;
+                ImGui::Image((void *)(CeU64)(CeU32)texture->GetID(), {imgW / div, imgH / div});
+            }
+            else
+            {
+                ImGui::Image((void *)(CeU64)(CeU32)PlaceHolderTexture->GetID(), {size, size});
+            }
+
+            if (ImGui::BeginDragDropTarget())
+            {
+                const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_CONTENT_PANEL");
+
+                if (payload)
+                {
+                    const char *name = (const char *)payload->Data;
+                    if (StringUtils::FileExtIsImage(name))
+                    {
+                        switch (type)
+                        {
+                        case TextureColor:
+                            material->SetColorTexture(name);
+                            break;
+
+                        case TextureNormal:
+                            material->SetNormalTexture(name);
+                            break;
+                        }
+                    }
+                }
+
+                ImGui::EndDragDropTarget();
+            }
+        }
     }
 }

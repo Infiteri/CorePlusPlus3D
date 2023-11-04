@@ -27,6 +27,8 @@ namespace Core
         int GetChannels();
         std::string GetPath();
 
+        bool IsValid();
+
         void FreeData();
     };
 

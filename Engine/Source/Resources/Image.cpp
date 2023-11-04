@@ -76,6 +76,11 @@ namespace Core
         return path;
     }
 
+    bool Image::IsValid()
+    {
+        return valid;
+    }
+
     void Image::FreeData()
     {
         if (data)

@@ -2,7 +2,7 @@
 
 #include "Logger.h"
 #include "Window.h"
-#include "Timer.h"
+#include "Instrumentation.h"
 #include "Memory/CeMemory.h"
 
 #include "Platform/Platform.h"
@@ -39,6 +39,7 @@ namespace Core
     static CeUserDataStructure GUserData;
     static float lastTime;
     static float deltaTime;
+    static std::vector<TimerInfo> timerInfos;
 
     // Dont skip frames
     static float wantedFPS = 0.0f;
@@ -53,6 +54,8 @@ namespace Core
 
     void Engine::PreInit(Application *app, EngineConfiguration *config)
     {
+        CE_PROFILE_FUNCTION();
+
         CE_ASSERT_IF(app == nullptr && "Engine::PreInit: Application is nullptr.");
         CE_ASSERT_IF(config == nullptr && "Engine::PreInit: Application is config.");
 
@@ -103,12 +106,16 @@ namespace Core
 
     void Engine::Init()
     {
+        CE_PROFILE_FUNCTION();
+
         World::InitActive();
         CE_DEBUG("Engine::Init successful.");
     }
 
     void Engine::Start()
     {
+        CE_PROFILE_FUNCTION();
+
         // NOTE: Removed because of editor
         //  World::StartActive(); Starting the scene will be done at runtime, editor doesn't work as expected
 
@@ -117,6 +124,8 @@ namespace Core
 
     void Engine::Update()
     {
+        CE_PROFILE_FUNCTION();
+
         double currentFrameTime = glfwGetTime();
         deltaTime = static_cast<float>(currentFrameTime - lastTime);
         lastTime = static_cast<float>(currentFrameTime);
@@ -131,6 +140,7 @@ namespace Core
 
     void Engine::Render()
     {
+        CE_PROFILE_FUNCTION();
         // Render with renderer
         Renderer::BeginFrame();
         Renderer::Render();
@@ -144,10 +154,14 @@ namespace Core
         ImGuiLayer::BeginFrame();
         LayerStack::RenderImGui();
         ImGuiLayer::EndFrame();
+
+        timerInfos.clear();
     }
 
     void Engine::Shutdown()
     {
+        CE_PROFILE_FUNCTION();
+
         EventManager::Shutdown();
         ImGuiLayer::Shutdown();
         LayerStack::Destroy();
@@ -236,5 +250,15 @@ namespace Core
     float Engine::GetWantedFPS()
     {
         return wantedFPS;
+    }
+
+    void Engine::PushTimerInfoForThisFrame(TimerInfo info)
+    {
+        timerInfos.push_back(info);
+    }
+
+    std::vector<TimerInfo> Engine::GetTimerInfoForThisFrame()
+    {
+        return timerInfos;
     }
 }

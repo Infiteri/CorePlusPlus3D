@@ -4,6 +4,7 @@
 #include "Core/Input.h"
 #include "Core/Logger.h"
 #include "Core/Timer.h"
+#include "Core/Instrumentation.h"
 #include "Core/CeAssert.h"
 #include "Core/Engine.h"
 #include "Core/Layer/LayerStack.h"

@@ -27,6 +27,13 @@ namespace Core
         Light
     };
 
+    enum class RenderOutputMode
+    {
+        Full,
+        WireFrame,
+        Points
+    };
+
     /// @brief Enumeration that represents the common depth modes.
     enum class DepthMode
     {
@@ -63,6 +70,9 @@ namespace Core
 
         static RenderMode GetRenderMode();
         static void SetRenderMode(RenderMode mode);
+
+        static RenderOutputMode GetRenderOutputMode();
+        static void SetRenderOutputMode(RenderOutputMode mode);
 
         static FrameBuffer *GetFrameBuffer();
     };

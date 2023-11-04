@@ -9,11 +9,10 @@
       "label": "Build",
       "problemMatcher": [],
       "group": {
-        "kind": "build",
+        "kind": "build",         
         "isDefault": true
       },
-
-    },
+    }
     {
       "type": "shell",
       "command": "${workspaceFolder}/Bin/Editor.exe",
@@ -25,12 +24,40 @@
     },
     {
       "type": "shell",
-      "command": "${workspaceFolder}/CleanBuild.bat",
+      "command": "${workspaceFolder}/Scripts/CleanAndBuild.bat",
       "label": "Build Clean",
       "problemMatcher": [],
       "group": {
         "kind": "build"
       }
+    },
+    {
+      "type": "shell",
+      "command": "${workspaceFolder}/Scripts/BuildEditor.bat",
+      "label": "Build Editor",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build"
+      }
+    },
+    {
+      "type": "shell",
+      "command": "${workspaceFolder}/Scripts/BuildEngine.bat",
+      "label": "Build Engine",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build"
+      }
+    },
+    {
+      "type": "shell",
+      "command": "${workspaceFolder}/Scripts/CopyAssets.bat",
+      "label": "Copy Assets",
+      "problemMatcher": [],
+      "group": {
+        "kind": "run"
+      }
     }
+
   ]
 }

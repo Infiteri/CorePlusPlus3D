@@ -3,6 +3,7 @@
 
 #include "Core/Engine.h"
 #include "Core/CeConfigurations.h"
+#include "Core/Instrumentation.h"
 
 #include <GLFW/glfw3.h>
 

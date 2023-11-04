@@ -13,6 +13,8 @@ namespace Core
 
     void EditorLayer::OnAttach()
     {
+        EditorUtils::InitAssets();
+
         // Create editor camera
         CameraSystem::Generate(CE_EDITOR_CAM_NAME, Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
         CameraSystem::Activate(CE_EDITOR_CAM_NAME);
@@ -53,6 +55,16 @@ namespace Core
 
     void EditorLayer::OnUpdate()
     {
+        CE_PROFILE_FUNCTION();
+
+        if (Input::GetKeyJustNow(Keys::F5))
+        {
+            if (currentSceneState == SceneStatePlay)
+                StopSceneRuntime();
+            else
+                StartSceneRuntime();
+        }
+
         if (currentSceneState == SceneStateStop)
             OnUpdateEditor();
         else if (currentSceneState == SceneStatePlay)
@@ -72,6 +84,7 @@ namespace Core
         sceneHierarchyPanel.OnImGuiRender();
         sceneSettingsPanel.OnImGuiRender();
         contentBrowserPanel.OnImGuiRender();
+        loggerPanel.OnImGuiRender();
 
         UI_DrawEditMaterial();
         UI_DrawMainTopBar();
@@ -403,27 +416,54 @@ namespace Core
         ImGui::Text("%i / %i by %i / %i : Bounds", (int)state.viewportLeftTop.x, (int)state.viewportLeftTop.y, (int)state.viewportRightBottom.x, (int)state.viewportRightBottom.y);
 
         // Popup for viewing things
-        const int selCount = 5;
-        const char *selections[] = {"Full", "Color", "Texture", "Normal", "Light"};
-        const char *selection = selections[(int)Renderer::GetRenderMode()];
-
-        if (ImGui::BeginCombo("Render Mode", selection))
         {
-            for (int i = 0; i < selCount; i++)
-            {
-                bool isSelected = (selection == selections[i]);
+            const int selCount = 5;
+            const char *selections[] = {"Full", "Color", "Texture", "Normal", "Light"};
+            const char *selection = selections[(int)Renderer::GetRenderMode()];
 
-                if (ImGui::Selectable(selections[i], isSelected))
+            if (ImGui::BeginCombo("Render Mode", selection))
+            {
+                for (int i = 0; i < selCount; i++)
                 {
-                    selection = selections[i];
-                    Renderer::SetRenderMode((RenderMode)i);
+                    bool isSelected = (selection == selections[i]);
+
+                    if (ImGui::Selectable(selections[i], isSelected))
+                    {
+                        selection = selections[i];
+                        Renderer::SetRenderMode((RenderMode)i);
+                    }
+
+                    if (isSelected)
+                        ImGui::SetItemDefaultFocus();
                 }
 
-                if (isSelected)
-                    ImGui::SetItemDefaultFocus();
+                ImGui::EndCombo();
             }
+        }
 
-            ImGui::EndCombo();
+        {
+            const int selCount = 3;
+            const char *selections[] = {"Full", "WireFrame", "Points"};
+            const char *selection = selections[(int)Renderer::GetRenderOutputMode()];
+
+            if (ImGui::BeginCombo("Render Outout Mode", selection))
+            {
+                for (int i = 0; i < selCount; i++)
+                {
+                    bool isSelected = (selection == selections[i]);
+
+                    if (ImGui::Selectable(selections[i], isSelected))
+                    {
+                        selection = selections[i];
+                        Renderer::SetRenderOutputMode((RenderOutputMode)i);
+                    }
+
+                    if (isSelected)
+                        ImGui::SetItemDefaultFocus();
+                }
+
+                ImGui::EndCombo();
+            }
         }
 
         ImGui::End();
@@ -431,26 +471,6 @@ namespace Core
 
     void EditorLayer::UI_DrawTestButtons()
     {
-        ImGui::Begin("Tests");
-
-        int shaderAddCount = 999;
-        if (ImGui::Button("Start The Shader Test"))
-        {
-            for (int i = 0; i < shaderAddCount; i++)
-            {
-                World::GetActive()->GetEnvironment()->sky->AddShaderData(sizeof(Color), new Color(255, 255, 255, 255), SkyShaderDataType::Color, std::string("Test" + i));
-            }
-        }
-
-        if (ImGui::Button("Stop The Shader Test"))
-        {
-            for (int i = 0; i < shaderAddCount; i++)
-            {
-                World::GetActive()->GetEnvironment()->sky->RemoveSkyShaderDataByName(std::string("Test" + i));
-            }
-        }
-
-        ImGui::End();
     }
 
     void EditorLayer::UI_DrawMainTopBar()
@@ -610,6 +630,8 @@ namespace Core
 
     void EditorLayer::StartSceneRuntime()
     {
+        CE_PROFILE_FUNCTION();
+
         state.lastPLightCount = PointLight::GetPointLightGID();
         PointLight::SetGlobalID0();
 
@@ -621,6 +643,7 @@ namespace Core
 
     void EditorLayer::StopSceneRuntime()
     {
+        CE_PROFILE_FUNCTION();
 
         currentSceneState = SceneStateStop;
         World::StopActive();
@@ -648,6 +671,8 @@ namespace Core
 
     void EditorLayer::SwapActiveCameraTo(ActiveCameraType type)
     {
+        CE_PROFILE_FUNCTION();
+
         if (activeCameraType != type)
         {
             if (type == CameraEditor)
@@ -677,6 +702,8 @@ namespace Core
 
     void EditorLayer::ResizeViewport()
     {
+        CE_PROFILE_FUNCTION();
+
         Renderer::Resize(state.lastFrameViewportSize.x, state.lastFrameViewportSize.y);
     }
 

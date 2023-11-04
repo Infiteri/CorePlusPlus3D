@@ -73,6 +73,8 @@ namespace Core
                     environment->directionalLight->GetDirection()->Set(Math::DegToRad(directionArray[0]), Math::DegToRad(directionArray[1]), Math::DegToRad(directionArray[2]));
                 }
 
+                // EditorUtils::ImGuiVec3Edit("Sepcular", environment->directionalLight.GetSpe);
+
                 ImGui::TreePop();
             }
 
@@ -186,7 +188,7 @@ namespace Core
                             const char *selections[maxSelections] = {"None", "Vec2", "Vec3", "Vec4", "Color"};
                             const char *current = selections[(int)data->type];
 
-                            if (ImGui::BeginCombo("Sky Mode", current))
+                            if (ImGui::BeginCombo("Data Type", current))
                             {
                                 for (int i = 0; i < maxSelections; i++)
                                 {

@@ -19,6 +19,8 @@ namespace Core
 
     Window::Window(WindowConfiguration config)
     {
+        CE_PROFILE_FUNCTION();
+
         this->config = config;
 
         int result = glfwInit();
@@ -38,7 +40,7 @@ namespace Core
 
         if (config.VSync)
             glfwSwapInterval(1);
-        else 
+        else
             glfwSwapInterval(0);
 
         if (config.startMaximized)
@@ -63,6 +65,8 @@ namespace Core
 
     void Window::Update()
     {
+        CE_PROFILE_FUNCTION();
+
         glfwSwapBuffers(handle);
         glfwPollEvents();
 

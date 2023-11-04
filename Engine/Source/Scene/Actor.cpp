@@ -10,14 +10,11 @@
 
 namespace Core
 {
-
     Actor::Actor()
     {
         state = ActorState::Created;
         name = "Actor";
         parent = nullptr;
-
-        CE_TRACE("Made actor: %i", uuid.Get());
     }
 
     Actor::~Actor()
@@ -26,6 +23,8 @@ namespace Core
 
     Actor *Actor::From(Actor *other)
     {
+        CE_PROFILE_FUNCTION();
+
         if (!other)
             return nullptr;
 
@@ -103,6 +102,8 @@ namespace Core
 
     void Actor::Update()
     {
+        CE_PROFILE_FUNCTION();
+
         if (state != ActorState::Started)
             return;
 
@@ -122,6 +123,8 @@ namespace Core
 
     void Actor::Render()
     {
+        CE_PROFILE_FUNCTION();
+
         if (state == ActorState::Created || state == ActorState::Destroyed) // Rendering can be done in most states
             return;
 
