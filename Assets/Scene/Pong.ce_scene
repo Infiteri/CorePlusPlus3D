@@ -1,0 +1,63 @@
+Scene: Lights
+Sky:
+  Mode: Shader
+  ShaderName: Assets/Shader/Sky
+  SkyShaderData:
+    - Name: color
+      Type: Color
+      Value: [27.9999981, 192.92308, 252, 255]
+    - Name: Time
+      Type: Vec2
+      Value: [3.6500001, 4.30000019]
+DirectionalLight:
+  Color: [255, 255, 255, 255]
+  Direction: [0, -0.400000006, -1.20000005]
+Actors:
+  - Actor: Filed
+    UUID: 18372707170111505855
+    Name: Camera
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [0, 0, 6.39398718]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PerspectiveCameraComponent:
+      Fov: 1.57079637
+      Near: 0.00999999978
+      Far: 1000
+      Position: [0, 0, 6.39398718]
+      Rotation: [0, 0, 0]
+  - Actor: Filed
+    UUID: 11780478036175976053
+    Name: Actor
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [-5, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: DefaultMaterial
+      Unique: Yes
+      Color: [74.2582474, 74.2582474, 74.2582474, 255]
+      ColorTextureName: ""
+      GeometryType: Box
+      W: 1
+      H: 1
+      D: 1
+  - Actor: Filed
+    UUID: 16845372135043671065
+    Name: Actor
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [-2.60351586, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLight:
+      Position: [-2.60351586, 0, 0]
+      Color: [255, 0, 0, 255]
+      Specular: [1, 1, 1]
+      Quadratic: 1.44200003
+      Linear: 5.23999977
+      Constant: 0.810000002
+      Intensity: 22.1700001
+      Radius: 0

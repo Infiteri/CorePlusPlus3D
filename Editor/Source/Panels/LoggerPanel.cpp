@@ -4,9 +4,11 @@
 
 namespace Core
 {
+    static int lastLogCount;
 
     LoggerPanel::LoggerPanel()
     {
+        lastLogCount = Logger::GetLogInfos().size();
     }
 
     LoggerPanel::~LoggerPanel()
@@ -55,6 +57,12 @@ namespace Core
             ImGui::PushStyleColor(ImGuiCol_Text, color);
             ImGui::Text(info.Message.c_str());
             ImGui::PopStyleColor();
+        }
+
+        if (lastLogCount != Logger::GetLogInfos().size())
+        {
+            lastLogCount = Logger::GetLogInfos().size();
+            ImGui::SetScrollHereY(1.0f);
         }
 
         ImGui::End();

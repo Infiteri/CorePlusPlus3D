@@ -184,18 +184,24 @@ namespace Core
 
     void World::RenderActive()
     {
+        CE_PROFILE_FUNCTION();
+
         if (activeScene)
             activeScene->Render();
     }
 
     void World::StopActive()
     {
+        CE_PROFILE_FUNCTION();
+
         if (activeScene)
             activeScene->Stop();
     }
 
     void World::DestroyActive()
     {
+        CE_PROFILE_FUNCTION();
+
         if (activeScene)
         {
             activeScene->Destroy();

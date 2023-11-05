@@ -12,10 +12,13 @@ namespace Core
         return c == 3 ? GL_RGB : GL_RGBA;
     };
 
+    static CeU8 defaultRGBAData[4] = {255, 255, 255, 255};
+
     Texture::Texture()
     {
-        generation = TextureManager::GetGlobalTextureCount();
-        TextureManager::IncrementGlobalTextureCount();
+        id = 0;
+        generation = 0;
+        image = nullptr;
     }
 
     Texture::~Texture()
@@ -25,19 +28,36 @@ namespace Core
 
     void Texture::Load()
     {
+        if (generation == 0)
+        {
+            CE_DEBUG("Generation increased for new empty texture.");
+
+            generation = TextureManager::GetGlobalTextureCount();
+            TextureManager::IncrementGlobalTextureCount();
+        }
+
+        if (image)
+            delete image;
+
         image = nullptr;
 
         glGenTextures(1, &id);
         Bind();
 
-        CeU8 data[4] = {255, 255, 255, 255};
-        TextureLoadUtils(1, 1, data, GL_RGBA, {});
+        TextureLoadUtils(1, 1, defaultRGBAData, GL_RGBA, {});
 
         Unbind();
     }
 
     void Texture::Load(const std::string &_filepath)
     {
+        if (generation == 0)
+        {
+            CE_DEBUG("Generation increased for '%s'", _filepath.c_str());
+            generation = TextureManager::GetGlobalTextureCount();
+            TextureManager::IncrementGlobalTextureCount();
+        }
+
         image = new Image(_filepath);
 
         glGenTextures(1, &id);
@@ -50,6 +70,13 @@ namespace Core
     void Texture::Load(const std::string &_filepath, TextureConfiguration config)
     {
         image = new Image(_filepath);
+
+        if (generation == 0)
+        {
+            CE_DEBUG("Generation increased for '%s' which is created with a configuration.", _filepath.c_str());
+            generation = TextureManager::GetGlobalTextureCount();
+            TextureManager::IncrementGlobalTextureCount();
+        }
 
         glGenTextures(1, &id);
         Bind();

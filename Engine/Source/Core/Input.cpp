@@ -113,17 +113,14 @@ namespace Core
         {
         case MouseMode::Visible:
             glfwSetInputMode(window->GetHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            CE_DEBUG("Input mode: MouseMode::Visible");
             break;
 
         case MouseMode::Hidden:
             glfwSetInputMode(window->GetHandle(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-            CE_DEBUG("Input mode: MouseMode::Hidden");
             break;
 
         case MouseMode::Locked:
             glfwSetInputMode(window->GetHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            CE_DEBUG("Input mode: MouseMode::Locked");
             break;
 
         default:

@@ -36,9 +36,9 @@ namespace Core
 
     CubeMapTexture::CubeMapTexture()
     {
+        id = 0;
+        generation = 0;
         image = nullptr;
-        generation = TextureManager::GetGlobalTextureCount();
-        TextureManager::IncrementGlobalTextureCount();
     }
 
     CubeMapTexture::~CubeMapTexture()
@@ -48,6 +48,12 @@ namespace Core
 
     void CubeMapTexture::Load()
     {
+        if (generation == 0)
+        {
+            generation = TextureManager::GetGlobalTextureCount();
+            TextureManager::IncrementGlobalTextureCount();
+        }
+
         glGenTextures(1, &id);
         Bind();
 
@@ -75,10 +81,14 @@ namespace Core
             return;
         }
 
+        if (generation == 0)
+        {
+            generation = TextureManager::GetGlobalTextureCount();
+            TextureManager::IncrementGlobalTextureCount();
+        }
+
         //? state
         filepaths = _filepaths;
-        generation = TextureManager::GetGlobalTextureCount();
-        TextureManager::IncrementGlobalTextureCount();
         glGenTextures(1, &id);
         Bind();
 
@@ -107,8 +117,11 @@ namespace Core
         }
 
         filepaths = _filepaths;
-        generation = TextureManager::GetGlobalTextureCount();
-        TextureManager::IncrementGlobalTextureCount();
+        if (generation == 0)
+        {
+            generation = TextureManager::GetGlobalTextureCount();
+            TextureManager::IncrementGlobalTextureCount();
+        }
 
         glGenTextures(1, &id);
         Bind();
@@ -157,8 +170,11 @@ namespace Core
 
         glDeleteTextures(1, &id);
 
-        generation = 0;
-        TextureManager::DecrementGlobalTextureCount();
+        if (generation != 0)
+        {
+            generation = 0;
+            TextureManager::DecrementGlobalTextureCount();
+        }
     }
 
     void CubeMapTexture::Use()

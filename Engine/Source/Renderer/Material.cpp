@@ -12,8 +12,8 @@ namespace Core
     {
         name = "DefaultMaterial";
         color.Set(255, 255, 255, 255);
-        texture = TextureManager::GetNewEmpty();
-        normalTexture = TextureManager::GetNewEmpty();
+        texture = TextureManager::GetDefault();
+        normalTexture = TextureManager::GetDefault();
         shininess = 32;
     }
 
@@ -25,7 +25,7 @@ namespace Core
 
         if (config.colorTextureName.empty())
         {
-            texture = TextureManager::GetNewEmpty();
+            texture = TextureManager::GetDefault();
         }
         else
         {
@@ -36,7 +36,7 @@ namespace Core
         }
         if (config.normalTextureName.empty())
         {
-            normalTexture = TextureManager::GetNewEmpty();
+            normalTexture = TextureManager::GetDefault();
         }
         else
         {
@@ -73,6 +73,52 @@ namespace Core
 
         if (other->GetNormalTexture()->HasImage())
             SetNormalTexture(other->GetNormalTexture()->GetImagePath());
+    }
+
+    void Material::EmptyColorTexture()
+    {
+        RemoveColorTexture();
+        if (!texture)
+            texture = TextureManager::GetDefault();
+    }
+
+    void Material::EmptyNormalTexture()
+    {
+        RemoveNormalTexture();
+        if (!normalTexture)
+            normalTexture = TextureManager::GetDefault();
+    }
+
+    void Material::RemoveColorTexture()
+    {
+        if (texture && !texture->IsMarkedAsDefault())
+        {
+            if (texture->HasImage())
+                TextureManager::Release(texture->GetImagePath());
+            else
+            {
+                // DONE: delete texture only if its not default
+                delete texture;
+            }
+
+            texture = nullptr;
+        }
+    }
+
+    void Material::RemoveNormalTexture()
+    {
+        if (normalTexture && !normalTexture->IsMarkedAsDefault())
+        {
+            if (normalTexture->HasImage())
+                TextureManager::Release(normalTexture->GetImagePath());
+            else
+            {
+                // DONE: delete normalTexture only if its not default
+                delete normalTexture;
+            }
+
+            normalTexture = nullptr;
+        }
     }
 
     void Material::SetName(const std::string &name)
@@ -161,37 +207,17 @@ namespace Core
         shader->Vec4(color.r / 255, color.g / 255, color.b / 255, color.a / 255, "uColor");
         texture->Use();
         shader->Int(texture->GetGeneration(), "uColorTexture");
+
+        normalTexture->Use();
         shader->Int(normalTexture->GetGeneration(), "uNormalTexture");
+
         shader->Float(shininess, "uShininess");
     }
 
     void Material::Destroy()
     {
-        if (texture && !texture->IsMarkedAsDefault())
-        {
-            if (texture->HasImage())
-                TextureManager::Release(texture->GetImagePath());
-            else
-            {
-                // DONE: delete texture only if its not default
-                delete texture;
-            }
-
-            texture = nullptr;
-        }
-
-        if (normalTexture && !normalTexture->IsMarkedAsDefault())
-        {
-            if (normalTexture->HasImage())
-                TextureManager::Release(normalTexture->GetImagePath());
-            else
-            {
-                // DONE: delete normalTexture only if its not default
-                delete normalTexture;
-            }
-
-            normalTexture = nullptr;
-        }
+        RemoveColorTexture();
+        RemoveNormalTexture();
     }
 
     float Material::GetShininess()

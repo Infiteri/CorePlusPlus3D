@@ -1,0 +1,87 @@
+Scene: Platformer
+Sky:
+  Mode: Color
+  Color: [0, 0, 0, 255]
+DirectionalLight:
+  Color: [255, 255, 255, 255]
+  Direction: [0, 0, -1]
+Actors:
+  - Actor: Filed
+    UUID: 18372707170111505855
+    Name: Camera
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [0, 0, 10]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PerspectiveCameraComponent:
+      Fov: 1.57079637
+      Near: 0.00999999978
+      Far: 1000
+      Position: [0, 0, 10]
+      Rotation: [0, 0, 0]
+  - Actor: Filed
+    UUID: 11780478036175976053
+    Name: Player
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: DefaultMaterial
+      Unique: Yes
+      Color: [255, 255, 255, 255]
+      ColorTextureName: ""
+      GeometryType: Plane
+      W: 1
+      H: 2
+    ActorScriptComponent:
+      ClassName: PlayerScript
+      OwnerName: Player
+    AABBComponent:
+      W: 1
+      H: 2
+      D: 1
+      PX: 0.100000001
+      PY: 0.100000001
+  - Actor: Filed
+    UUID: 16845372135043671065
+    Name: Floor
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [0, -4.8984375, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: Assets/Materials/Platformer/Object.ce_mat
+      Unique: No
+      GeometryType: Plane
+      W: 20
+      H: 1
+    AABBComponent:
+      W: 20
+      H: 1
+      D: 1
+      PX: 0.100000001
+      PY: 0.100000001
+  - Actor: Filed
+    UUID: 1275278976166057676
+    Name: Wall
+    ParentName: __NO_PARENT_NAME_CE__
+    Transform:
+      Position: [-8, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Name: Assets/Materials/Platformer/Object.ce_mat
+      Unique: No
+      GeometryType: Plane
+      W: 1
+      H: 5
+    AABBComponent:
+      W: 1
+      H: 5
+      D: 1
+      PX: 0.100000001
+      PY: 0.100000001

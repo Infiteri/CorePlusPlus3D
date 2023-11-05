@@ -11,6 +11,7 @@
 
 1. Use of Engine API in game code. [ - ]
 2. script "OnStop" called twice [ + ]
+3. Core Logging. So it can be turned off. [ - ] (MAJOR PROBLEM WHEN GAMEPLAY)
 
 ### Scripting
 

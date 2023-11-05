@@ -20,6 +20,7 @@ namespace Core
             delete texture;
         };
     };
+
     static std::unordered_map<std::string, TextureRef *> references;
 
     void TextureManager::Init()
@@ -62,18 +63,16 @@ namespace Core
         references[path]->count = 0;
         references[path]->texture = new Texture();
         references[path]->texture->Load(path, config);
-        CE_TRACE("Loaded texture: '%s', reference count is 0.", path.c_str());
+        CE_TRACE("TextureManager::Load: Loaded texture: '%s'.", path.c_str());
     }
 
     Texture *TextureManager::Get(const std::string &path)
     {
         if (!references[path])
-        {
             Load(path);
-        }
 
         references[path]->count++;
-        CE_TRACE("Found texture: '%s', reference count is %i.", path.c_str(), references[path]->count);
+        CE_TRACE("Found texture: '%s', reference count is %i and generation is %i.", path.c_str(), references[path]->count, references[path]->texture->GetGeneration());
 
         return references[path]->texture;
     }
@@ -95,11 +94,18 @@ namespace Core
         if (!references[path])
             return;
 
-        references[path]->count--;
-        CE_TRACE("Found texture: '%s', reference count is %i.", path.c_str(), references[path]->count);
         if (references[path]->count == 0)
         {
-            CE_TRACE("Texture: '%s' with reference count of %i is getting deleted.", path.c_str(), references[path]->count);
+            CE_WARN("TextureManager::Release: Texture '%s' is not referenced, cannot be released.");
+            return;
+        }
+
+        references[path]->count--;
+
+        CE_TRACE("TextureManager::Release: Found texture: '%s', reference count is %i.", path.c_str(), references[path]->count);
+        if (references[path]->count == 0)
+        {
+            CE_TRACE("TextureManager::Release: Texture: '%s' is getting deleted.", path.c_str(), references[path]->count);
             delete references[path];
             references[path] = nullptr;
         }
@@ -113,6 +119,11 @@ namespace Core
     int TextureManager::GetGlobalTextureCount()
     {
         return GTextureGenerationCount;
+    }
+
+    int TextureManager::GetTextureReferencesCount()
+    {
+        return references.size();
     }
 
     void TextureManager::IncrementGlobalTextureCount()

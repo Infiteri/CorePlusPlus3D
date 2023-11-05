@@ -114,4 +114,9 @@ namespace Core
             references[name] = nullptr;
         }
     }
+
+    int MaterialManager::GetMaterialReferencesCount()
+    {
+        return references.size();
+    }
 }

@@ -7,25 +7,25 @@ DirectionalLight:
   Direction: [0, 0, -1.57079637]
 Actors:
   - Actor: Filed
-    UUID: 5730567359334639028
+    UUID: 8279685334796349381
     Name: Floor
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
-      Position: [0, -1.99956322, 0]
+      Position: [-0.12864697, -1.99956322, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     MeshComponent:
       Name: DefaultMaterial
       Unique: Yes
       Color: [255, 255, 255, 255]
-      ColorTextureName: Assets/Images/Paving/paving2.png
-      NormalTextureName: Assets/Images/Paving/paving2_NRM.png
+      ColorTextureName: Assets/CeImage/Powerlines/posy.ce_image
+      NormalTextureName: Assets/CeImage/Powerlines/posy.ce_image
       GeometryType: Box
       W: 10
       H: 0.5
       D: 10
   - Actor: Filed
-    UUID: 8279685334796349381
+    UUID: 15690817201535237022
     Name: Wall
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
@@ -36,14 +36,14 @@ Actors:
       Name: DefaultMaterial
       Unique: Yes
       Color: [255, 255, 255, 255]
-      ColorTextureName: Assets/Images/Paving/paving2.png
-      NormalTextureName: Assets/Images/Paving/paving2_NRM.png
+      ColorTextureName: Assets/CeImage/HornstullsStrand/negx.ce_image
+      NormalTextureName: Assets/CeImage/HornstullsStrand/negx.ce_image
       GeometryType: Box
       W: 10
       H: 10
       D: 0.5
   - Actor: Filed
-    UUID: 15690817201535237022
+    UUID: 17995714989864800573
     Name: Box
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
@@ -53,7 +53,7 @@ Actors:
     MeshComponent:
       Name: DefaultMaterial
       Unique: Yes
-      Color: [92.4870529, 92.4870529, 92.4870529, 255]
+      Color: [129.481873, 129.481873, 129.481873, 255]
       ColorTextureName: Assets/Images/Paving/paving2.png
       NormalTextureName: Assets/Images/Paving/paving2_NRM.png
       GeometryType: Box
@@ -61,7 +61,7 @@ Actors:
       H: 1
       D: 1
   - Actor: Filed
-    UUID: 17995714989864800573
+    UUID: 3890369874501826196
     Name: Camera
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
@@ -75,36 +75,19 @@ Actors:
       Position: [0, 1.78499997, 7.82939816]
       Rotation: [-0.0700000003, 0, 0]
   - Actor: Filed
-    UUID: 9823208261777837817
+    UUID: 8800294969640267456
     Name: Actor
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
-      Position: [7.0808239, 1.44583404, 0.174452692]
+      Position: [4.4662118, 0.351837337, -2.38731956]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     PointLight:
-      Position: [7.0808239, 1.44583404, 0.174452692]
-      Color: [81.917099, 255, 0, 255]
+      Position: [4.4662118, 0.351837337, -2.38731956]
+      Color: [255, 255, 255, 255]
       Specular: [1, 1, 1]
-      Quadratic: 0.202000007
-      Linear: 3.80999994
+      Quadratic: 0.319999993
+      Linear: 0.699999988
       Constant: 1
-      Intensity: 3.43000007
-      Radius: 100
-  - Actor: Filed
-    UUID: 14575463871798177882
-    Name: Actor
-    ParentName: __NO_PARENT_NAME_CE__
-    Transform:
-      Position: [6.23248243, 0.77835542, 2.61215854]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    PointLight:
-      Position: [6.23248243, 0.77835542, 2.61215854]
-      Color: [81.917099, 255, 0, 255]
-      Specular: [1, 1, 1]
-      Quadratic: 0.0320000015
-      Linear: 0.0900000036
-      Constant: 1
-      Intensity: 1.22000003
-      Radius: 100
+      Intensity: 5
+      Radius: 99.5800018

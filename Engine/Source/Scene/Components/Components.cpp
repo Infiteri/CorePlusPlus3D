@@ -49,6 +49,9 @@ namespace Core
 
             if (mat->GetColorTexture()->HasImage())
                 mesh->GetMaterial()->SetColorTexture(mat->GetColorTexture()->GetImagePath());
+
+            if (mat->GetNormalTexture()->HasImage())
+                mesh->GetMaterial()->SetNormalTexture(mat->GetNormalTexture()->GetImagePath());
         }
         else
         {

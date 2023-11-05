@@ -78,7 +78,6 @@ namespace Core
 
         // Allocate the State
         state = (RendererState *)CeMemory::Allocate(sizeof(RendererState));
-        CeMemory::TracePrintSize("RendererState: ", sizeof(RendererState));
 
         // Setup viewport structure
         state->viewport.width = Engine::GetWindowInstance()->GetWidth();
@@ -114,6 +113,8 @@ namespace Core
         SetDepthMode(DepthMode::Lequal);
         SetRenderMode(RenderMode::Full);
         SetRenderOutputMode(RenderOutputMode::Full);
+
+        CE_INFO("Renderer Initialized.");
     }
 
     void Renderer::Shutdown()

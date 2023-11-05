@@ -279,6 +279,20 @@ namespace Core
 
                 ImGui::EndDragDropTarget();
             }
+
+            if (ImGui::Button("Remove"))
+            {
+                switch (type)
+                {
+                case TextureColor:
+                    material->EmptyColorTexture();
+                    break;
+
+                case TextureNormal:
+                    material->EmptyNormalTexture();
+                    break;
+                }
+            }
         }
     }
 }

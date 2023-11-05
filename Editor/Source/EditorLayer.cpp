@@ -411,11 +411,15 @@ namespace Core
         ImGui::Text("%.3f : DeltaTime", delta);
         ImGui::Text("%i : FPS", (int)fps);
 
+        ImGui::Separator();
+
         auto pos = Input::GetMousePosition();
         ImGui::Text("%i / %i : Mouse Position", (int)pos.x, (int)pos.y);
         ImGui::Text("%i / %i by %i / %i : Bounds", (int)state.viewportLeftTop.x, (int)state.viewportLeftTop.y, (int)state.viewportRightBottom.x, (int)state.viewportRightBottom.y);
 
         // Popup for viewing things
+        ImGui::Separator();
+
         {
             const int selCount = 5;
             const char *selections[] = {"Full", "Color", "Texture", "Normal", "Light"};
@@ -465,6 +469,13 @@ namespace Core
                 ImGui::EndCombo();
             }
         }
+
+        ImGui::Separator();
+
+        // Texture manager state
+        ImGui::Text("%i: Texture references.", TextureManager::GetTextureReferencesCount());
+        ImGui::Text("%i: Texture generations.", TextureManager::GetGlobalTextureCount());
+        ImGui::Text("%i: Material references.", MaterialManager::GetMaterialReferencesCount());
 
         ImGui::End();
     }

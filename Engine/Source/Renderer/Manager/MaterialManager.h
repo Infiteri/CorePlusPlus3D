@@ -40,5 +40,7 @@ namespace Core
         /// @brief Releases a material if it's no longer used.
         /// @param name The name of material.
         static void Release(const std::string &name);
+
+        static int GetMaterialReferencesCount();
     };
 }

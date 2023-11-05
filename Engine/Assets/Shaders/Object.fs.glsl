@@ -44,7 +44,7 @@ vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir) {
     vec3 reflectDir = reflect(-lightDir, normal);
 
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), uShininess);
-    
+
     vec3 diffuse = diff * light.color.rgb; // DONE: Strength
     vec3 specular = spec * light.specular;//* vec3(texture(uNormalTexture, vUVs));
 
@@ -56,7 +56,7 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), uShininess);
-    
+
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
@@ -74,12 +74,13 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
     return (diffuse + specular);
 }
 
+vec3 GetNormal() {
+    return vNormal;
+}
+
 void main() {
     if(uRenderMode == 0) {
-
-        vec3 normal;
-        normal = texture(uNormalTexture, vUV).rgb;
-        normal = normalize(normal * 2.0 - 1.0);
+        vec3 normal = texture(uNormalTexture, vUV).rgb * GetNormal();
 
         vec3 viewDirection = normalize(uCameraPosition - vFragPos);
 
@@ -102,8 +103,7 @@ void main() {
     } else if(uRenderMode == 2) {
         outColor = texture2D(uColorTexture, vUV);
     } else if(uRenderMode == 3) {
-        outColor = vec4(vNormal * 0.5 + 0.5, 1.0);
-        outColor *= texture2D(uNormalTexture, vUV);
+        outColor = vec4(GetNormal(), 1.0);
     } else if(uRenderMode == 4) {
         vec3 normal = normalize(vNormal); // Normalize the normal
         vec3 viewDirection = normalize(uCameraPosition - vFragPos);

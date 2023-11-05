@@ -50,6 +50,12 @@ namespace Core
 
         void From(Material *other);
 
+        void EmptyColorTexture();
+        void EmptyNormalTexture();
+
+        void RemoveColorTexture();
+        void RemoveNormalTexture();
+
         void SetName(const std::string &name);
 
         /// @brief Returns the color of the materials, could use "->Set" on the return value to set the color's values.
