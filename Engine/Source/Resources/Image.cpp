@@ -27,7 +27,7 @@ namespace Core
             if (!data)
             {
                 valid = false;
-                CE_FATAL("Image loading failure: Data not valid, might be path. (%s)", path.c_str());
+                CE_CORE_FATAL("Image loading failure: Data not valid, might be path. (%s)", path.c_str());
                 return;
             }
         }
@@ -38,7 +38,7 @@ namespace Core
             {
                 valid = false;
                 const char *reason = stbi_failure_reason();
-                CE_FATAL("Image loading failure: STB Reason: %s (%s)", reason, path.c_str());
+                CE_CORE_FATAL("Image loading failure: STB Reason: %s (%s)", reason, path.c_str());
                 return;
             }
         }

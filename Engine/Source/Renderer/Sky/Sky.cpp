@@ -71,7 +71,7 @@ namespace Core
     {
         if (!shouldClear)
         {
-            CE_WARN("SkyShaderData::ClearDataBasedOnCurrentType: Should not be called.");
+            CE_CORE_WARN("SkyShaderData::ClearDataBasedOnCurrentType: Should not be called.");
             return;
         }
 
@@ -215,7 +215,7 @@ namespace Core
 
                 if (!shd)
                 {
-                    CE_ERROR("Sky::Render: Shader '%s' is invalid.", shaderName.c_str());
+                    CE_CORE_ERROR("Sky::Render: Shader '%s' is invalid.", shaderName.c_str());
                     return;
                 }
             }
@@ -252,7 +252,7 @@ namespace Core
 
                 case SkyShaderDataType::None:
                 default:
-                    CE_WARN("Sky::Render: Unknown ShaderData.Type.");
+                    CE_CORE_WARN("Sky::Render: Unknown ShaderData.Type.");
                     break;
                 }
             }

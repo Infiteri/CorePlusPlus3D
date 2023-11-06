@@ -96,17 +96,17 @@ namespace Core
         if (_name.empty())
         {
             out.valid = false;
-            CE_FATAL("Unable to create a library with no name.");
+            CE_CORE_FATAL("Unable to create a library with no name.");
             return out;
         }
 
         // Load to make sure its fine
-        HMODULE mod = LoadLibrary(_name.c_str());
+        HMODULE mod = LoadLibrary(_name.c_str()); 
 
         if (mod == NULL)
         {
             out.valid = false;
-            CE_FATAL("Unable to create a library with name '%s'.", _name.c_str());
+            CE_CORE_FATAL("Unable to create a library with name '%s'.", _name.c_str());
             return out;
         }
 

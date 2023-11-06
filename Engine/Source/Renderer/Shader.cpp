@@ -28,8 +28,8 @@ namespace Core
             std::vector<GLchar> infoLog(maxLength);
             glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
 
-            CE_ERROR("Shader compilation failed.");
-            CE_ERROR("(%s %s) %s", type == GL_VERTEX_SHADER ? "Vertex" : "Fragment", source, infoLog.data());
+            CE_CORE_ERROR("Shader compilation failed.");
+            CE_CORE_ERROR("(%s %s) %s", type == GL_VERTEX_SHADER ? "Vertex" : "Fragment", source, infoLog.data());
 
             glDeleteShader(shader);
             return (GLuint)0;
@@ -65,7 +65,7 @@ namespace Core
             glDeleteShader(vertexShader);
             glDeleteShader(fragmentShader);
 
-            CE_FATAL("ProgramError: %s", infoLog.data());
+            CE_CORE_FATAL("ProgramError: %s", infoLog.data());
 
             valid = false;
         }

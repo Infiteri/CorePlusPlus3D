@@ -10,9 +10,11 @@
 #define CE_UNKNOWN_PLATFORM
 #endif
 
+//? Whether or not its in debug mode.
 #ifdef _DEBUG
-// Whether or not its in debug mode.
-#define CE_DEBUG_MODE
+#define CE_DEBUG_MODE 1
+#else
+#define CE_DEBUG_MODE 0
 #endif
 
 // TODO: Version

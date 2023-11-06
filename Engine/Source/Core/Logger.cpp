@@ -8,6 +8,7 @@
 namespace Core
 {
     static std::unordered_map<LoggingLevel, std::string> levelToStringMap;
+    static std::unordered_map<std::string, LogCategory *> categories;
     static std::vector<LogInfo> logs;
 
     Logger::Logger()
@@ -22,6 +23,9 @@ namespace Core
     {
         CE_PROFILE_FUNCTION();
 
+        DefineLogCategory("Core", CE_CORE_LOGGER_NAME);
+        DefineLogCategory("Client", CE_CLIENT_LOGGER_NAME);
+
         levelToStringMap[LoggingLevel::Info] = "Info";
         levelToStringMap[LoggingLevel::Warn] = "Warn";
         levelToStringMap[LoggingLevel::Error] = "Error";
@@ -34,7 +38,7 @@ namespace Core
     {
     }
 
-    void Logger::Log(LoggingLevel level, const char *fmt, ...)
+    void Logger::Log(LoggingLevel level, const std::string &category, const char *fmt, ...)
     {
         // The actual string representation of the level
         std::string logDescriptionString = levelToStringMap[level];
@@ -107,5 +111,11 @@ namespace Core
     void Logger::ClearLogInfos()
     {
         logs.clear();
+    }
+
+    void Logger::DefineLogCategory(const char *pending, const std::string &name)
+    {
+        categories[name] = new LogCategory;
+        categories[name]->Pending = pending;
     }
 }

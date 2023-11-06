@@ -73,11 +73,11 @@ namespace Core
     void CubeMapTexture::Load(std::vector<std::string> _filepaths)
     {
         if (_filepaths.size() > 6)
-            CE_WARN("The amount of paths cannot be over 6.");
+            CE_CORE_WARN("The amount of paths cannot be over 6.");
 
         if (_filepaths.size() < 6)
         {
-            CE_ERROR("The amount of paths cannot be less then 6.");
+            CE_CORE_ERROR("The amount of paths cannot be less then 6.");
             return;
         }
 
@@ -108,11 +108,11 @@ namespace Core
     void CubeMapTexture::Load(std::vector<std::string> _filepaths, TextureConfiguration config)
     {
         if (_filepaths.size() > 6)
-            CE_WARN("The amount of paths cannot be over 6.");
+            CE_CORE_WARN("The amount of paths cannot be over 6.");
 
         if (_filepaths.size() < 6)
         {
-            CE_ERROR("The amount of paths cannot be less then 6.");
+            CE_CORE_ERROR("The amount of paths cannot be less then 6.");
             return;
         }
 

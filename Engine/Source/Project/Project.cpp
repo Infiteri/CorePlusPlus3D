@@ -52,7 +52,7 @@ namespace Core
 
         if (!activeProject)
         {
-            CE_ERROR("Unable to save active project, no project loaded.");
+            CE_CORE_ERROR("Unable to save active project, no project loaded.");
             return;
         }
 

@@ -60,6 +60,6 @@ namespace Core
             format = "B";
         }
 
-        CE_TRACE("%s%i %s", message, value, format);
+        CE_CORE_TRACE("%s%i %s", message, value, format);
     }
 }

@@ -90,6 +90,6 @@ namespace Core
         }
         const char *ext = type == Seconds ? "S" : "MS";
 
-        CE_TRACE("%s: %.3f %s.", name, (end - begin) * mul, ext);
+        CE_CORE_TRACE("%s: %.3f %s.", name, (end - begin) * mul, ext);
     }
 }

@@ -2,7 +2,6 @@
 
 #include "Base.h"
 #include "Core/Input.h"
-#include "Core/Logger.h"
 
 #include "Math/Matrix4.h"
 

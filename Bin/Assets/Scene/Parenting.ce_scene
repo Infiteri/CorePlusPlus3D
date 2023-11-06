@@ -4,7 +4,7 @@ Sky:
   CubeMapPath: Assets/CubeMaps/PadNight.ce_cubemap
 DirectionalLight:
   Color: [255, 255, 255, 255]
-  Direction: [0, 0, -1.57079637]
+  Direction: [2.27416396, -2.26892805, -1.57079637]
 Actors:
   - Actor: Filed
     UUID: 8279685334796349381
@@ -53,7 +53,7 @@ Actors:
     MeshComponent:
       Name: DefaultMaterial
       Unique: Yes
-      Color: [129.481873, 129.481873, 129.481873, 255]
+      Color: [255, 255, 255, 255]
       ColorTextureName: Assets/Images/Paving/paving2.png
       NormalTextureName: Assets/Images/Paving/paving2_NRM.png
       GeometryType: Box

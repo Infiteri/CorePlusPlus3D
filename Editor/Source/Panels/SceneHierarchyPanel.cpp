@@ -142,7 +142,7 @@ namespace Core
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CE_SCENE_HIERARCHY_ACTOR"))
             {
                 UUID *uid = (UUID *)payload->Data;
-                CE_TRACE("%s to %ull", a->GetName().c_str(), uid->Get());
+                CE_CORE_TRACE("%s to %ull", a->GetName().c_str(), uid->Get());
 
                 // NOTE: Actor is target, data is name of the actor to move
                 Actor *child = GetChildInHierarchy(parent, uid);
@@ -319,7 +319,7 @@ namespace Core
                 {
                     found = true;
                     returnValue = Actor::From(a);
-                    CE_TRACE("%s got copyed.", returnValue->GetName().c_str());
+                    CE_CORE_TRACE("%s got copyed.", returnValue->GetName().c_str());
                     break;
                 }
 

@@ -1,6 +1,4 @@
-
 #include "FrameBuffer.h"
-
 #include "Core/Logger.h"
 #include "Core/Memory/CeMemory.h"
 
@@ -21,7 +19,7 @@ namespace Core
             break;
         }
 
-        CE_WARN("IDK");
+        CE_CORE_WARN("IDK");
         return GL_RGB;
     }
 
@@ -145,7 +143,7 @@ namespace Core
         }
         else
         {
-            CE_ERROR("Trying to get a pass at invalid index.");
+            CE_CORE_ERROR("Trying to get a pass at invalid index.");
             return nullptr;
         }
     }

@@ -24,7 +24,7 @@ namespace Core
 
         if (!file.Valid())
         {
-            CE_FATAL("Unable to open handle for reading: %s when loading material configuration.", path.c_str());
+            CE_CORE_FATAL("Unable to open handle for reading: %s when loading material configuration.", path.c_str());
             return config;
         }
 
@@ -63,7 +63,7 @@ namespace Core
                 }
                 else if (StringUtils::EqualI(key, "name"))
                 {
-                    CE_ERROR("MaterialLoader: Names are now the file path. The name will be the filepath.");
+                    CE_CORE_ERROR("MaterialLoader: Names are now the file path. The name will be the filepath.");
                 }
                 else if (StringUtils::EqualI(key, "colorTextureName"))
                 {

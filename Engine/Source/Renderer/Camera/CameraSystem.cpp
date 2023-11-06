@@ -47,13 +47,13 @@ namespace Core
     {
         if (perspectives[name] == nullptr)
         {
-            CE_ERROR("CameraSystem::Activate: Unable to find camera '%s'.", name.c_str());
+            CE_CORE_ERROR("CameraSystem::Activate: Unable to find camera '%s'.", name.c_str());
             return;
         }
 
         activeCamera = perspectives[name];
 
-        CE_TRACE("Active camera: %s", name.c_str());
+        CE_CORE_TRACE("Active camera: %s", name.c_str());
     }
 
     void CameraSystem::Activate(PerspectiveCamera *camera)
@@ -65,7 +65,7 @@ namespace Core
     {
         if (perspectives[name] == nullptr)
         {
-            CE_ERROR("CameraSystem::UpdateProjection: Unable to find camera '%s'.", name.c_str());
+            CE_CORE_ERROR("CameraSystem::UpdateProjection: Unable to find camera '%s'.", name.c_str());
             return;
         }
 

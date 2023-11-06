@@ -30,7 +30,7 @@ namespace Core
 
         if (!shader->IsValid())
         {
-            CE_ERROR("Unable to load shader: %s, not valid.", name.c_str());
+            CE_CORE_ERROR("Unable to load shader: %s, not valid.", name.c_str());
             return nullptr;
         }
 
@@ -64,7 +64,7 @@ namespace Core
         }
         else
         {
-            CE_WARN("ShaderSystem::Destroy: No shader at name '%s'.", name.c_str());
+            CE_CORE_WARN("ShaderSystem::Destroy: No shader at name '%s'.", name.c_str());
         }
     }
 }

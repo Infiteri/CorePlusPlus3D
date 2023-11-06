@@ -398,7 +398,7 @@ namespace Core
             break;
 
         default:
-            CE_WARN("Unknown sky type when serializing '%s' scene.", name.c_str());
+            CE_CORE_WARN("Unknown sky type when serializing '%s' scene.", name.c_str());
             break;
         }
         out << YAML::EndMap;
@@ -515,7 +515,7 @@ namespace Core
         break;
 
         default:
-            CE_WARN("Unknown sky type when deserializing '%s' scene.", name.c_str());
+            CE_CORE_WARN("Unknown sky type when deserializing '%s' scene.", name.c_str());
             break;
         }
 

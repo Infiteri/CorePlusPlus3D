@@ -25,7 +25,7 @@ namespace Core
         stream.open(_path);
         if (!stream.is_open())
         {
-            CE_ERROR("Unable to open file: %s", _path.c_str());
+            CE_CORE_ERROR("Unable to open file: %s", _path.c_str());
         }
     }
 
@@ -54,7 +54,7 @@ namespace Core
         }
         else
         {
-            CE_ERROR("Unable to read file content");
+            CE_CORE_ERROR("Unable to read file content");
             fileContent = "";
         }
 
@@ -102,7 +102,7 @@ namespace Core
         }
         else
         {
-            CE_ERROR("Unable to read file content:  %s", filename.c_str());
+            CE_CORE_ERROR("Unable to read file content:  %s", filename.c_str());
             vertResult = "";
         }
 

@@ -114,7 +114,7 @@ namespace Core
         SetRenderMode(RenderMode::Full);
         SetRenderOutputMode(RenderOutputMode::Full);
 
-        CE_INFO("Renderer Initialized.");
+        CE_CORE_INFO("Renderer Initialized.");
     }
 
     void Renderer::Shutdown()
@@ -162,7 +162,7 @@ namespace Core
 
         if (!ShaderSystem::UseShaderIfExists("EngineResources/Shaders/Object"))
         {
-            CE_FATAL("Unable to use object shader.");
+            CE_CORE_FATAL("Unable to use object shader.");
             return;
         }
 
@@ -246,7 +246,7 @@ namespace Core
 
         if (!ShaderSystem::UseShaderIfExists("EngineResources/Shaders/Screen"))
         {
-            CE_FATAL("Unable to use screen shader.");
+            CE_CORE_FATAL("Unable to use screen shader.");
             return;
         }
 

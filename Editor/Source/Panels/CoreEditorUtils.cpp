@@ -158,7 +158,7 @@ namespace Core
             }
             else
             {
-                CE_ERROR("File handle not open: %s", name);
+                CE_CORE_ERROR("File handle not open: %s", name);
             }
         }
 
@@ -170,7 +170,7 @@ namespace Core
                 color->Set4(edit, 255.0f);
         }
 
-        void ImGuiVec2Edit(const char *label, Vector2 *vec)
+        void ImGuiVec2Edit(const char *label, Vector2 *vec) 
         {
             float edit[2] = {vec->x, vec->y};
 

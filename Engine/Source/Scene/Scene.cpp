@@ -219,7 +219,7 @@ namespace Core
         {
             if (actors[i]->GetUUID()->Get() == id->Get())
             {
-                CE_DEBUG("Removing %s (%ull), %i.", actors[i]->GetName().c_str(), id->Get(), actors.size());
+                CE_CORE_DEBUG("Removing %s (%ull), %i.", actors[i]->GetName().c_str(), id->Get(), actors.size());
                 actors[i]->Destroy();
                 delete actors[i];
 
@@ -228,7 +228,7 @@ namespace Core
                 std::advance(it, i);
                 actors.erase(it);
 
-                CE_DEBUG("Length %i.", actors.size());
+                CE_CORE_DEBUG("Length %i.", actors.size());
             }
         }
     }
@@ -342,7 +342,7 @@ namespace Core
 
         if (i > actors.size())
         {
-            CE_ERROR("Unable to get actor at index %i, out of bounds. (Actor count is %i.)", i, actors.size());
+            CE_CORE_ERROR("Unable to get actor at index %i, out of bounds. (Actor count is %i.)", i, actors.size());
             return nullptr;
         }
 

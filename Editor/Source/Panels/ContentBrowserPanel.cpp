@@ -297,7 +297,7 @@ namespace Core
                 }
                 else
                 {
-                    CE_ERROR("File handle not open: %s", Name);
+                    CE_CORE_ERROR("File handle not open: %s", Name);
                 }
 
                 std::string NewName2 = activePath + "/" + std::string(Name) + ".cpp";
@@ -315,7 +315,7 @@ namespace Core
                 }
                 else
                 {
-                    CE_ERROR("File handle not open: %s", Name);
+                    CE_CORE_ERROR("File handle not open: %s", Name);
                 }
 
                 displayCreateScript = false;

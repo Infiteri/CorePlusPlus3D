@@ -12,14 +12,14 @@
 #define CE_ASSERT_NOT(cond)                                                          \
     if (!(cond))                                                                     \
     {                                                                                \
-        CE_FATAL("Assertion failure: '%s'. (%s at %i).", #cond, __FILE__, __LINE__); \
+        CE_CORE_FATAL("Assertion failure: '%s'. (%s at %i).", #cond, __FILE__, __LINE__); \
         CeBreakDebugger();                                                           \
     }
 
 #define CE_ASSERT_IF(cond)                                                           \
     if (cond)                                                                        \
     {                                                                                \
-        CE_FATAL("Assertion failure: '%s'. (%s at %i).", #cond, __FILE__, __LINE__); \
+        CE_CORE_FATAL("Assertion failure: '%s'. (%s at %i).", #cond, __FILE__, __LINE__); \
         CeBreakDebugger();                                                           \
     }
 

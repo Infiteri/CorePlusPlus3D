@@ -12,7 +12,7 @@ namespace Core
         std::ifstream inputFile(path, std::ios::binary);
         if (!inputFile)
         {
-            CE_ERROR("Failed to open custom image file for reading '%s'.", path);
+            CE_CORE_ERROR("Failed to open custom image file for reading '%s'.", path);
             return nullptr;
         }
 

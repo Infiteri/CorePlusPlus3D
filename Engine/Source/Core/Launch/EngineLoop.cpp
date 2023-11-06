@@ -42,7 +42,7 @@ namespace Core
             if (deltaTime < (1.0 / Engine::GetWantedFPS()))
             {
                 double remainingTime = (1.0 / Engine::GetWantedFPS()) - deltaTime;
-                glfwWaitEventsTimeout(remainingTime);
+                glfwWaitEventsTimeout(remainingTime); 
                 currentTime = glfwGetTime();
             }
             lastFrameTime = currentTime;

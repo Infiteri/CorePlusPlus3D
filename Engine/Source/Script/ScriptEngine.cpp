@@ -76,7 +76,7 @@ namespace Core
 
         if (pfn == nullptr)
         {
-            CE_FATAL("Unable to load PFN for creating actor script.");
+            CE_CORE_FATAL("Unable to load PFN for creating actor script.");
             return;
         }
 

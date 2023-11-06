@@ -101,7 +101,7 @@ namespace Core
         // Starting application after starting subsystems
         GApp->Init();
 
-        CE_DEBUG("Engine::PreInit successful.");
+        CE_CORE_DEBUG("Engine::PreInit successful.");
     }
 
     void Engine::Init()
@@ -109,7 +109,7 @@ namespace Core
         CE_PROFILE_FUNCTION();
 
         World::InitActive();
-        CE_DEBUG("Engine::Init successful.");
+        CE_CORE_DEBUG("Engine::Init successful.");
     }
 
     void Engine::Start()
@@ -119,7 +119,7 @@ namespace Core
         // NOTE: Removed because of editor
         //  World::StartActive(); Starting the scene will be done at runtime, editor doesn't work as expected
 
-        CE_DEBUG("Engine::Start successful.");
+        CE_CORE_DEBUG("Engine::Start successful.");
     }
 
     void Engine::Update()
@@ -173,7 +173,7 @@ namespace Core
         GApp->Shutdown();
         delete GWindowInstance;
         delete GApp;
-        CE_DEBUG("Engine::Shutdown successful.");
+        CE_CORE_DEBUG("Engine::Shutdown successful.");
     }
 
     float Engine::GetWindowAspect()

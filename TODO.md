@@ -11,7 +11,10 @@
 
 1. Use of Engine API in game code. [ - ]
 2. script "OnStop" called twice [ + ]
-3. Core Logging. So it can be turned off. [ - ] (MAJOR PROBLEM WHEN GAMEPLAY)
+3. Core Logging. So it can be turned off. [ WIP ] (MAJOR PROBLEM WHEN GAMEPLAY)
+4. Texture configurations. [ - ]
+5. Cube Texture configurations. [ - ]
+6. Window popup for the Scene Creation. [ - ] (REQUIRED)
 
 ### Scripting
 

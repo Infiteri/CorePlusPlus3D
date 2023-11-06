@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Base.h"
-#include "Core/Logger.h"
-#include "Core/Memory/CeMemory.h"
+
 namespace Core
 {
     enum RenderPassTextureType

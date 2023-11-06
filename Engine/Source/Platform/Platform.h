@@ -64,7 +64,7 @@ namespace Core
         static std::vector<std::string> GetFolderPathsInDirectory(const std::string &directoryPath);
         static std::vector<DirectoryEntry> GetDirectoryEntries(const std::string &directoryPath);
 
-        static bool CreateFolder(const std::string& name);
+        static bool CreateFolder(const std::string &name);
 
         // ------------------------------------------------
 
@@ -86,7 +86,7 @@ namespace Core
         {
             if (!library || !library->valid)
             {
-                CE_ERROR("Library not valid when searching for function.");
+                CE_CORE_ERROR("Library not valid when searching for function.");
                 return NULL;
             }
 
@@ -94,7 +94,7 @@ namespace Core
             {
                 if (!LibraryLoadFunction(library, funcName))
                 {
-                    CE_ERROR("Unable to load function for library when trying to get it.");
+                    CE_CORE_ERROR("Unable to load function for library when trying to get it.");
                     return NULL;
                 }
             }

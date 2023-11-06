@@ -55,7 +55,7 @@ namespace Core
     {
         if (references[path])
         {
-            CE_WARN("Image with path '%s' already exists, not overriding.", path.c_str());
+            CE_CORE_WARN("Image with path '%s' already exists, not overriding.", path.c_str());
             return;
         }
 
@@ -63,7 +63,7 @@ namespace Core
         references[path]->count = 0;
         references[path]->texture = new Texture();
         references[path]->texture->Load(path, config);
-        CE_TRACE("TextureManager::Load: Loaded texture: '%s'.", path.c_str());
+        CE_CORE_TRACE("TextureManager::Load: Loaded texture: '%s'.", path.c_str());
     }
 
     Texture *TextureManager::Get(const std::string &path)
@@ -72,7 +72,7 @@ namespace Core
             Load(path);
 
         references[path]->count++;
-        CE_TRACE("Found texture: '%s', reference count is %i and generation is %i.", path.c_str(), references[path]->count, references[path]->texture->GetGeneration());
+        CE_CORE_TRACE("Found texture: '%s', reference count is %i and generation is %i.", path.c_str(), references[path]->count, references[path]->texture->GetGeneration());
 
         return references[path]->texture;
     }
@@ -96,16 +96,16 @@ namespace Core
 
         if (references[path]->count == 0)
         {
-            CE_WARN("TextureManager::Release: Texture '%s' is not referenced, cannot be released.");
+            CE_CORE_WARN("TextureManager::Release: Texture '%s' is not referenced, cannot be released.");
             return;
         }
 
         references[path]->count--;
 
-        CE_TRACE("TextureManager::Release: Found texture: '%s', reference count is %i.", path.c_str(), references[path]->count);
+        CE_CORE_TRACE("TextureManager::Release: Found texture: '%s', reference count is %i.", path.c_str(), references[path]->count);
         if (references[path]->count == 0)
         {
-            CE_TRACE("TextureManager::Release: Texture: '%s' is getting deleted.", path.c_str(), references[path]->count);
+            CE_CORE_TRACE("TextureManager::Release: Texture: '%s' is getting deleted.", path.c_str(), references[path]->count);
             delete references[path];
             references[path] = nullptr;
         }

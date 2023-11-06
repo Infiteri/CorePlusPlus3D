@@ -30,7 +30,7 @@ namespace Core
     {
         if (generation == 0)
         {
-            CE_DEBUG("Generation increased for new empty texture.");
+            CE_CORE_DEBUG("Generation increased for new empty texture.");
 
             generation = TextureManager::GetGlobalTextureCount();
             TextureManager::IncrementGlobalTextureCount();
@@ -53,7 +53,7 @@ namespace Core
     {
         if (generation == 0)
         {
-            CE_DEBUG("Generation increased for '%s'", _filepath.c_str());
+            CE_CORE_DEBUG("Generation increased for '%s'", _filepath.c_str());
             generation = TextureManager::GetGlobalTextureCount();
             TextureManager::IncrementGlobalTextureCount();
         }
@@ -73,7 +73,7 @@ namespace Core
 
         if (generation == 0)
         {
-            CE_DEBUG("Generation increased for '%s' which is created with a configuration.", _filepath.c_str());
+            CE_CORE_DEBUG("Generation increased for '%s' which is created with a configuration.", _filepath.c_str());
             generation = TextureManager::GetGlobalTextureCount();
             TextureManager::IncrementGlobalTextureCount();
         }

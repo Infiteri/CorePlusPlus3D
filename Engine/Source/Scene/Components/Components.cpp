@@ -148,7 +148,7 @@ namespace Core
     {
         if (!other)
         {
-            CE_ERROR("AABBComponent::CollidesWith: Other is nullptr.");
+            CE_CORE_ERROR("AABBComponent::CollidesWith: Other is nullptr.");
             return false;
         }
 
@@ -162,7 +162,7 @@ namespace Core
     {
         if (!other)
         {
-            CE_ERROR("AABBComponent::CollidesX: Other is nullptr.");
+            CE_CORE_ERROR("AABBComponent::CollidesX: Other is nullptr.");
             return false;
         }
 
@@ -180,7 +180,7 @@ namespace Core
     {
         if (!other)
         {
-            CE_ERROR("AABBComponent::CollidesY: Other is nullptr.");
+            CE_CORE_ERROR("AABBComponent::CollidesY: Other is nullptr.");
             return false;
         }
 

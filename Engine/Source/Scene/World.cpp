@@ -31,7 +31,7 @@ namespace Core
             if (scene->GetName() == activeScene->GetName())
                 continue;
 
-            CE_TRACE("Destroying scene '%s'.", scene->GetName().c_str());
+            CE_CORE_TRACE("Destroying scene '%s'.", scene->GetName().c_str());
 
             scene->Destroy();
             delete scene;
@@ -39,7 +39,7 @@ namespace Core
 
         if (activeScene)
         {
-            CE_TRACE("Destroying scene '%s'.", activeScene->GetName().c_str());
+            CE_CORE_TRACE("Destroying scene '%s'.", activeScene->GetName().c_str());
 
             activeScene->Destroy();
             delete activeScene;
@@ -71,7 +71,7 @@ namespace Core
 
         if (scenes[name] != nullptr)
         {
-            CE_ERROR("Scene '%s' already exists.", name.c_str());
+            CE_CORE_ERROR("Scene '%s' already exists.", name.c_str());
             return nullptr;
         }
 
@@ -79,7 +79,7 @@ namespace Core
         scene->SetName(name.c_str());
         scenes[name] = scene;
 
-        CE_DEBUG("Created scene '%s'", name.c_str());
+        CE_CORE_DEBUG("Created scene '%s'", name.c_str());
 
         return scene;
     }
@@ -92,13 +92,13 @@ namespace Core
 
         if (!scenes[name])
         {
-            CE_ERROR("Unable to find scene '%s'.", name.c_str());
+            CE_CORE_ERROR("Unable to find scene '%s'.", name.c_str());
             return;
         }
 
         activeScene = scenes[name];
 
-        CE_DEBUG("Activated scene '%s'", activeScene->GetName().c_str());
+        CE_CORE_DEBUG("Activated scene '%s'", activeScene->GetName().c_str());
     }
 
     void World::Activate(Scene *scene)
@@ -122,7 +122,7 @@ namespace Core
 
         if (!scene)
         {
-            CE_ERROR("World::CopyToActive: Scene cannot be a nullptr.");
+            CE_CORE_ERROR("World::CopyToActive: Scene cannot be a nullptr.");
             return;
         }
 
@@ -151,7 +151,7 @@ namespace Core
         {
             auto it = scenes.find(name);
             scenes.erase(it);
-            CE_TRACE("Deleting scene '%s', scene count is now %i.", name.c_str(), scenes.size());
+            CE_CORE_TRACE("Deleting scene '%s', scene count is now %i.", name.c_str(), scenes.size());
             scene->Destroy();
             delete scene;
             scene = nullptr;
