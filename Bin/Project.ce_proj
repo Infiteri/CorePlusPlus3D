@@ -1,6 +1,6 @@
 Project:
   Name: Test
-  StartScene: Assets/Scene/Parenting.ce_scene
+  StartScene: Assets/Scene/LightFollow.ce_scene
   AssetPath: Assets
   ScriptPath: GameLibrary.dll
   ScriptFilesPath: Assets/Scripts

@@ -249,14 +249,24 @@ namespace Core
     {
         CE_PROFILE_FUNCTION();
 
+        bool found = false;
+
         for (Actor *a : actors)
         {
             auto comp = a->GetComponent<PerspectiveCameraComponent>();
             if (comp)
             {
-                comp->camera->GetPosition()->Set(&a->GetTransform()->position);
-                comp->camera->GetRotation()->Set(&a->GetTransform()->rotation);
+                found = true;
                 return comp;
+            }
+        }
+        if (!found)
+        {
+            for (Actor *a : actors)
+            {
+                auto comp = a->SearchChildrenForComponent<PerspectiveCameraComponent>();
+                if (comp)
+                    return comp;
             }
         }
 

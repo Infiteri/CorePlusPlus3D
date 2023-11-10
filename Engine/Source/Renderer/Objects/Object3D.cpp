@@ -13,7 +13,6 @@ namespace Core
     void Object3D::Destroy()
     {
     }
-    
 
     void Object3D::Init()
     {

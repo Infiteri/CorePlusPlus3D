@@ -218,6 +218,14 @@ namespace Core
             EditorUtils::ImGuiVector3Edit("Position", &a->GetTransform()->position, 0.0f);
             EditorUtils::ImGuiVector3Edit("Rotation", &a->GetTransform()->rotation, 0.0f);
             EditorUtils::ImGuiVector3Edit("Scale", &a->GetTransform()->scale, 1.0f);
+
+            if (ImGui::TreeNodeEx("Matrix Inner Data"))
+            {
+                EditorUtils::RenderMatrix4GuiText(a->GetWorldMatrix()->data);
+
+                ImGui::TreePop();
+            }
+
             ImGui::TreePop();
         }
 

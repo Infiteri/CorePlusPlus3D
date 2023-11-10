@@ -118,13 +118,12 @@ namespace Core
 
     void PerspectiveCameraComponent::Start()
     {
-        camera->Update();
     }
 
     void PerspectiveCameraComponent::Render()
     {
-        camera->GetPosition()->Set(&owner->GetTransform()->position);
-        camera->GetRotation()->Set(&owner->GetTransform()->rotation);
+        Matrix4 m = *owner->GetWorldMatrix();
+        camera->GetTransform()->FromMatrix(&m);
     }
 
     void AABBComponent::Render()
@@ -222,7 +221,7 @@ namespace Core
 
     void PointLightComponent::Render()
     {
-        light->GetPosition()->Set(&owner->GetTransform()->position);
+        light->GetPosition()->Set(owner->GetWorldMatrix()->data[12], owner->GetWorldMatrix()->data[13], owner->GetWorldMatrix()->data[14]);
         light->Update();
     }
 }

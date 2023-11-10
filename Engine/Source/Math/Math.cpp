@@ -42,38 +42,37 @@ namespace Core
             out->y = data[13];
             out->z = data[14];
         }
+
         void DecomposeRotation(float *data, Vector3 *out)
         {
-            float m00 = data[0]; // Scale X
+            float m00 = data[0];
             float m01 = data[1];
             float m02 = data[2];
             float m10 = data[4];
-            float m11 = data[5]; // Scale Y
+            float m11 = data[5];
             float m12 = data[6];
             float m20 = data[8];
             float m21 = data[9];
-            float m22 = data[10]; // Scale Z
+            float m22 = data[10];
 
-            // Calculate the scaling factors
-            float scaleX = sqrt(m00 * m00 + m01 * m01 + m02 * m02);
-            float scaleY = sqrt(m10 * m10 + m11 * m11 + m12 * m12);
-            float scaleZ = sqrt(m20 * m20 + m21 * m21 + m22 * m22);
+            float angleX, angleY, angleZ;
 
-            // Remove scaling from the matrix to extract the rotation part
-            m00 /= scaleX;
-            m01 /= scaleX;
-            m02 /= scaleX;
-            m10 /= scaleY;
-            m11 /= scaleY;
-            m12 /= scaleY;
-            m20 /= scaleZ;
-            m21 /= scaleZ;
-            m22 /= scaleZ;
+            // Extract rotation angles from the 3x3 rotation matrix
+            angleY = asin(-m02); // Calculate pitch (Y-axis rotation)
 
-            // Calculate rotation angles using the extracted rotation matrix
-            float angleX = atan2(m12, m22);
-            float angleY = atan2(-m02, sqrt(m00 * m00 + m01 * m01));
-            float angleZ = atan2(m01, m00);
+            float threshold = 0.001; // Threshold to handle near singularity
+
+            // Check for near singularities at the poles to determine the other angles
+            if (cos(angleY) > threshold)
+            {
+                angleX = atan2(m12, m22); // Calculate roll (X-axis rotation)
+                angleZ = atan2(m01, m00); // Calculate yaw (Z-axis rotation)
+            }
+            else
+            {
+                angleX = atan2(-m21, m11);
+                angleZ = 0.0;
+            }
 
             // Convert angles from radians to degrees if desired
             out->x = angleX;

@@ -17,6 +17,7 @@ namespace Core
         ~Transform();
 
         void From(Transform *other);
+        void FromMatrix(Matrix4 *matrix);
         Matrix4 GetMatrix();
     };
 }

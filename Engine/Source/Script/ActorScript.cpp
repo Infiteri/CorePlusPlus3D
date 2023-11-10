@@ -37,4 +37,12 @@ namespace Core
 
         return World::GetActive()->GetActorByName(name);
     }
+
+    Actor *ActorScript::GetChildByName(const std::string &name)
+    {
+        if (!owner)
+            return nullptr;
+
+        return owner->GetChildByName(name);
+    }
 }

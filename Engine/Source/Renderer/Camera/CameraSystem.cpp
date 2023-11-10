@@ -58,6 +58,7 @@ namespace Core
 
     void CameraSystem::Activate(PerspectiveCamera *camera)
     {
+        CE_TRACE("Activated camera with a instance.");
         activeCamera = camera;
     }
 

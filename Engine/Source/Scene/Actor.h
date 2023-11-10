@@ -136,6 +136,30 @@ namespace Core
         };
 
         template <typename T>
+        T *SearchChildrenForComponent()
+        {
+            for (Component *c : components)
+            {
+                T *typedComponent = dynamic_cast<T *>(c);
+                if (typedComponent)
+                {
+                    return typedComponent;
+                }
+            }
+
+            for (Actor *child : children)
+            {
+                T *componentInChildren = child->SearchChildrenForComponent<T>();
+                if (componentInChildren)
+                {
+                    return componentInChildren;
+                }
+            }
+
+            return nullptr;
+        }
+
+        template <typename T>
         bool HasComponent()
         {
             return GetComponent<T>() != nullptr;

@@ -65,5 +65,6 @@ namespace Core
         SkyShaderDataType StringToShaderDatatType(const std::string &val);
 
         void DrawMeshTextureUI(TexType type, Core::Material *material);
+        void RenderMatrix4GuiText(float *data);
     }
 }

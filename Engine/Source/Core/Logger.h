@@ -42,7 +42,7 @@
 #define CE_ENABLE_DEBUG_LOGGING 1
 #define CE_LOGGER_MAX_MESSAGE_LENGTH 32000
 
-#define CE_CORE_CAN_LOG 0
+#define CE_CORE_CAN_LOG 1
 #define CE_CLIENT_CAN_LOG 1
 
 #define CE_CORE_LOGGER_NAME "__CoreLogger__"

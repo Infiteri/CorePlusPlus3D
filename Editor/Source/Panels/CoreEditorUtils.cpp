@@ -170,7 +170,7 @@ namespace Core
                 color->Set4(edit, 255.0f);
         }
 
-        void ImGuiVec2Edit(const char *label, Vector2 *vec) 
+        void ImGuiVec2Edit(const char *label, Vector2 *vec)
         {
             float edit[2] = {vec->x, vec->y};
 
@@ -294,5 +294,17 @@ namespace Core
                 }
             }
         }
+
+        void RenderMatrix4GuiText(float *data)
+        {
+            ImGui::Columns(4, "MatrixColumns", true);
+            for (int i = 0; i < 16; ++i)
+            {
+                ImGui::Text("%.2f", data[i]);
+                ImGui::NextColumn();
+            }
+            ImGui::Columns(1); // Reset columns to 1 at the end
+        }
+
     }
 }

@@ -259,12 +259,8 @@ namespace Core
 
         //? Calculate the world matrix with the parent matrix if its parented
         if (parent)
-        {
             worldMatrix = Matrix4::Multiply(&parent->worldMatrix, &localMatrix);
-        }
         else
-        {
             worldMatrix = localMatrix;
-        }
     }
 }
