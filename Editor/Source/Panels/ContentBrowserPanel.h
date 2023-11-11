@@ -2,12 +2,15 @@
 
 #include "Panel.h"
 #include <fstream>
+#include <string>
 
 namespace Core
 {
     class ContentBrowserPanel : public Panel
     {
     public:
+        std::string baseResourcesPath = ""; // TODO: From project
+        std::string activePath = baseResourcesPath;
         ContentBrowserPanel();
         ~ContentBrowserPanel();
 

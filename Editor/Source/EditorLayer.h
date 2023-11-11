@@ -25,6 +25,11 @@ namespace Core
         void Clear();
     };
 
+    struct UIAssetViewer
+    {
+        bool render = true;
+    };
+
     struct EditShaderFile
     {
         char *FileName;
@@ -64,6 +69,8 @@ namespace Core
         ImVec2 viewportRightBottom;
 
         bool updateCameraWithMouse = false;
+
+        UIAssetViewer assetViewer;
     };
 
     class EditorLayer : public Layer
@@ -140,6 +147,10 @@ namespace Core
         void UI_DrawEditShaderFile();
         void UI_DrawEngineStats();
         void UI_DrawTestButtons();
+        void UI_DrawAssetLayout();
+        void UI_DrawAssetViewer();
+
+        void UI_UTIL_DrawFolderContents(const std::string& folderPath, const std::string& parentPath);
         // ------------------------------------
 
         void BeginDockspace();

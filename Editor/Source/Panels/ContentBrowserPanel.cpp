@@ -13,8 +13,6 @@
 
 namespace Core
 {
-    static std::string baseResourcesPath = ""; // TODO: From project
-    static std::string activePath = baseResourcesPath;
     static bool pressedFolder = false;
     static bool displayCreateCubeMap = false;
     static bool displayCreateScript = false;
@@ -44,6 +42,7 @@ namespace Core
     ContentBrowserPanel::~ContentBrowserPanel()
     {
     }
+    
 
     void ContentBrowserPanel::LoadAssets()
     {

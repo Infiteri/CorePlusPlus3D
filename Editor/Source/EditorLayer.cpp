@@ -30,6 +30,7 @@ namespace Core
 
         state.IconStopTexture = new Texture();
         state.IconStopTexture->Load("EngineResources/CeImage/Icons/StopButton.ce_image");
+        state.assetViewer.render = true;
         contentBrowserPanel.LoadAssets();
 
         SetContexts();
@@ -94,6 +95,7 @@ namespace Core
         UI_DrawEditShaderFile();
         UI_DrawEngineStats();
         UI_DrawTestButtons();
+        UI_DrawAssetViewer();
 
         RenderSceneViewport();
 
@@ -482,6 +484,56 @@ namespace Core
 
     void EditorLayer::UI_DrawTestButtons()
     {
+    }
+
+    void EditorLayer::UI_DrawAssetLayout()
+    {
+        for (DirectoryEntry entry : Platform::GetDirectoryEntries(contentBrowserPanel.activePath))
+        {
+            if (entry.isFolder)
+                UI_UTIL_DrawFolderContents(entry.path, "");
+            else
+                ImGui::Text("%s", StringUtils::GetFileName(entry.path).c_str());
+        }
+    }
+
+    void EditorLayer::UI_DrawAssetViewer()
+    {
+        UIAssetViewer *view = &state.assetViewer;
+
+        if (!view->render)
+            return;
+
+        ImGui::Begin("Asset Viewer");
+        UI_DrawAssetLayout();
+
+        ImGui::End();
+    }
+
+    void EditorLayer::UI_UTIL_DrawFolderContents(const std::string &folderPath, const std::string &parentPath)
+    {
+        if (ImGui::TreeNodeEx(folderPath.c_str()))
+        {
+            for (DirectoryEntry entry : Platform::GetDirectoryEntries(contentBrowserPanel.activePath + parentPath + "/" + folderPath))
+            {
+                ImGui::PushID(entry.path.c_str()); // Ensure each item has a unique ID
+
+                if (entry.isFolder)
+                {
+                    // Recursively draw subfolders
+                    UI_UTIL_DrawFolderContents(entry.path, parentPath + "/" + folderPath);
+                }
+                else
+                {
+                    // Render file entry
+                    ImGui::Text("%s", StringUtils::GetFileName(entry.path).c_str());
+                }
+
+                ImGui::PopID();
+            }
+
+            ImGui::TreePop();
+        }
     }
 
     void EditorLayer::UI_DrawMainTopBar()
