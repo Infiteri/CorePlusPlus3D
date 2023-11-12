@@ -10,6 +10,7 @@ namespace Core
     static std::unordered_map<LoggingLevel, std::string> levelToStringMap;
     static std::unordered_map<std::string, LogCategory *> categories;
     static std::vector<LogInfo> logs;
+    static LoggerInformation info;
 
     Logger::Logger()
     {
@@ -19,8 +20,10 @@ namespace Core
     {
     }
 
-    void Logger::Init()
+    void Logger::Init(LoggerInformation information)
     {
+        info = information;
+
         CE_PROFILE_FUNCTION();
 
         DefineLogCategory("Core", CE_CORE_LOGGER_NAME);
@@ -40,11 +43,26 @@ namespace Core
 
     void Logger::Log(LoggingLevel level, const std::string &category, const char *fmt, ...)
     {
+        if (level == LoggingLevel::Error || level == LoggingLevel::Fatal)
+        {
+        }
+        else
+        {
+            for (auto s : info.IgnoredCategories)
+            {
+                if (s == category) // Ignored category.
+                    return;
+            }
+        }
+
         // The actual string representation of the level
         std::string logDescriptionString = levelToStringMap[level];
+        auto cat = categories[category];
+
+        if (!cat)
+            DefineLogCategory(category.c_str(), category);
 
         // TODO: Refactor strings
-
         char OutMessage[CE_LOGGER_MAX_MESSAGE_LENGTH];
         Platform::MemSet(OutMessage, 0, CE_LOGGER_MAX_MESSAGE_LENGTH);
 
@@ -56,7 +74,11 @@ namespace Core
 
         char OutMessageWithLevels[CE_LOGGER_MAX_MESSAGE_LENGTH];
         Platform::MemSet(OutMessageWithLevels, 0, CE_LOGGER_MAX_MESSAGE_LENGTH);
-        snprintf(OutMessageWithLevels, CE_LOGGER_MAX_MESSAGE_LENGTH, "[%s %s]: %s\n", "Core", logDescriptionString.c_str(), OutMessage);
+
+        if (info.PendLevelToOuput)
+            snprintf(OutMessageWithLevels, CE_LOGGER_MAX_MESSAGE_LENGTH, "[%s %s]: %s\n", cat->Pending, logDescriptionString.c_str(), OutMessage);
+        else
+            snprintf(OutMessageWithLevels, CE_LOGGER_MAX_MESSAGE_LENGTH, "[%s]: %s\n", cat->Pending, OutMessage);
 
         // WIP: Console colors
         PlatformLogColor color;
@@ -95,12 +117,11 @@ namespace Core
         Platform::SetConsoleColor(color);
         Platform::LogMessage(OutMessageWithLevels);
 
+        // Push a log info
         LogInfo inf;
         inf.Level = level;
         inf.Message = OutMessageWithLevels;
         logs.push_back(inf);
-
-        OnLoggerLogGeneral();
     }
 
     std::vector<LogInfo> Logger::GetLogInfos()

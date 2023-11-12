@@ -34,6 +34,8 @@ namespace Core
 
     void EngineLoop::Tick()
     {
+        // Note: Might cap FPS
+        // TODO: Fix this crap
         if (Engine::GetWantedFPS() > 0)
         {
             double currentTime = glfwGetTime();
@@ -42,7 +44,7 @@ namespace Core
             if (deltaTime < (1.0 / Engine::GetWantedFPS()))
             {
                 double remainingTime = (1.0 / Engine::GetWantedFPS()) - deltaTime;
-                glfwWaitEventsTimeout(remainingTime); 
+                glfwWaitEventsTimeout(remainingTime);
                 currentTime = glfwGetTime();
             }
             lastFrameTime = currentTime;

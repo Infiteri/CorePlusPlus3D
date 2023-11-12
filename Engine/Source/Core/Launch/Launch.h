@@ -8,8 +8,10 @@ extern Core::Application *Core::CreateApplication(Core::EngineConfiguration *con
 
 int main(int argc, char const *argv[])
 {
+    // Starts a profiling session when the engine starts.
     CE_PROFILE_BEGIN_SESSION_FILE("Game", "Debug/Core-Profile_Game.json");
 
+    // Global configuration used when setting up the engine.
     Core::EngineConfiguration config;
 
     // Setup default config
@@ -22,8 +24,8 @@ int main(int argc, char const *argv[])
     config.windowConfig.decorated = true;
     config.windowConfig.title = "Hello Core Engine";
 
+    // Global engine loop manager
     Core::EngineLoop GEngineLoop;
-
     Core::Application *application = Core::CreateApplication(&config);
 
     // pre Init stage

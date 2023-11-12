@@ -62,8 +62,12 @@ namespace Core
         GConfig = config;
         GApp = app;
 
+        LoggerInformation information;
+        information.PendLevelToOuput = true;
+        information.IgnoredCategories = {CE_CORE_LOGGER_NAME};
+        Logger::Init(information);
+
         // Setup systems
-        Logger::Init();
         EventManager::Init();
         LayerStack::Init();
         World::Init();
@@ -102,6 +106,9 @@ namespace Core
         GApp->Init();
 
         CE_CORE_DEBUG("Engine::PreInit successful.");
+
+        CE_DEFINE_LOG_CATEGORY("Engine", "Engine");
+        CE_LOG("Engine", Info, "hello");
     }
 
     void Engine::Init()

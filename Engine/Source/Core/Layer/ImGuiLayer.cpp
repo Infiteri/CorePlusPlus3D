@@ -14,7 +14,6 @@ namespace Core
     {
         CE_PROFILE_FUNCTION();
 
-
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
@@ -24,6 +23,7 @@ namespace Core
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
+        // TODO: Check if path is valid
         io.Fonts->AddFontFromFileTTF("EngineResources/Fonts/Open_Sans/static/OpenSans-Bold.ttf", 12.0f);
 
         // Styling
@@ -33,6 +33,7 @@ namespace Core
         ImGui_ImplGlfw_InitForOpenGL(Engine::GetWindowInstance()->GetHandle(), true);
         ImGui_ImplOpenGL3_Init("#version 330 core");
 
+        // TODO: Make CONFIGURABLE and SAVABLE
         auto &colors = ImGui::GetStyle().Colors;
         colors[ImGuiCol_WindowBg] = ImVec4{0.1f, 0.105f, 0.11f, 1.0f};
 
@@ -66,6 +67,7 @@ namespace Core
 
     void ImGuiLayer::Shutdown()
     {
+        ImGui::DestroyContext();
     }
 
     void ImGuiLayer::BeginFrame()

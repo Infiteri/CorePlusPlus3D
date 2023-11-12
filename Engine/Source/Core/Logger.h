@@ -4,7 +4,7 @@
 //? This serves as a little explanation for how logging works right now.
 //? Last Update:
 //?                 06 November 2023. 3:10 PM. (As of writing this)
-//? --------------------------------------------------------------------------------------
+//? ------------------------------------2--------------------------------------------------
 //? Pendings are the string before the level:
 //? "Core Warn" - The pending is "Core", the level is "Warn".
 //
@@ -53,10 +53,6 @@
 #define CE_CORE_LOGGER_NAME "__CoreLogger__"
 #define CE_CLIENT_LOGGER_NAME "__ClientLogger__"
 
-#ifdef CE_WITH_EDITOR
-#include <imgui.h>
-#endif
-
 namespace Core
 {
     enum class LoggingLevel
@@ -80,13 +76,22 @@ namespace Core
         const char *Pending;
     };
 
+    struct LoggerInformation
+    {
+        /// @brief If set to true: "[Core LEVEL]: ", otherwise "[CORE]: "
+        bool PendLevelToOuput = true;
+
+        /// @brief Represents the list of ignored categories. Used by name not by pending.
+        std::vector<std::string> IgnoredCategories;
+    };
+
     class CE_API Logger
     {
     public:
         Logger();
         ~Logger();
 
-        static void Init();
+        static void Init(LoggerInformation info);
         static void Shutdown();
 
         static void Log(LoggingLevel level, const std::string &category, const char *fmt, ...);
@@ -95,13 +100,6 @@ namespace Core
         static void ClearLogInfos();
 
         static void DefineLogCategory(const char *pending, const std::string &name);
-
-        static void OnLoggerLogGeneral()
-        {
-#ifdef CE_WITH_EDITOR
-            ImGui::SetScrollHereY(1.0f);
-#endif
-        };
     };
 }
 
@@ -191,3 +189,7 @@ namespace Core
 #define CE_TRACE(fmt, ...)
 #define CE_DEBUG(fmt, ...)
 #endif
+
+#define CE_DEFINE_LOG_CATEGORY(pending, name) Core::Logger::DefineLogCategory(pending, name)
+
+#define CE_LOG(name, level, message, ...) Core::Logger::Log(Core::LoggingLevel::level, name, message, ##__VA_ARGS__)

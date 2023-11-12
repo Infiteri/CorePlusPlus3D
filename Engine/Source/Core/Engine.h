@@ -73,12 +73,28 @@ namespace Core
         /// @return void*
         static void *GetCopyOfUserData();
 
+        /// @brief Returns the delta time.
+        /// @return Float
         static float GetDeltaTime();
+
+        /// @brief WIP: Returns the wanted FPS
+        /// @return
         static float GetFPS();
+
+        /// @brief WIP: WORK IN PROGRESS
+        /// @param fpsValue The Value
         static void SetWantedFPS(float fpsValue);
+
+        /// @brief WIP: WORK IN PROGRESS
+        /// @return
         static float GetWantedFPS();
 
+        /// @brief Not very relevant but used for instrumentation.
+        /// @param info Information
         static void PushTimerInfoForThisFrame(TimerInfo info);
+
+        /// @brief Not very relevant but used for instrumentation.
+        /// @return Vector yk.
         static std::vector<TimerInfo> GetTimerInfoForThisFrame();
     };
 }

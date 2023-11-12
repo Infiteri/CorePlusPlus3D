@@ -73,7 +73,7 @@ Actors:
       Near: 0.00999999978
       Far: 1000
       Position: [0, 1.78499997, 7.82939816]
-      Rotation: [-0.0700000003, 0, 0]
+      Rotation: [0.0699999928, 0, 0]
   - Actor: Filed
     UUID: 8800294969640267456
     Name: Actor

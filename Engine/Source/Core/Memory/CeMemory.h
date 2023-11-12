@@ -1,5 +1,10 @@
 #pragma once
 
+//? ------------------------------ Welcome to Core/Memory/CeMemory.h --------------------------------
+//? All the functions inside the CeMemory class are for use, it serves as a nice interface over the--
+//? memory allocation / freeing / setting and other functions, also allows for memory size printing.-
+//? -------------------------------------------------------------------------------------------------
+
 #include "Base.h"
 
 namespace Core
