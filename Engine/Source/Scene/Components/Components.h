@@ -5,6 +5,7 @@
 #include "Renderer/Objects/Mesh.h"
 #include "Renderer/Camera/CameraSystem.h"
 #include "Renderer/Light/PointLight.h"
+#include "Renderer/Light/SpotLight.h"
 
 namespace Core
 {
@@ -106,6 +107,20 @@ namespace Core
         ~PointLightComponent();
 
         void From(PointLightComponent *other);
+
+        void Destroy();
+        void Render();
+    };
+
+    class CE_API SpotLightComponent : public Component
+    {
+    public:
+        SpotLight *light;
+
+        SpotLightComponent();
+        ~SpotLightComponent();
+
+        void From(SpotLightComponent *other);
 
         void Destroy();
         void Render();

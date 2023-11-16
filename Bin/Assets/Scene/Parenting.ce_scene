@@ -4,7 +4,7 @@ Sky:
   CubeMapPath: Assets/CubeMaps/PadNight.ce_cubemap
 DirectionalLight:
   Color: [255, 255, 255, 255]
-  Direction: [2.27416396, -2.26892805, -1.57079637]
+  Direction: [0, 0, 0]
 Actors:
   - Actor: Filed
     UUID: 8279685334796349381
@@ -53,7 +53,7 @@ Actors:
     MeshComponent:
       Name: DefaultMaterial
       Unique: Yes
-      Color: [255, 255, 255, 255]
+      Color: [92.4870529, 92.4870529, 92.4870529, 255]
       ColorTextureName: Assets/Images/Paving/paving2.png
       NormalTextureName: Assets/Images/Paving/paving2_NRM.png
       GeometryType: Box
@@ -65,29 +65,20 @@ Actors:
     Name: Camera
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
-      Position: [0, 1.78499997, 7.82939816]
+      Position: [0, 1.78500819, 7.82940102]
       Rotation: [-0.0700000003, 0, 0]
       Scale: [1, 1, 1]
     PerspectiveCameraComponent:
       Fov: 1.57079637
       Near: 0.00999999978
       Far: 1000
-      Position: [0, 1.78499997, 7.82939816]
+      Position: [0, -1.23302615, -7.93507433]
       Rotation: [0.0699999928, 0, 0]
   - Actor: Filed
-    UUID: 8800294969640267456
+    UUID: 8486910628449696272
     Name: Actor
     ParentName: __NO_PARENT_NAME_CE__
     Transform:
-      Position: [4.4662118, 0.351837337, -2.38731956]
-      Rotation: [0, 0, 0]
+      Position: [0, 1.39149594, -0.343419611]
+      Rotation: [2.92000008, 0.449999988, 1.57000005]
       Scale: [1, 1, 1]
-    PointLight:
-      Position: [4.4662118, 0.351837337, -2.38731956]
-      Color: [255, 255, 255, 255]
-      Specular: [1, 1, 1]
-      Quadratic: 0.319999993
-      Linear: 0.699999988
-      Constant: 1
-      Intensity: 5
-      Radius: 99.5800018

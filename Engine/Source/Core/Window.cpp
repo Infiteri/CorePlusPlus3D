@@ -25,11 +25,9 @@ namespace Core
 
         int result = glfwInit();
         CE_ASSERT_IF(result == GLFW_FALSE && "Window::Window: glfwInit didn't return successful.")
-
-        if (!config.decorated)
-        {
-            glfwWindowHint(GLFW_DECORATED, false);
-        }
+    
+        glfwWindowHint(GLFW_DECORATED, config.decorated);
+        glfwWindowHint(GLFW_SAMPLES, config.Samples);
 
         // Create window
         handle = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);

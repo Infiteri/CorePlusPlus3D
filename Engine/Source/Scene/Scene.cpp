@@ -122,8 +122,10 @@ namespace Core
         }
 
         ShaderSystem::Get("EngineResources/Shaders/Object")->Int(environment.Raw()->pointLightCount, "uPointLightCount");
+        ShaderSystem::Get("EngineResources/Shaders/Object")->Int(environment.Raw()->spotLightCount, "uSpotLightCount");
 
         environment.Raw()->pointLightCount = 0;
+        environment.Raw()->spotLightCount = 0;
     }
 
     void Scene::Start()

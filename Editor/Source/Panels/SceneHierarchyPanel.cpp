@@ -194,6 +194,7 @@ namespace Core
     void DrawCameraComponentUI(PerspectiveCameraComponent *c, Actor *a);
     void DrawAABBComponent(AABBComponent *comp, Actor *a);
     void DrawPointLightComponent(PointLightComponent *comp, Actor *a);
+    void DrawSpotLightComponent(SpotLightComponent *comp, Actor *a);
     // ----------------------------------------
 
     void SceneHierarchyPanel::DrawActorComponents(Actor *a)
@@ -245,6 +246,9 @@ namespace Core
         EditorUtils::DrawComponentUI<PointLightComponent>("Point Light", a, [&](PointLightComponent *comp)
                                                           { DrawPointLightComponent(comp, a); });
 
+        EditorUtils::DrawComponentUI<SpotLightComponent>("Spot Light", a, [&](SpotLightComponent *comp)
+                                                         { DrawSpotLightComponent(comp, a); });
+
         for (auto comp : selectionContext->GetComponents())
         {
             if (comp->custom)
@@ -283,6 +287,9 @@ namespace Core
 
             if (ImGui::MenuItem("Point Light"))
                 selectionContext->AddComponent<PointLightComponent>();
+
+            if (ImGui::MenuItem("Spot Light"))
+                selectionContext->AddComponent<SpotLightComponent>();
 
             ImGui::EndPopup();
         }
@@ -630,5 +637,47 @@ namespace Core
             comp->light->SetIntensity(intensity);
         }
     }
-    // ----------------------------------------
+    void DrawSpotLightComponent(SpotLightComponent *comp, Actor *a)
+    {
+        EditorUtils::ImGuiColor4Edit("Color", comp->light->GetColor());
+        EditorUtils::ImGuiVec3Edit("Specular", comp->light->GetSpecular());
+
+        float constant = comp->light->GetConstant();
+        float linear = comp->light->GetLinear();
+        float quadratic = comp->light->GetQuadratic();
+        float intensity = comp->light->GetIntensity();
+        float cut = comp->light->GetCutOff();
+        float cutoFf = comp->light->GetOuterCutOff();
+
+        if (ImGui::DragFloat("Constant", &constant, 0.01f, 0.01f, 100.0f))
+        {
+            comp->light->SetConstant(constant);
+        }
+
+        if (ImGui::DragFloat("Linear", &linear, 0.01f, 0.01f, 100.0f))
+        {
+            comp->light->SetLinear(linear);
+        }
+
+        if (ImGui::DragFloat("Quadratic", &quadratic, 0.01f, 0.01f, 100.0f))
+        {
+            comp->light->SetQuadratic(quadratic);
+        }
+
+        if (ImGui::DragFloat("Intensity", &intensity, 0.01f, 0.01f, 100.0f))
+        {
+            comp->light->SetIntensity(intensity);
+        }
+
+        if (ImGui::DragFloat("Cut", &cut, 0.01f, 0.01f, 100.0f))
+        {
+            comp->light->SetCutOff(cut);
+        }
+
+        if (ImGui::DragFloat("Cut Off", &cutoFf, 0.01f, 0.01f, 100.0f))
+        {
+            comp->light->SetOuterCutOff(cutoFf);
+        }
+        // ----------------------------------------
+    }
 }

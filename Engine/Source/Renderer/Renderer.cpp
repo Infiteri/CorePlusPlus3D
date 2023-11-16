@@ -134,6 +134,7 @@ namespace Core
         CE_PROFILE_FUNCTION();
         state->ScreenFramebuffer->Bind();
 
+        glEnable(GL_MULTISAMPLE);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(state->depthType);
 

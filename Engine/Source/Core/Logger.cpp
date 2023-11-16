@@ -121,6 +121,7 @@ namespace Core
         LogInfo inf;
         inf.Level = level;
         inf.Message = OutMessageWithLevels;
+        inf.Pending = cat->Pending;
         logs.push_back(inf);
     }
 

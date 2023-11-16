@@ -122,8 +122,7 @@ namespace Core
 
     void PerspectiveCameraComponent::Render()
     {
-        Matrix4 m = *owner->GetWorldMatrix();
-        camera->GetTransform()->FromMatrix(&m);
+        camera->GetTransform()->FromMatrix(owner->GetWorldMatrix(), true);
     }
 
     void AABBComponent::Render()
@@ -204,6 +203,9 @@ namespace Core
 
     void PointLightComponent::From(PointLightComponent *other)
     {
+        if (!other)
+            return;
+
         light->GetPosition()->Set(other->light->GetPosition());
         light->GetColor()->Set(other->light->GetColor());
         light->GetSpecular()->Set(other->light->GetSpecular());
@@ -222,6 +224,44 @@ namespace Core
     void PointLightComponent::Render()
     {
         light->GetPosition()->Set(owner->GetWorldMatrix()->data[12], owner->GetWorldMatrix()->data[13], owner->GetWorldMatrix()->data[14]);
+        light->Update();
+    }
+
+    SpotLightComponent::SpotLightComponent()
+    {
+        light = new SpotLight();
+    }
+
+    SpotLightComponent::~SpotLightComponent()
+    {
+        Destroy();
+    }
+
+    void SpotLightComponent::From(SpotLightComponent *other)
+    {
+        if (!other)
+            return;
+
+        light->GetPosition()->Set(other->light->GetPosition());
+        light->GetRotation()->Set(other->light->GetRotation());
+        light->SetCutOff(other->light->GetCutOff());
+        light->SetOuterCutOff(other->light->GetOuterCutOff());
+        light->GetSpecular()->Set(other->light->GetSpecular());
+        light->GetColor()->Set(other->light->GetColor());
+        light->GetSpecular()->Set(other->light->GetSpecular());
+        light->SetConstant(other->light->GetConstant());
+        light->SetLinear(other->light->GetLinear());
+        light->SetQuadratic(other->light->GetQuadratic());
+    }
+
+    void SpotLightComponent::Destroy()
+    {
+        delete light;
+    }
+
+    void SpotLightComponent::Render()
+    {
+        light->GetTransform()->From(owner->GetTransform());
         light->Update();
     }
 }

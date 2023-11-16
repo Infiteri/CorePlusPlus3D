@@ -9,8 +9,9 @@ MinGW64 which provides make and g++.
 
 # Docs
 
-How to Setup: [text](Docs/HowToSetup.md)
-How to use the Engine User Data system: [text](Docs/HowToSetup.md)
+How to Setup: [ReadME](Docs/HowToSetup.md)
+
+How to use the Engine User Data system: [ReadME](Docs/HowToSetup.md)
 
 ## About Me
 

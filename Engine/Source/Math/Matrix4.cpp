@@ -10,7 +10,7 @@ namespace Core
         data[0] = data[5] = data[10] = data[15] = 1.0f;
     }
 
-    Matrix4::~Matrix4()
+        Matrix4::~Matrix4()
     {
     }
 

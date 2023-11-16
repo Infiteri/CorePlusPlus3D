@@ -64,7 +64,7 @@ namespace Core
 
         LoggerInformation information;
         information.PendLevelToOuput = true;
-        information.IgnoredCategories = {CE_CORE_LOGGER_NAME};
+        information.IgnoredCategories = {};
         Logger::Init(information);
 
         // Setup systems
@@ -106,9 +106,6 @@ namespace Core
         GApp->Init();
 
         CE_CORE_DEBUG("Engine::PreInit successful.");
-
-        CE_DEFINE_LOG_CATEGORY("Engine", "Engine");
-        CE_LOG("Engine", Info, "hello");
     }
 
     void Engine::Init()

@@ -11,6 +11,7 @@
 
 namespace Core
 {
+    /// @brief Actor state representation.
     enum class ActorState
     {
         /// @brief Constructor, just created and no methods called.
@@ -181,10 +182,10 @@ namespace Core
             }
         };
 
-        void CalculateMatrices();
-
         // -------------------------------
 
+        void CalculateMatrices();
+        
         inline Transform *GetTransform() { return &transform; };
         inline Matrix4 *GetWorldMatrix() { return &worldMatrix; };
         inline Matrix4 *GetLocalMatrix() { return &localMatrix; };

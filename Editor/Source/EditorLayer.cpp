@@ -13,6 +13,9 @@ namespace Core
 
     void EditorLayer::OnAttach()
     {
+        CE_DEFINE_LOG_CATEGORY("Editor", "ED");
+        CE_LOG_INFO("ED", "Welcome to Core.");
+
         EditorUtils::InitAssets();
 
         // Create editor camera
@@ -614,6 +617,8 @@ namespace Core
     // -- TOP BAR ACTIONS -------------
     void EditorLayer::New()
     {
+        CE_LOG_INFO("ED", "Created a new scene.");
+
         World::StopActive();
         // TODO: Create scene window prompt with basic information.
         World::Create("Untitled Scene");
@@ -696,7 +701,9 @@ namespace Core
         CE_PROFILE_FUNCTION();
 
         state.lastPLightCount = PointLight::GetPointLightGID();
+        state.spotLightCount = SpotLight::GetSpotLightGID();
         PointLight::SetGlobalID0();
+        SpotLight::SetGlobalIDZero();
 
         currentSceneState = SceneStatePlay;
         state.EditorScene = World::CopyActive();
@@ -721,6 +728,10 @@ namespace Core
             PointLight::SetGlobalID0();
             for (int i = 0; i < state.lastPLightCount; i++)
                 PointLight::IncremenetGolbalID();
+
+            SpotLight::SetGlobalIDZero();
+            for (int i = 0; i < state.spotLightCount; i++)
+                SpotLight::IncrementGlobalID();
 
             SetContexts();
         }
@@ -833,7 +844,9 @@ namespace Core
 
     void EditorLayer::RenderSceneViewport()
     {
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
         ImGui::Begin("Viewport");
+        ImGui::PopStyleVar();
 
         // Update renderer viewport
         ImVec2 viewportSize = ImGui::GetContentRegionAvail();

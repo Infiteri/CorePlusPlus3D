@@ -141,11 +141,6 @@ namespace Core
 
         CE_ASSERT_IF(name.empty() && "Name cannot be empty.");
 
-        if (activeScene->GetName().compare(name) == 0)
-        {
-            activeScene = nullptr;
-        }
-
         Scene *scene = scenes[name];
         if (scene)
         {

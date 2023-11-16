@@ -68,6 +68,7 @@ namespace Core
     struct LogInfo
     {
         std::string Message;
+        std::string Pending;
         LoggingLevel Level;
     };
 
@@ -191,5 +192,10 @@ namespace Core
 #endif
 
 #define CE_DEFINE_LOG_CATEGORY(pending, name) Core::Logger::DefineLogCategory(pending, name)
-
 #define CE_LOG(name, level, message, ...) Core::Logger::Log(Core::LoggingLevel::level, name, message, ##__VA_ARGS__)
+#define CE_LOG_INFO(name, message, ...) Core::Logger::Log(Core::LoggingLevel::Info, name, message, ##__VA_ARGS__)
+#define CE_LOG_WARN(name, message, ...) Core::Logger::Log(Core::LoggingLevel::Warn, name, message, ##__VA_ARGS__)
+#define CE_LOG_ERROR(name, message, ...) Core::Logger::Log(Core::LoggingLevel::Error, name, message, ##__VA_ARGS__)
+#define CE_LOG_FATAL(name, message, ...) Core::Logger::Log(Core::LoggingLevel::Fatal, name, message, ##__VA_ARGS__)
+#define CE_LOG_TRACE(name, message, ...) Core::Logger::Log(Core::LoggingLevel::Trace, name, message, ##__VA_ARGS__)
+#define CE_LOG_DEBUG(name, message, ...) Core::Logger::Log(Core::LoggingLevel::Debug, name, message, ##__VA_ARGS__)

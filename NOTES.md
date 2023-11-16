@@ -16,3 +16,7 @@ Okay so started working on a little pong clone, small problem, no collision dete
 ## 24 October 2023
 
 Made bin public yesterday, started to work on actor parenting.
+
+## 14 November 2023
+
+Lol no notes anymore.

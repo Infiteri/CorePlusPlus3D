@@ -18,6 +18,7 @@ namespace Core
         DirectionalLight *directionalLight;
         Sky *sky;
         int pointLightCount;
+        int spotLightCount;
 
         ~SceneEnvironment();
     };

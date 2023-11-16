@@ -64,6 +64,7 @@ namespace Core
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
         ImVec2 lastFrameViewportSize;
         CeU32 lastPLightCount;
+        CeU32 spotLightCount;
 
         ImVec2 viewportLeftTop;
         ImVec2 viewportRightBottom;

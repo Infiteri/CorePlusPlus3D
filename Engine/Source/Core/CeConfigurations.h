@@ -32,6 +32,9 @@ namespace Core
 
         /// @brief Use top bar.
         bool VSync = true;
+
+        /// @brief The amount of samples to use.
+        int Samples = 10;
     };
 
     /// @brief Setup engine configuration.

@@ -23,24 +23,73 @@ namespace Core
         scale.Set(&other->scale);
     }
 
-    void Transform::FromMatrix(Matrix4 *matrix)
+    // TODO: FIX
+    void Transform::FromMatrix(Matrix4 *matrix, bool invert)
     {
-        position = Vector3(matrix->data[12], matrix->data[13], matrix->data[14]);
+        if (invert)
+        {
+            *matrix = Matrix4::Invert(*matrix);
 
-        //? Da fuq
-        // I might get haunted for this by hey, if it works it works
-        *matrix = Matrix4::Invert(*matrix);
+            position = Vector3(matrix->data[12], matrix->data[13], matrix->data[14]);
 
-        // Extract rotation angles (assuming RotationXYZ uses degrees)
-        rotation.x = std::asin(-matrix->data[9]);
-        rotation.y = std::atan2(matrix->data[8], matrix->data[10]);
-        rotation.z = std::atan2(matrix->data[1], matrix->data[5]);
+            // Extract rotation matrix
+            Matrix4 rotationMatrix = *matrix;
+            rotationMatrix.data[12] = rotationMatrix.data[13] = rotationMatrix.data[14] = 0;
+            rotationMatrix.data[15] = 1;
 
-        *matrix = Matrix4::Invert(*matrix);
+            // Extract scaling matrix
+            Matrix4 scaleMatrix = *matrix;
+            scaleMatrix.data[0] /= scale.x;
+            scaleMatrix.data[1] /= scale.x;
+            scaleMatrix.data[2] /= scale.x;
+            scaleMatrix.data[4] /= scale.y;
+            scaleMatrix.data[5] /= scale.y;
+            scaleMatrix.data[6] /= scale.y;
+            scaleMatrix.data[8] /= scale.z;
+            scaleMatrix.data[9] /= scale.z;
+            scaleMatrix.data[10] /= scale.z;
 
-        scale.x = sqrt(matrix->data[0] * matrix->data[0] + matrix->data[1] * matrix->data[1] + matrix->data[2] * matrix->data[2]);
-        scale.y = sqrt(matrix->data[4] * matrix->data[4] + matrix->data[5] * matrix->data[5] + matrix->data[6] * matrix->data[6]);
-        scale.z = sqrt(matrix->data[8] * matrix->data[8] + matrix->data[9] * matrix->data[9] + matrix->data[10] * matrix->data[10]);
+            // Extract rotation angles (assuming RotationXYZ uses degrees)
+            rotation.x = std::asin(-rotationMatrix.data[9]);
+            rotation.y = std::atan2(rotationMatrix.data[8], rotationMatrix.data[10]);
+            rotation.z = std::atan2(rotationMatrix.data[1], rotationMatrix.data[5]);
+
+            *matrix = Matrix4::Invert(*matrix);
+
+            scale.x = scaleMatrix.data[0];
+            scale.y = scaleMatrix.data[5];
+            scale.z = scaleMatrix.data[10];
+        }
+        else
+        {
+            position = Vector3(matrix->data[12], matrix->data[13], matrix->data[14]);
+
+            // Extract rotation matrix
+            Matrix4 rotationMatrix = *matrix;
+            rotationMatrix.data[12] = rotationMatrix.data[13] = rotationMatrix.data[14] = 0;
+            rotationMatrix.data[15] = 1;
+
+            // Extract scaling matrix
+            Matrix4 scaleMatrix = *matrix;
+            scaleMatrix.data[0] /= scale.x;
+            scaleMatrix.data[1] /= scale.x;
+            scaleMatrix.data[2] /= scale.x;
+            scaleMatrix.data[4] /= scale.y;
+            scaleMatrix.data[5] /= scale.y;
+            scaleMatrix.data[6] /= scale.y;
+            scaleMatrix.data[8] /= scale.z;
+            scaleMatrix.data[9] /= scale.z;
+            scaleMatrix.data[10] /= scale.z;
+
+            // Extract rotation angles (assuming RotationXYZ uses degrees)
+            rotation.x = std::asin(-rotationMatrix.data[9]);
+            rotation.y = std::atan2(rotationMatrix.data[8], rotationMatrix.data[10]);
+            rotation.z = std::atan2(rotationMatrix.data[1], rotationMatrix.data[5]);
+
+            scale.x = scaleMatrix.data[0];
+            scale.y = scaleMatrix.data[5];
+            scale.z = scaleMatrix.data[10];
+        }
     }
 
     Matrix4 Transform::GetMatrix()
