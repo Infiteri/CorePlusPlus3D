@@ -31,6 +31,18 @@ namespace Core
 
         void Set(float x, float y, float z);
         void Set(Vector3 *v);
+
+        void operator+=(const Vector3 &o)
+        {
+            x += o.x;
+            y += o.y;
+            z += o.z;
+        };
+
+        Vector3 operator*(const Vector3 &o) const
+        {
+            return {x * o.x, y * o.y, z * o.z};
+        }
     };
 
     class CE_API Vector4

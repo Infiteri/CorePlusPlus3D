@@ -3,12 +3,14 @@
 
 #include "Core/Logger.h"
 #include "Core/Engine.h"
-
 #include "Scene/Actor.h"
 #include "Script/ActorScript.h"
-
 #include "Renderer/Geometry/BoxGeometry.h"
 #include "Renderer/Geometry/PlaneGeometry.h"
+#include "Renderer/Objects/Mesh.h"
+#include "Renderer/Camera/CameraSystem.h"
+#include "Renderer/Light/PointLight.h"
+#include "Renderer/Light/SpotLight.h"
 
 namespace Core
 {
@@ -122,7 +124,10 @@ namespace Core
 
     void PerspectiveCameraComponent::Render()
     {
-        camera->GetTransform()->FromMatrix(owner->GetWorldMatrix(), true);
+        if (owner->GetParent())
+            camera->GetTransform()->FromMatrix(owner->GetWorldMatrix(), true);
+        else
+            camera->GetTransform()->From(owner->GetTransform());
     }
 
     void AABBComponent::Render()

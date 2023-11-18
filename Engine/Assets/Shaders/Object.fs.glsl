@@ -165,9 +165,10 @@ void main() {
     } else if(uRenderMode == 1) {
         outColor = uColor;
     } else if(uRenderMode == 2) {
-        outColor = texture2D(uColorTexture, vUV);
+        vec3 positiveNormal = max(normalize(GetNormal()), 0.0).rgb;
+        outColor = vec4(positiveNormal * texture2D(uNormalTexture, vUV).rgb, 1.0);
     } else if(uRenderMode == 3) {
-        outColor = vec4(GetNormal(), 1.0);
+        outColor = vec4(normalize(GetNormal()).rgb * texture2D(uNormalTexture, vUV).rgb, 1.0);
     } else if(uRenderMode == 4) {
         vec3 directionalLightResult = CalcDirLight(directionalLight, normal, viewDirection);
         vec3 pointLightResult = vec3(0);

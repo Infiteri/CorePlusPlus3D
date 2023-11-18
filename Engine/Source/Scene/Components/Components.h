@@ -1,16 +1,17 @@
 #pragma once
 
 #include "Base.h"
-
-#include "Renderer/Objects/Mesh.h"
-#include "Renderer/Camera/CameraSystem.h"
-#include "Renderer/Light/PointLight.h"
-#include "Renderer/Light/SpotLight.h"
+#include "Math/Vectors.h"
 
 namespace Core
 {
     class Actor;
     class ActorScript;
+    class Mesh;
+    class PerspectiveCamera;
+    class PointLight;
+    class SpotLight;
+    class Geometry;
 
     class CE_API Component
     {

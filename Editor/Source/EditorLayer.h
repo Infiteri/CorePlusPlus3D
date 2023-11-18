@@ -2,6 +2,7 @@
 
 #include "Core.h"
 
+
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SceneSettingsPanel.h"
 #include "Panels/ContentBrowserPanel.h"

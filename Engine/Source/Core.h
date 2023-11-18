@@ -33,6 +33,9 @@
 #include "Renderer/Geometry/PlaneGeometry.h"
 #include "Renderer/Camera/CameraSystem.h"
 #include "Renderer/Camera/PerspectiveMovement.h"
+#include "Renderer/Light/DirectionalLight.h"
+#include "Renderer/Light/PointLight.h"
+#include "Renderer/Light/SpotLight.h"
 
 #include "Scene/Scene.h"
 #include "Scene/Actor.h"

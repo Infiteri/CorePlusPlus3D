@@ -251,7 +251,14 @@ namespace Core
     void Actor::SetUUID(CeU64 uid)
     {
         uuid = uid;
-    };
+    }
+
+    void Actor::MoveBy(const Vector3 &vector)
+    {
+        Vector3 forward = Matrix4::Forward(Matrix4::RotationZYX(transform.rotation));
+
+        transform.position += forward * vector;
+    }
 
     void Actor::CalculateMatrices()
     {

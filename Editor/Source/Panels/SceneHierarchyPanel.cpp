@@ -217,7 +217,29 @@ namespace Core
         if (transformOpen)
         {
             EditorUtils::ImGuiVector3Edit("Position", &a->GetTransform()->position, 0.0f);
-            EditorUtils::ImGuiVector3Edit("Rotation", &a->GetTransform()->rotation, 0.0f);
+
+            // Rotation
+            {
+                Vector3 rotationNice = a->GetTransform()->rotation;
+                rotationNice.x = Math::RadToDeg(rotationNice.x);
+                rotationNice.y = Math::RadToDeg(rotationNice.y);
+                rotationNice.z = Math::RadToDeg(rotationNice.z);
+                EditorUtils::ImGuiVector3Edit("Rotation", &rotationNice, 0.0f);
+
+                if (rotationNice.x >= 360 || rotationNice.x <= -360)
+                    rotationNice.x -= 360;
+                if (rotationNice.y >= 360 || rotationNice.y <= -360)
+                    rotationNice.y -= 360;
+                if (rotationNice.z >= 360 || rotationNice.z <= -360)
+                    rotationNice.z -= 360;
+
+                rotationNice.x = Math::DegToRad(rotationNice.x);
+                rotationNice.y = Math::DegToRad(rotationNice.y);
+                rotationNice.z = Math::DegToRad(rotationNice.z);
+
+                a->GetTransform()->rotation.Set(&rotationNice);
+            }
+
             EditorUtils::ImGuiVector3Edit("Scale", &a->GetTransform()->scale, 1.0f);
 
             if (ImGui::TreeNodeEx("Matrix Inner Data"))

@@ -78,6 +78,9 @@ namespace Core
         UUID *GetUUID() { return &uuid; };
         void SetUUID(CeU64 uid);
 
+        /// @brief Respects the rotation.
+        void MoveBy(const Vector3 &vector);
+
         // -- ACTOR RELATIONS ---------------
 
         /// @brief If nullptr than there is no parent.
@@ -185,7 +188,7 @@ namespace Core
         // -------------------------------
 
         void CalculateMatrices();
-        
+
         inline Transform *GetTransform() { return &transform; };
         inline Matrix4 *GetWorldMatrix() { return &worldMatrix; };
         inline Matrix4 *GetLocalMatrix() { return &localMatrix; };
