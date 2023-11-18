@@ -1,7 +1,0 @@
-Project:
-  Name: Test
-  StartScene: Assets/Scene/Parenting.ce_scene
-  AssetPath: Assets
-  ScriptPath: GameLibrary.dll
-  ScriptFilesPath: Assets/Scripts
-  BuildScriptsPath: Assets/Scripts/Build.bat

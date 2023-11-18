@@ -212,6 +212,7 @@ namespace Core
         auto camera = a->GetComponent<PerspectiveCameraComponent>();
         auto aabb = a->GetComponent<AABBComponent>();
         auto pointLight = a->GetComponent<PointLightComponent>();
+        auto spotLight = a->GetComponent<SpotLightComponent>();
 
         if (mesh)
         {
@@ -295,6 +296,21 @@ namespace Core
             out << YAML::Key << "Constant" << YAML::Value << pointLight->light->GetConstant();
             out << YAML::Key << "Intensity" << YAML::Value << pointLight->light->GetIntensity();
             out << YAML::Key << "Radius" << YAML::Value << pointLight->light->GetRadius();
+            out << YAML::EndMap;
+        }
+
+        if (spotLight)
+        {
+            out << YAML::Key << "SpotLight";
+            out << YAML::BeginMap;
+            out << YAML::Key << "Color" << YAML::Value << spotLight->light->GetColor();
+            out << YAML::Key << "Specular" << YAML::Value << spotLight->light->GetSpecular();
+            out << YAML::Key << "Quadratic" << YAML::Value << spotLight->light->GetQuadratic();
+            out << YAML::Key << "Linear" << YAML::Value << spotLight->light->GetLinear();
+            out << YAML::Key << "Constant" << YAML::Value << spotLight->light->GetConstant();
+            out << YAML::Key << "Intensity" << YAML::Value << spotLight->light->GetIntensity();
+            out << YAML::Key << "CutOff" << YAML::Value << spotLight->light->GetCutOff();
+            out << YAML::Key << "OuterCutOff" << YAML::Value << spotLight->light->GetOuterCutOff();
             out << YAML::EndMap;
         }
 
@@ -542,6 +558,7 @@ namespace Core
                 auto camera = actor["PerspectiveCameraComponent"];
                 auto aabb = actor["AABBComponent"];
                 auto pLight = actor["PointLight"];
+                auto sLight = actor["SpotLight"];
 
                 Actor *a = new Actor();
                 a->SetUUID(actor["UUID"].as<CeU64>());
@@ -620,11 +637,25 @@ namespace Core
                     YAMLToVcc3(pLight["Position"], &c->light->GetTransform()->position);
                     YAMLToColor(pLight["Color"], c->light->GetColor());
                     YAMLToVcc3(pLight["Specular"], c->light->GetSpecular());
+
                     c->light->SetConstant(pLight["Constant"].as<float>());
                     c->light->SetLinear(pLight["Linear"].as<float>());
                     c->light->SetQuadratic(pLight["Quadratic"].as<float>());
                     c->light->SetIntensity(pLight["Intensity"].as<float>());
                     c->light->SetRadius(pLight["Radius"].as<float>());
+                }
+
+                if (sLight)
+                {
+                    auto c = a->AddComponent<SpotLightComponent>();
+                    YAMLToColor(sLight["Color"], c->light->GetColor());
+                    YAMLToVcc3(sLight["Specular"], c->light->GetSpecular());
+                    c->light->SetConstant(sLight["Constant"].as<float>());
+                    c->light->SetLinear(sLight["Linear"].as<float>());
+                    c->light->SetQuadratic(sLight["Quadratic"].as<float>());
+                    c->light->SetIntensity(sLight["Intensity"].as<float>());
+                    c->light->SetCutOff(sLight["CutOff"].as<float>());
+                    c->light->SetOuterCutOff(sLight["OuterCutOff"].as<float>());
                 }
 
                 // Deserialize the actor parent
