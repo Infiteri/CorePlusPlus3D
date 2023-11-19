@@ -271,10 +271,36 @@ namespace Core
         EditorUtils::DrawComponentUI<SpotLightComponent>("Spot Light", a, [&](SpotLightComponent *comp)
                                                          { DrawSpotLightComponent(comp, a); });
 
+        int index = 0;
         for (auto comp : selectionContext->GetComponents())
         {
-            if (comp->custom)
-                comp->OnImGuiRender();
+            if (comp->customComponentInformation.IsCustom)
+            {
+
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, {4, 4});
+                bool open = ImGui::TreeNodeEx(comp->customComponentInformation.UniqueLabel, ImGuiTreeNodeFlags_AllowItemOverlap);
+                ImGui::PopStyleVar();
+
+                bool remove = false;
+                bool removeComp = false;
+
+                if (open)
+                {
+                    comp->OnImGuiRender();
+
+                    if (ImGui::Button("Remove"))
+                    {
+                        removeComp = true;
+                    };
+
+                    ImGui::TreePop();
+                }
+
+                if (remove)
+                    a->RemoveComponentAtIndex(index);
+            }
+
+            index++;
         }
 
         // Delete Entity

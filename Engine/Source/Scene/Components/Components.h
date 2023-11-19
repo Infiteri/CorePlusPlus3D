@@ -13,12 +13,18 @@ namespace Core
     class SpotLight;
     class Geometry;
 
+    struct CustomComponentInformation
+    {
+        bool IsCustom = false;
+        const char *UniqueLabel;
+    };
+
     class CE_API Component
     {
     public:
         Actor *owner;
 
-        bool custom = false;
+        CustomComponentInformation customComponentInformation;
 
         Component(){};
         ~Component(){};

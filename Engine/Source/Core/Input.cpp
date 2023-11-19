@@ -133,6 +133,11 @@ namespace Core
         return mouse_state.position;
     }
 
+    Vector2 Input::GetMouseDelta()
+    {
+        return mouse_state.delta;
+    }
+
     void Input::SetMousePosition(const Vector2 &pos)
     {
         glfwSetCursorPos(Engine::GetWindowInstance()->GetHandle(), pos.x, pos.y);

@@ -16,6 +16,19 @@ namespace Core
 
         void Set(float x, float y);
         void Set(Vector2 *v);
+
+        void operator+=(const Vector2 &o)
+        {
+            x += o.x;
+            y += o.y;
+        };
+
+        Vector2 operator*(const Vector2 &o) const
+        {
+            return {x * o.x, y * o.y};
+        }
+
+        bool NotZero();
     };
 
     class CE_API Vector3
@@ -43,6 +56,8 @@ namespace Core
         {
             return {x * o.x, y * o.y, z * o.z};
         }
+
+        bool NotZero();
     };
 
     class CE_API Vector4
@@ -59,5 +74,20 @@ namespace Core
 
         void Set(float x, float y, float z, float w);
         void Set(Vector4 *v);
+
+        void operator+=(const Vector4 &o)
+        {
+            x += o.x;
+            y += o.y;
+            z += o.z;
+            w += o.w;
+        };
+
+        Vector4 operator*(const Vector4 &o) const
+        {
+            return {x * o.x, y * o.y, z * o.z, w * o.w};
+        }
+
+        bool NotZero();
     };
 }

@@ -208,9 +208,20 @@ namespace Core
         /// @return Integer.
         static int GetMouseMovementDirectionY();
 
+        /// @brief Sets the mouse mode to the specified mode.
+        /// @param mode The mode of the mouse.
         static void SetMouseMode(MouseMode mode);
 
+        /// @brief Returns a Vector2 of the mouse position.
+        /// @return Vector2
         static Vector2 GetMousePosition();
+
+        /// @brief Returns a Vector2 of the mouse delta.
+        /// @return Vector2
+        static Vector2 GetMouseDelta();
+
+        /// @brief Sets the mouse position.
+        /// @param pos The position of the mouse.
         static void SetMousePosition(const Vector2 &pos);
     };
 

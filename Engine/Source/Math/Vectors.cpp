@@ -27,6 +27,11 @@ namespace Core
         Set(v->x, v->y);
     }
 
+    bool Vector2::NotZero()
+    {
+        return (x != 0.0f || y != 0.0f);
+    }
+
     Vector3::Vector3()
     {
         Set(0, 0, 0);
@@ -51,6 +56,11 @@ namespace Core
     void Vector3::Set(Vector3 *v)
     {
         Set(v->x, v->y, v->z);
+    }
+
+    bool Vector3::NotZero()
+    {
+        return (x != 0.0f || y != 0.0f || z != 0.0f);
     }
 
     Vector4::Vector4()
@@ -78,5 +88,10 @@ namespace Core
     void Vector4::Set(Vector4 *v)
     {
         Set(v->x, v->y, v->z, v->w);
+    }
+
+    bool Vector4::NotZero()
+    {
+        return (x != 0.0f || y != 0.0f || z != 0.0f || w != 0.0f);
     }
 }

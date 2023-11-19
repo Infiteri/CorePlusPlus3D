@@ -24,7 +24,7 @@ namespace Core
         void RenderActor(Actor *a, Actor *parent, bool parentNodeOpen, CeU32 deep);
         void DrawActorComponents(Actor *a);
 
-        Actor *GetChildInHierarchy(Actor *parent, UUID* uid);
-        void RmChildInHierarchy(Actor *parent, UUID* uid);
+        Actor *GetChildInHierarchy(Actor *parent, UUID *uid);
+        void RmChildInHierarchy(Actor *parent, UUID *uid);
     };
 }

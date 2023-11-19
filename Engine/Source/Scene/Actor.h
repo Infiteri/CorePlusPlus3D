@@ -185,6 +185,8 @@ namespace Core
             }
         };
 
+        void RemoveComponentAtIndex(int index);
+
         // -------------------------------
 
         void CalculateMatrices();

@@ -32,7 +32,6 @@ namespace Core
 
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, {4, 4});
                 bool open = ImGui::TreeNodeEx((void *)typeid(T).hash_code(), flags, name.c_str());
-                bool remove = false;
                 bool removeComp = false;
 
                 ImGui::PopStyleVar();

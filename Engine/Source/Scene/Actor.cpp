@@ -255,9 +255,22 @@ namespace Core
 
     void Actor::MoveBy(const Vector3 &vector)
     {
-        Vector3 forward = Matrix4::Forward(Matrix4::RotationZYX(transform.rotation));
+        Vector3 forward = Matrix4::Forward(worldMatrix);
 
         transform.position += forward * vector;
+    }
+
+    void Actor::RemoveComponentAtIndex(int index)
+    {
+        if (components.size() > index)
+        {
+            CE_FATAL("Actor::RemoveComponentAtIndex: index to big.");
+            return;
+        }
+
+        components[index]->Destroy();
+        delete components[index];
+        components.erase(components.begin() + index);
     }
 
     void Actor::CalculateMatrices()

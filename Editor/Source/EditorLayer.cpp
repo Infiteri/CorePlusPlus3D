@@ -741,6 +741,9 @@ namespace Core
         SwapActiveCameraTo(CameraEditor);
 
         World::InitActive();
+
+        //? GamePlay might toggle it to be locked for FPS games.
+        Input::SetMouseMode(MouseMode::Visible);
     }
 
     void EditorLayer::SwapActiveCameraTo(ActiveCameraType type)
