@@ -194,35 +194,7 @@ namespace Core
                 vec->Set(edit[0], edit[1], edit[2], edit[3]);
         }
 
-        std::string ShaderDataTypeToString(SkyShaderDataType d)
-        {
-            switch (d)
-            {
-                CE_SWITCH_SHADER_UITL(Vec2);
-                CE_SWITCH_SHADER_UITL(Vec3);
-                CE_SWITCH_SHADER_UITL(Vec4);
-                CE_SWITCH_SHADER_UITL(Color);
-
-            case SkyShaderDataType::None:
-            default:
-                return "None";
-                break;
-            }
-        }
-
-        SkyShaderDataType StringToShaderDatatType(const std::string &val)
-        {
-            if (val == "None")
-                return SkyShaderDataType::None;
-
-            CE_SWITCH_SHADER_UITL_STRING(val, Vec2);
-            CE_SWITCH_SHADER_UITL_STRING(val, Vec3);
-            CE_SWITCH_SHADER_UITL_STRING(val, Vec4);
-            CE_SWITCH_SHADER_UITL_STRING(val, Color);
-
-            return SkyShaderDataType::None;
-        }
-
+    
         void DrawMeshTextureUI(TexType type, Core::Material *material)
         {
 

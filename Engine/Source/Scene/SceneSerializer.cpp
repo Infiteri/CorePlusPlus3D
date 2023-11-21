@@ -71,52 +71,6 @@ namespace Core
         }
     }
 
-    std::string SkyShaderDataTypeToString(SkyShaderDataType type)
-    {
-        switch (type)
-        {
-        case SkyShaderDataType::Vec2:
-            return "Vec2";
-            break;
-
-        case SkyShaderDataType::Vec3:
-            return "Vec3";
-            break;
-
-        case SkyShaderDataType::Vec4:
-            return "Vec4";
-            break;
-
-        case SkyShaderDataType::Color:
-            return "Color";
-            break;
-
-        case SkyShaderDataType::None:
-        default:
-            return "None";
-            break;
-        }
-
-        return "None";
-    }
-
-    SkyShaderDataType StringToSkyShaderDataType(const std::string &val)
-    {
-        if (val == "Vec2")
-            return SkyShaderDataType::Vec2;
-
-        if (val == "Vec3")
-            return SkyShaderDataType::Vec3;
-
-        if (val == "Vec4")
-            return SkyShaderDataType::Vec4;
-
-        if (val == "Color")
-            return SkyShaderDataType::Color;
-
-        return SkyShaderDataType::None;
-    }
-
     SkyMode StringToSkyMode(const std::string &value)
     {
         if (value.compare("CubeMap") == 0)
@@ -375,32 +329,32 @@ namespace Core
             {
                 out << YAML::BeginMap;
                 out << YAML::Key << "Name" << YAML::Value << d->Name;
-                out << YAML::Key << "Type" << YAML::Value << SkyShaderDataTypeToString(d->type);
+                out << YAML::Key << "Type" << YAML::Value << d->TypeToString();
 
-                switch (d->type)
+                switch (d->Type)
                 {
-                case SkyShaderDataType::Vec2:
+                case Data::DataVec2:
                 {
                     Vector2 *v = (Vector2 *)d->Data;
                     out << YAML::Key << "Value" << v;
                     break;
                 }
 
-                case SkyShaderDataType::Vec3:
+                case Data::DataVec3:
                 {
                     Vector3 *v = (Vector3 *)d->Data;
                     out << YAML::Key << "Value" << v;
                     break;
                 }
 
-                case SkyShaderDataType::Vec4:
+                case Data::DataVec4:
                 {
                     Vector4 *v = (Vector4 *)d->Data;
                     out << YAML::Key << "Value" << v;
                     break;
                 }
 
-                case SkyShaderDataType::Color:
+                case Data::DataColor:
                 {
                     Color *v = (Color *)d->Data;
                     out << YAML::Key << "Value" << v;
@@ -488,11 +442,11 @@ namespace Core
             for (auto skyShaderData : data["Sky"]["SkyShaderData"])
             {
                 std::string name = skyShaderData["Name"].as<std::string>();
-                SkyShaderDataType type = StringToSkyShaderDataType(skyShaderData["Type"].as<std::string>());
+                Data::DataType type = Data::StringToDataType(skyShaderData["Type"].as<std::string>());
 
                 switch (type)
                 {
-                case SkyShaderDataType::Vec2:
+                case Data::DataVec2:
                 {
                     Vector2 *data = new Vector2(skyShaderData["Value"][0].as<float>(), skyShaderData["Value"][1].as<float>());
                     env->sky->AddShaderData(sizeof(data), data, type, name);
@@ -500,7 +454,7 @@ namespace Core
                 }
                 break;
 
-                case SkyShaderDataType::Vec3:
+                case Data::DataVec3:
                 {
                     Vector3 *data = new Vector3(skyShaderData["Value"][0].as<float>(), skyShaderData["Value"][1].as<float>(), skyShaderData["Value"][2].as<float>());
                     env->sky->AddShaderData(sizeof(data), data, type, name);
@@ -508,7 +462,7 @@ namespace Core
                 }
                 break;
 
-                case SkyShaderDataType::Vec4:
+                case Data::DataVec4:
                 {
                     Vector4 *data = new Vector4(skyShaderData["Value"][0].as<float>(), skyShaderData["Value"][1].as<float>(), skyShaderData["Value"][2].as<float>(), skyShaderData["Value"][3].as<float>());
                     env->sky->AddShaderData(sizeof(data), data, type, name);
@@ -516,7 +470,7 @@ namespace Core
                 }
                 break;
 
-                case SkyShaderDataType::Color:
+                case Data::DataColor:
                 {
                     Color *data = new Color(skyShaderData["Value"][0].as<float>(), skyShaderData["Value"][1].as<float>(), skyShaderData["Value"][2].as<float>(), skyShaderData["Value"][3].as<float>());
                     env->sky->AddShaderData(sizeof(data), data, type, name);
@@ -524,7 +478,7 @@ namespace Core
                 }
                 break;
 
-                case SkyShaderDataType::None:
+                case Data::DataNone:
                 default:
                     break;
                 }

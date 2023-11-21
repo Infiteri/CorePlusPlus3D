@@ -67,84 +67,6 @@ namespace Core
         1.0f, -1.0f, -1.0f,
         -1.0f, -1.0f, -1.0f};
 
-    void SkyShaderData::ClearDataBasedOnCurrentType()
-    {
-        if (!shouldClear)
-        {
-            CE_CORE_WARN("SkyShaderData::ClearDataBasedOnCurrentType: Should not be called.");
-            return;
-        }
-
-        shouldClear = false;
-#if 1
-        switch (type)
-        {
-        case SkyShaderDataType::Vec2:
-        {
-            Vector2 *d = (Vector2 *)Data;
-            delete d;
-        }
-        break;
-
-        case SkyShaderDataType::Vec3:
-        {
-            Vector3 *d = (Vector3 *)Data;
-            delete d;
-        }
-        break;
-
-        case SkyShaderDataType::Vec4:
-        {
-            Vector4 *d = (Vector4 *)Data;
-            delete d;
-        }
-        break;
-
-        case SkyShaderDataType::Color:
-        {
-            Color *d = (Color *)Data;
-            delete d;
-        }
-        break;
-
-        case SkyShaderDataType::None:
-        default:
-            shouldClear = true;
-            break;
-        }
-#else
-        CeMemory::TracePrintSize("Data: ", sizeof(Data));
-        CeMemory::Free(Data);
-#endif
-    }
-
-    void SkyShaderData::SetupDefaultValuesBaseOnCurrentType()
-    {
-        shouldClear = true;
-        switch (type)
-        {
-        case SkyShaderDataType::Vec2:
-            Data = new Vector2(0, 0);
-            break;
-
-        case SkyShaderDataType::Vec3:
-            Data = new Vector3(0, 0, 0);
-            break;
-
-        case SkyShaderDataType::Vec4:
-            Data = new Vector4(0, 0, 0, 0);
-            break;
-
-        case SkyShaderDataType::Color:
-            Data = new Color(255, 255, 255, 255);
-            break;
-
-        case SkyShaderDataType::None:
-        default:
-            break;
-        }
-    }
-
     Sky::Sky()
     {
         color = new Color(0, 0, 0, 255);
@@ -229,32 +151,32 @@ namespace Core
             // Wip Shader data
             for (auto data : shaderData)
             {
-                switch (data->type)
+                switch (data->Type)
                 {
 
-                case SkyShaderDataType::Vec2:
+                case Data::DataVec2:
                 {
                     shd->Vec2((Vector2 *)data->Data, data->Name.c_str());
                 }
 
-                case SkyShaderDataType::Vec3:
+                case Data::DataVec3:
                 {
                     shd->Vec3((Vector3 *)data->Data, data->Name.c_str());
                 }
                 break;
-                case SkyShaderDataType::Vec4:
+                case Data::DataVec4:
                 {
                     shd->Vec4((Vector4 *)data->Data, data->Name.c_str());
                 }
                 break;
-                case SkyShaderDataType::Color:
+                case Data::DataColor:
                 {
                     Color *c = (Color *)data->Data;
                     shd->Vec4(c->r / 255, c->g / 255, c->b / 255, c->a / 255, data->Name.c_str());
                 }
                 break;
 
-                case SkyShaderDataType::None:
+                case Data::DataNone:
                 default:
                     CE_CORE_WARN("Sky::Render: Unknown ShaderData.Type.");
                     break;
@@ -312,9 +234,9 @@ namespace Core
         shaderName = name;
     }
 
-    void Sky::AddShaderData(CeU32 dataSize, void *Data, SkyShaderDataType dataType, const std::string &name)
+    void Sky::AddShaderData(CeU32 dataSize, void *Data, Data::DataType dataType, const std::string &name)
     {
-        shaderData.push_back(new SkyShaderData(dataSize, Data, dataType, name));
+        shaderData.push_back(new Data::Set(dataSize, Data, dataType, name));
     }
     void Sky::RemoveSkyShaderDataByName(const std::string &name)
     {
@@ -348,38 +270,38 @@ namespace Core
         //? Copy over the shader data
         for (auto o : other->GetSkyShaderData())
         {
-            switch (o->type)
+            switch (o->Type)
 
             {
-            case SkyShaderDataType::Vec2:
+            case Data::DataVec2:
             {
                 Vector2 *other = (Vector2 *)o->Data;
-                AddShaderData(sizeof(Vector2), new Vector2(other->x, other->y), SkyShaderDataType::Vec2, o->Name.c_str());
+                AddShaderData(sizeof(Vector2), new Vector2(other->x, other->y), Data::DataVec2, o->Name.c_str());
             }
             break;
 
-            case SkyShaderDataType::Vec3:
+            case Data::DataVec3:
             {
                 Vector3 *other = (Vector3 *)o->Data;
-                AddShaderData(sizeof(Vector3), new Vector3(other->x, other->y, other->z), SkyShaderDataType::Vec3, o->Name.c_str());
+                AddShaderData(sizeof(Vector3), new Vector3(other->x, other->y, other->z), Data::DataVec3, o->Name.c_str());
             }
             break;
 
-            case SkyShaderDataType::Vec4:
+            case Data::DataVec4:
             {
                 Vector4 *other = (Vector4 *)o->Data;
-                AddShaderData(sizeof(Vector4), new Vector4(other->x, other->y, other->z, other->w), SkyShaderDataType::Vec4, o->Name.c_str());
+                AddShaderData(sizeof(Vector4), new Vector4(other->x, other->y, other->z, other->w), Data::DataVec4, o->Name.c_str());
             }
             break;
 
-            case SkyShaderDataType::Color:
+            case Data::DataColor:
             {
                 Color *other = (Color *)o->Data;
-                AddShaderData(sizeof(Color), new Color(other->r, other->g, other->b, other->a), SkyShaderDataType::Color, o->Name.c_str());
+                AddShaderData(sizeof(Color), new Color(other->r, other->g, other->b, other->a), Data::DataColor, o->Name.c_str());
             }
             break;
 
-            case SkyShaderDataType::None:
+            case Data::DataNone:
             default:
                 break;
             }

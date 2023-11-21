@@ -3,6 +3,7 @@
 #include "Core/Application.h"
 #include "Core/Input.h"
 #include "Core/Logger.h"
+#include "Core/CeData.h"
 #include "Core/Timer.h"
 #include "Core/Instrumentation.h"
 #include "Core/CeAssert.h"

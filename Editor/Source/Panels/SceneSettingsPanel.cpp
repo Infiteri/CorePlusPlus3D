@@ -186,7 +186,7 @@ namespace Core
                             // -- DATA TYPE SELECTION --
                             const int maxSelections = 5;
                             const char *selections[maxSelections] = {"None", "Vec2", "Vec3", "Vec4", "Color"};
-                            const char *current = selections[(int)data->type];
+                            const char *current = selections[(int)data->Type];
 
                             if (ImGui::BeginCombo("Data Type", current))
                             {
@@ -198,7 +198,7 @@ namespace Core
                                     {
                                         current = selections[i];
                                         data->ClearDataBasedOnCurrentType();
-                                        data->type = (SkyShaderDataType)i;
+                                        data->Type = (Data::DataType)i;
                                         data->SetupDefaultValuesBaseOnCurrentType();
                                     }
 
@@ -211,25 +211,25 @@ namespace Core
                             // -------------------------
 
                             // -- EDIT VALUES ----------
-                            switch (data->type)
+                            switch (data->Type)
                             {
-                            case SkyShaderDataType::Vec2:
+                            case Data::DataVec2:
                                 EditorUtils::ImGuiVec2Edit("Value", (Vector2 *)data->Data);
                                 break;
 
-                            case SkyShaderDataType::Vec3:
+                            case Data::DataVec3:
                                 EditorUtils::ImGuiVec3Edit("Value", (Vector3 *)data->Data);
                                 break;
 
-                            case SkyShaderDataType::Vec4:
+                            case Data::DataVec4:
                                 EditorUtils::ImGuiVec4Edit("Value", (Vector4 *)data->Data);
                                 break;
 
-                            case SkyShaderDataType::Color:
+                            case Data::DataColor:
                                 EditorUtils::ImGuiColor4Edit("Value", (Color *)data->Data);
                                 break;
 
-                            case SkyShaderDataType::None:
+                            case Data::DataNone:
                             default:
                                 break;
                             }
@@ -249,7 +249,7 @@ namespace Core
 
                     if (ImGui::Button("Add"))
                     {
-                        sky->AddShaderData(sizeof(Vector2), new Vector2(), SkyShaderDataType::Vec2, "Value");
+                        sky->AddShaderData(sizeof(Vector2), new Vector2(), Data::DataVec2, "Value");
                     }
                 }
 

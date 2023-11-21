@@ -60,9 +60,6 @@ namespace Core
         void ImGuiVec3Edit(const char *label, Vector3 *vec);
         void ImGuiVec4Edit(const char *label, Vector4 *vec);
 
-        std::string ShaderDataTypeToString(SkyShaderDataType d);
-        SkyShaderDataType StringToShaderDatatType(const std::string &val);
-
         void DrawMeshTextureUI(TexType type, Core::Material *material);
         void RenderMatrix4GuiText(float *data);
     }

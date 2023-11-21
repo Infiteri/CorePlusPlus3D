@@ -2,6 +2,7 @@
 
 #include "Base.h"
 #include "Core/Memory/CeMemory.h"
+#include "Core/CeData.h"
 #include "Math/Vectors.h"
 #include "Renderer/Color.h"
 #include "Renderer/Buffer/VertexArray.h"
@@ -23,78 +24,7 @@ namespace Core
         Shader,
     };
 
-    enum class SkyShaderDataType
-    {
-        None = 0,
-        Vec2,
-        Vec3,
-        Vec4,
-        Color,
-        Texture
-    };
-
-    struct SkyShaderData
-    {
-        std::string Name;
-        SkyShaderDataType type;
-        void *Data;
-        bool shouldClear = false;
-
-        SkyShaderData(CeU32 dataSize, void *_Data, SkyShaderDataType dataType, const std::string &_name)
-        {
-            shouldClear = true;
-            type = dataType;
-            Name = _name;
-
-            switch (type)
-            {
-            case SkyShaderDataType::Vec2:
-            {
-                Vector2 *other = static_cast<Vector2 *>(_Data);
-                Data = new Vector2(other->x, other->y);
-                break;
-            }
-
-            case SkyShaderDataType::Vec3:
-            {
-                Vector3 *other = static_cast<Vector3 *>(_Data);
-                Data = new Vector3(other->x, other->y, other->z);
-                break;
-            }
-
-            case SkyShaderDataType::Vec4:
-            {
-                Vector4 *other = static_cast<Vector4 *>(_Data);
-                Data = new Vector4(other->x, other->y, other->z, other->w);
-                break;
-            }
-
-            case SkyShaderDataType::Color:
-            {
-                Color *other = static_cast<Color *>(_Data);
-                Data = new Color(other->r, other->g, other->b, other->a);
-                break;
-            }
-
-            case SkyShaderDataType::Texture:
-                {
-                break;
-            }
-
-            case SkyShaderDataType::None:
-            default:
-                // Optionally handle or log an error for an unsupported type.
-                break;
-            }
-        }
-
-        CE_API void ClearDataBasedOnCurrentType();
-
-        /// @brief ClearDataBasedOnCurrentType IS NOT CALLED! CALL AT YOUR OWN
-        CE_API void SetupDefaultValuesBaseOnCurrentType();
-    };
-
-    class CE_API Sky
+        class CE_API Sky
     {
     private:
         Color *color = nullptr;
@@ -103,7 +33,7 @@ namespace Core
         std::string cubeTextureConfigPath = "";
 
         std::string shaderName = "";
-        std::vector<SkyShaderData *> shaderData; // NOTE: BRO THIS IS CORRECT DONT WRITE OTHERWISE, FIX THE CODE
+        std::vector<Data::Set *> shaderData; // NOTE: BRO THIS IS CORRECT DONT WRITE OTHERWISE, FIX THE CODE
 
         SkyMode mode;
 
@@ -129,9 +59,9 @@ namespace Core
 
         inline std::string GetShaderName() { return shaderName; };
         void SetShaderName(const std::string &name);
-        void AddShaderData(CeU32 dataSize, void *Data, SkyShaderDataType dataType, const std::string &name);
+        void AddShaderData(CeU32 dataSize, void *Data, Data::DataType dataType, const std::string &name);
 
-        inline std::vector<SkyShaderData *> GetSkyShaderData() { return shaderData; };
+        inline std::vector<Data::Set *> GetSkyShaderData() { return shaderData; };
         void RemoveSkyShaderDataByName(const std::string &name);
 
         void From(Sky *other);

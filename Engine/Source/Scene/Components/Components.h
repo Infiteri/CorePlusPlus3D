@@ -132,4 +132,5 @@ namespace Core
         void Destroy();
         void Render();
     };
+
 }
