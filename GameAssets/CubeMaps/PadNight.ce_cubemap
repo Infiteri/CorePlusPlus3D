@@ -1,6 +1,6 @@
-left = CeImage\PondNight\negx.ce_image
-right = CeImage\PondNight\posx.ce_image
-top = CeImage\PondNight\posy.ce_image
-bottom = CeImage\PondNight\negy.ce_image
-front = CeImage\PondNight\posz.ce_image
-back = CeImage\PondNight\negz.ce_image
+left = CeImage\PongNight\negx.ce_image
+right = CeImage\PongNight\posx.ce_image
+top = CeImage\PongNight\posy.ce_image
+bottom = CeImage\PongNight\negy.ce_image
+front = CeImage\PongNight\posz.ce_image
+back = CeImage\PongNight\negz.ce_image
