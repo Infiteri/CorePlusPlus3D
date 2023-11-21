@@ -2,13 +2,13 @@
 
 #include "Core.h"
 
-
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SceneSettingsPanel.h"
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/LoggerPanel.h"
 
 #include <vector>
+#include <unordered_map>
 #include <ImGuizmo.h>
 
 namespace Core
@@ -87,7 +87,22 @@ namespace Core
         EditorLayer(){};
         ~EditorLayer(){};
 
+        enum ResourcePath
+        {
+            None = 0,
+            PathPlayIcon,
+            PathStopIcon,
+            PathFolderIcon,
+            PathFileIcon,
+        };
+        std::unordered_map<ResourcePath, std::string> paths;
+        std::unordered_map<ResourcePath, Texture *> textures;
+
+        static void RegisterAnAsset(ResourcePath p, std::string pa);
+        static Texture* GetAnAsset(ResourcePath p);
+
         void OnAttach();
+        void LoadAssets();
         void OnImGuiRender();
         void OnDetach();
         void OnUpdate();
@@ -152,7 +167,7 @@ namespace Core
         void UI_DrawAssetLayout();
         void UI_DrawAssetViewer();
 
-        void UI_UTIL_DrawFolderContents(const std::string& folderPath, const std::string& parentPath);
+        void UI_UTIL_DrawFolderContents(const std::string &folderPath, const std::string &parentPath);
         // ------------------------------------
 
         void BeginDockspace();

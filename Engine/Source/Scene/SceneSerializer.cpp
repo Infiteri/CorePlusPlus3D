@@ -9,6 +9,8 @@
 
 #include "Renderer/Geometry/BoxGeometry.h"
 #include "Renderer/Geometry/PlaneGeometry.h"
+#include "Renderer/Light/SpotLight.h"
+#include "Renderer/Light/PointLight.h"
 
 #include "Scene/World.h"
 

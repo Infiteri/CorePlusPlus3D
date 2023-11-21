@@ -15,6 +15,7 @@ namespace Core
 
         void Serialize(const std::string &path);
         void Deserialize(const std::string &path);
+        void DeserializeOrMakeFileIfNotExistent(const std::string &path);
     };
 
 }

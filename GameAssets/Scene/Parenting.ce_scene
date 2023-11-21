@@ -18,8 +18,8 @@ Actors:
       Name: DefaultMaterial
       Unique: Yes
       Color: [255, 255, 255, 255]
-      ColorTextureName: Assets/CeImage/Powerlines/posy.ce_image
-      NormalTextureName: Assets/CeImage/Powerlines/posy.ce_image
+      ColorTextureName: Assets/Images/Powerlines/posy.png
+      NormalTextureName: Assets/Images/Powerlines/posy.png
       GeometryType: Box
       W: 10
       H: 0.5
@@ -36,8 +36,8 @@ Actors:
       Name: DefaultMaterial
       Unique: Yes
       Color: [255, 255, 255, 255]
-      ColorTextureName: Assets/CeImage/HornstullsStrand/negx.ce_image
-      NormalTextureName: Assets/CeImage/HornstullsStrand/negx.ce_image
+      ColorTextureName: Assets/Images/HornstullsStrand/negx.png
+      NormalTextureName: Assets/Images/HornstullsStrand/negx.png
       GeometryType: Box
       W: 10
       H: 10

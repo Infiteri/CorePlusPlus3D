@@ -8,6 +8,7 @@
 #include "Renderer/Material.h"
 #include "CoreEditorUtils.h"
 #include "Project/Project.h"
+#include "EditorLayer.h"
 
 #define IM_TEXT_UTIL(a) ImGui::InputText(#a, a, 256)
 
@@ -31,9 +32,6 @@ namespace Core
     char Back[256];
     MaterialConfiguration MaterialConfig;
 
-    Texture *iconTexture;
-    Texture *folderTexture;
-
     ContentBrowserPanel::ContentBrowserPanel()
     {
         ZeroCharBuffers();
@@ -42,15 +40,11 @@ namespace Core
     ContentBrowserPanel::~ContentBrowserPanel()
     {
     }
-    
 
     void ContentBrowserPanel::LoadAssets()
     {
-        iconTexture = new Texture();
-        iconTexture->Load("EngineResources/Images/Icons/icon.png");
-
-        folderTexture = new Texture();
-        folderTexture->Load("EngineResources/Images/Icons/folder.png");
+        EditorLayer::RegisterAnAsset(EditorLayer::PathFolderIcon, "EngineResources/Images/icons/folder.png");
+        EditorLayer::RegisterAnAsset(EditorLayer::PathFileIcon, "EngineResources/Images/icons/icon.png");
     }
 
     void ContentBrowserPanel::OnImGuiRender()
@@ -112,7 +106,7 @@ namespace Core
 
             ImGui::PushID(it);
 
-            Texture *texture = entry.isFolder ? folderTexture : iconTexture;
+            Texture *texture = entry.isFolder ? EditorLayer::GetAnAsset(EditorLayer::PathFolderIcon) : EditorLayer::GetAnAsset(EditorLayer::PathFileIcon);
             if (ImGui::ImageButton((void *)(CeU64)(CeU32)texture->GetID(), size))
             {
                 if (entry.isFolder)

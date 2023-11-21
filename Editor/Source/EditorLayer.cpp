@@ -1,5 +1,4 @@
 #include "EditorLayer.h"
-
 #include "Panels/CoreEditorUtils.h"
 
 #define CE_EDITOR_CAM_NAME "__EditorCamera__"
@@ -16,25 +15,34 @@ namespace Core
         CE_DEFINE_LOG_CATEGORY("Editor", "ED");
         CE_LOG_INFO("ED", "Welcome to Core.");
 
-        EditorUtils::InitAssets();
+        inst = this;
+
+        //? Setup assets and paths.
+        paths[PathPlayIcon] = "EngineResources/Images/Icons/PlayButton.png";
+        paths[PathStopIcon] = "EngineResources/Images/Icons/StopButton.png";
+
+        //? Load up the asssets.
+        LoadAssets();
 
         // Create editor camera
-        CameraSystem::Generate(CE_EDITOR_CAM_NAME, Math::DegToRad(90), Engine::GetWindowAspect(), 0.01f, 1000.0f);
-        CameraSystem::Activate(CE_EDITOR_CAM_NAME);
+        CameraActivationInformation CameraInformation;
+        CameraInformation.Name = CE_EDITOR_CAM_NAME;
+        CameraInformation.Fov = Math::DegToRad(90);
+        CameraInformation.Aspect = Engine::GetWindowAspect();
+        CameraInformation.Near = 0.01f;
+        CameraInformation.Far = 1000.0f;
+        CameraInformation.MatrixMode = Camera::TransformMatrix;
+
+        CameraSystem::Generate(CameraInformation);
+        CameraSystem::Activate(CameraInformation.Name);
 
         state.imageViewerImage = nullptr;
         state.editMaterialTexture = nullptr;
         state.EditorScene = nullptr;
         state.editMaterialTextureSizes = 50.0f;
+        state.assetViewer.render = true;
 
         state.movement = new PerspectiveMovement();
-        state.IconPlayTexture = new Texture();
-        state.IconPlayTexture->Load("EngineResources/CeImage/Icons/PlayButton.ce_image");
-
-        state.IconStopTexture = new Texture();
-        state.IconStopTexture->Load("EngineResources/CeImage/Icons/StopButton.ce_image");
-        state.assetViewer.render = true;
-        contentBrowserPanel.LoadAssets();
 
         SetContexts();
         StopSceneRuntime();
@@ -42,19 +50,26 @@ namespace Core
 
         // Runtime loading from project
         if (Project::GetConfig() != nullptr)
-            OpenScene(Project::GetConfig()->startScene);
+            OpenScene(Project::GetConfig()->GetStartSceneFormatted());
         else
             New();
 
         state.editProjectState.Clear();
+    }
 
-        inst = this;
+    void EditorLayer::LoadAssets()
+    {
+        EditorUtils::InitAssets();
+        contentBrowserPanel.LoadAssets();
+        for (auto it = paths.begin(); it != paths.end(); it++)
+        {
+            textures[it->first] = new Texture();
+            textures[it->first]->Load(it->second);
+        }
     }
 
     void EditorLayer::OnDetach()
     {
-        delete state.IconPlayTexture;
-        delete state.IconStopTexture;
     }
 
     void EditorLayer::OnUpdate()
@@ -198,13 +213,21 @@ namespace Core
     {
         ImGui::Begin("##topbar");
 
-        Texture *tex = currentSceneState == SceneStatePlay ? state.IconStopTexture : state.IconPlayTexture;
-        if (ImGui::ImageButton((ImTextureID)(CeU64)(CeU32)tex->GetID(), {12, 12}))
+        Texture *tex = currentSceneState == SceneStatePlay ? textures[PathStopIcon] : textures[PathPlayIcon];
+        if (!tex)
         {
-            if (currentSceneState == SceneStatePlay)
-                StopSceneRuntime();
-            else
-                StartSceneRuntime();
+            CE_CORE_FATAL("Why is there no texture bro? Infiteri u suck, u are a bad programmer, give up, NOW.");
+        }
+        else
+        {
+
+            if (ImGui::ImageButton((ImTextureID)(CeU64)(CeU32)tex->GetID(), {12, 12}))
+            {
+                if (currentSceneState == SceneStatePlay)
+                    StopSceneRuntime();
+                else
+                    StartSceneRuntime();
+            }
         }
 
         ImGui::End();
@@ -680,7 +703,7 @@ namespace Core
 
         std::string finalScript;
 
-        finalScript += "call " + config->buildScriptsPath;
+        finalScript += "call " + config->assetPath + "/" + config->buildScriptsPath;
 
         int sys = system(finalScript.c_str());
         if (sys == 0)
@@ -993,6 +1016,22 @@ namespace Core
         CeMemory::Zero(&this->ScriptFilesPath, 256);
         CeMemory::Zero(&this->ScriptPath, 256);
         CeMemory::Zero(&this->StartScene, 256);
+    }
+
+    void EditorLayer::RegisterAnAsset(ResourcePath p, std::string pa)
+    {
+        if (!inst)
+            return;
+
+        inst->paths[p] = pa;
+    }
+
+    Texture *EditorLayer::GetAnAsset(ResourcePath p)
+    {
+        if (!inst)
+            return nullptr;
+
+        return inst->textures[p];
     }
 
     // --------------------------------

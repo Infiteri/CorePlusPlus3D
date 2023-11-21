@@ -36,9 +36,21 @@ namespace Core
 
     PerspectiveCamera *CameraSystem::Generate(const std::string &name, float fov, float aspect, float near, float far)
     {
-        PerspectiveCamera *camera = new PerspectiveCamera(fov, aspect, near, far);
+        CameraActivationInformation info;
+        info.Name = name;
+        info.Fov = fov;
+        info.Aspect = aspect;
+        info.Near = near;
+        info.Far = far;
+        info.MatrixMode = Camera::TransformMatrix;
+        return Generate(info);
+    }
 
-        perspectives[name] = camera;
+    PerspectiveCamera *CameraSystem::Generate(CameraActivationInformation info)
+    {
+        PerspectiveCamera *camera = new PerspectiveCamera(info.Fov, info.Aspect, info.Near, info.Far);
+        camera->SetMatrixMode(info.MatrixMode);
+        perspectives[info.Name] = camera;
 
         return camera;
     }

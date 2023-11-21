@@ -9,8 +9,8 @@ void PlayerScript::OnUpdate()
     else
         velocity.y = 0;
 
-    GetTransform()->GetPosition()->x += velocity.x;
-    GetTransform()->GetPosition()->y += velocity.y;
+    GetTransform()->position.x += velocity.x;
+    GetTransform()->position.y += velocity.y;
 }
 
 CE_IMPLEMENT_ACTOR_SCRIPT_DEFINE(PlayerScript);

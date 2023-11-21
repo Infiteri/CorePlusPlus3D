@@ -12,6 +12,7 @@ namespace Core
         this->near = 0.01;
         this->far = 1000;
         this->aspect = 1280 / 720;
+        this->matrixMode = Camera::TransformMatrix;
 
         UpdateProjection((float)Engine::GetWindowInstance()->GetWidth() / (float)Engine::GetWindowInstance()->GetHeight());
     }

@@ -60,4 +60,35 @@ namespace Core
         config->scriptFilesPath = projNode["ScriptFilesPath"].as<std::string>();
         config->buildScriptsPath = projNode["BuildScriptsPath"].as<std::string>();
     }
+    void ProjectSerializer::DeserializeOrMakeFileIfNotExistent(const std::string &path)
+    {
+        CE_PROFILE_FUNCTION();
+
+        try
+        {
+            Deserialize(path);
+        }
+        catch (const std::exception &)
+        {
+            auto config = Project::GetConfig();
+            config->name = "DefaultProject";
+            config->startScene = "DefaultScene";
+            config->assetPath = "Assets";
+            config->scriptPath = "Scripts";
+            config->scriptFilesPath = "ScriptFiles";
+            config->buildScriptsPath = "BuildScripts";
+
+            // Serialize the default configuration to the specified path
+            Serialize(path);
+
+            // Close the file before attempting to deserialize again
+            std::ifstream file(path);
+            if (file.is_open())
+                file.close();
+
+            // Deserialize the defaults
+            Deserialize(path);
+        }
+    }
+
 }

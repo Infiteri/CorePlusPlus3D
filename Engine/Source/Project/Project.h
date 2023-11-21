@@ -15,6 +15,8 @@ namespace Core
         std::string scriptFilesPath;
         std::string buildScriptsPath;
         std::string startScene;
+
+        inline std::string GetStartSceneFormatted() { return assetPath + "/" + startScene; };
     };
 
     class CE_API Project

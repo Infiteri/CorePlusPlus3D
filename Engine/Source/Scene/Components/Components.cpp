@@ -1,6 +1,6 @@
 #include "Components.h"
+#include "cmath"
 #include "Math/Math.h"
-
 #include "Core/Logger.h"
 #include "Core/Engine.h"
 #include "Scene/Actor.h"
@@ -107,6 +107,7 @@ namespace Core
     PerspectiveCameraComponent::PerspectiveCameraComponent()
     {
         camera = new PerspectiveCamera();
+        camera->SetMatrixMode(Camera::InputMatrix);
     }
 
     PerspectiveCameraComponent::~PerspectiveCameraComponent()
@@ -121,13 +122,24 @@ namespace Core
     void PerspectiveCameraComponent::Start()
     {
     }
-
     void PerspectiveCameraComponent::Render()
     {
         if (owner->GetParent())
-            camera->GetTransform()->FromMatrix(owner->GetWorldMatrix(), true);
+        {
+            // NOTE: The camera's transform is NEEDED for the cubemap model position to work. In theory it could be extracted from the camera's view matrix at, 12, 13 and 14. (Matrix4 data index).
+            // NOTE: Things might be done in the future about this. But for now this should be sufficient.
+            Matrix4 *model = owner->GetWorldMatrix();
+            camera->GetTransform()->position.x = model->data[12];
+            camera->GetTransform()->position.y = model->data[13];
+            camera->GetTransform()->position.z = model->data[14];
+            camera->SetMatrixMode(Camera::InputMatrix);
+            camera->SetViewMatrix(*model);
+        }
         else
+        {
+            camera->SetMatrixMode(Camera::TransformMatrix);
             camera->GetTransform()->From(owner->GetTransform());
+        }
     }
 
     void AABBComponent::Render()

@@ -198,6 +198,10 @@ namespace Core
 
                 shd->Int(cubeTexture->GetGeneration(), "uSkybox");
             }
+            else
+            {
+                CE_CORE_WARN("Sky::Render: Camera is not valid, might not exist.");
+            }
         }
         break;
 

@@ -27,8 +27,8 @@ namespace Core
         activeProject = new Project();
         return activeProject;
     }
-    
-    Project* Project::GetInstance()
+
+    Project *Project::GetInstance()
     {
         return activeProject;
     }
@@ -41,7 +41,7 @@ namespace Core
             New();
 
         ProjectSerializer ser(activeProject);
-        ser.Deserialize(path);
+        ser.DeserializeOrMakeFileIfNotExistent(path);
 
         return activeProject;
     }
@@ -67,4 +67,5 @@ namespace Core
 
         return &activeProject->config;
     }
+
 }

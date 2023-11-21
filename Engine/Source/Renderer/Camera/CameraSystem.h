@@ -7,6 +7,16 @@
 
 namespace Core
 {
+    struct CameraActivationInformation
+    {
+        std::string Name;
+        float Fov;
+        float Aspect;
+        float Near;
+        float Far;
+        Camera::MatrixMode MatrixMode;
+    };
+
     /// @brief Simple wrapper around things like active camera, camera map and other things.
     class CE_API CameraSystem
     {
@@ -37,6 +47,7 @@ namespace Core
         /// @param far The far frustum of the camera.
         /// @return A pointer to a camera object.
         static PerspectiveCamera *Generate(const std::string &name, float fov, float aspect, float near, float far);
+        static PerspectiveCamera *Generate(CameraActivationInformation info);
 
         /// @brief ACtivates a camera. Outputs a error message if the camera isn't found.
         /// @param name The name of the camera to search for.
