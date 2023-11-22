@@ -1,4 +1,5 @@
 #include "Vectors.h"
+#include <cmath>
 
 namespace Core
 {
@@ -51,6 +52,14 @@ namespace Core
         this->x = x;
         this->y = y;
         this->z = z;
+    }
+
+    void Vector3::Normalize()
+    {
+        float magnitude = std::sqrt(x * x + y * y + z * z);
+        x /= magnitude;
+        y /= magnitude;
+        z /= magnitude;
     }
 
     void Vector3::Set(Vector3 *v)

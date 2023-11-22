@@ -10,7 +10,7 @@ namespace Core
         data[0] = data[5] = data[10] = data[15] = 1.0f;
     }
 
-        Matrix4::~Matrix4()
+    Matrix4::~Matrix4()
     {
     }
 
@@ -48,6 +48,18 @@ namespace Core
         for (int i = 0; i < 16; i++)
         {
             this->data[i] = data[i];
+        }
+    }
+
+    void Matrix4::Normalized()
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            Vector3 col(data[i], data[i + 4], data[i + 8]);
+            col.Normalize();
+            data[i] = col.x;
+            data[i + 4] = col.y;
+            data[i + 8] = col.z;
         }
     }
 

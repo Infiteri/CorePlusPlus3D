@@ -20,6 +20,7 @@ namespace Core
 {
     static Texture *PlaceHolderTexture;
     static const CeU32 size = 50;
+    static CeU32 SetID = 0;
 
     namespace EditorUtils
     {
@@ -194,7 +195,6 @@ namespace Core
                 vec->Set(edit[0], edit[1], edit[2], edit[3]);
         }
 
-    
         void DrawMeshTextureUI(TexType type, Core::Material *material)
         {
 
@@ -278,5 +278,106 @@ namespace Core
             ImGui::Columns(1); // Reset columns to 1 at the end
         }
 
+        bool RenderDataSet(Data::Set *set, Sky *sky)
+        {
+
+            // TODO: This has to be pointer
+            if (ImGui::TreeNodeEx((void *)(CeU64)(CeU32)SetID, 0, set->Name.c_str()))
+            {
+                static char Name[256];
+                CeMemory::Zero(&Name, 256);
+
+                CeMemory::Copy(&Name, set->Name.c_str(), 256);
+
+                if (ImGui::InputText("Name", Name, 256))
+                {
+                    set->Name = Name;
+                }
+
+                // -- DATA TYPE SELECTION --
+                const int maxSelections = 6;
+                const char *selections[maxSelections] = {"None", "Vec2", "Vec3", "Vec4", "Color", "Float"};
+                const char *current = selections[(int)set->Type];
+
+                if (ImGui::BeginCombo("Data Type", current))
+                {
+                    for (int i = 0; i < maxSelections; i++)
+                    {
+                        bool isSelected = (current == selections[i]);
+
+                        if (ImGui::Selectable(selections[i], isSelected))
+                        {
+                            current = selections[i];
+                            set->ClearDataBasedOnCurrentType();
+                            set->Type = (Data::DataType)i;
+                            set->SetupDefaultValuesBaseOnCurrentType();
+                        }
+
+                        if (isSelected)
+                            ImGui::SetItemDefaultFocus();
+                    }
+
+                    ImGui::EndCombo();
+                }
+                // -------------------------
+
+                // -- EDIT VALUES ----------
+                switch (set->Type)
+                {
+                case Data::DataVec2:
+                    EditorUtils::ImGuiVec2Edit("Value", (Vector2 *)set->Data);
+                    break;
+
+                case Data::DataVec3:
+                    EditorUtils::ImGuiVec3Edit("Value", (Vector3 *)set->Data);
+                    break;
+
+                case Data::DataVec4:
+                    EditorUtils::ImGuiVec4Edit("Value", (Vector4 *)set->Data);
+                    break;
+
+                case Data::DataFloat:
+                {
+                    Data::FloatContainer *Cont = set->As<Data::FloatContainer>();
+                    ImGui::DragFloat("Value", &Cont->Value, 0.1f);
+                    break;
+                }
+
+                case Data::DataColor:
+                    EditorUtils::ImGuiColor4Edit("Value", (Color *)set->Data);
+                    break;
+
+                case Data::DataNone:
+                default:
+                    break;
+                }
+                // -------------------------
+
+                if (ImGui::Button("Remove"))
+                {
+                    if (sky)
+                    {
+                        sky->RemoveSkyShaderDataByName(set->Name);
+                        ImGui::TreePop();
+                        return true;
+                    }
+                    else
+                    {
+                        ImGui::TreePop();
+                        return true;
+                    }
+                }
+
+                ImGui::TreePop();
+            }
+
+            SetID++;
+            return false;
+        }
+
+        void SetRenderDataSetIDZero()
+        {
+            SetID = 0;
+        }
     }
 }

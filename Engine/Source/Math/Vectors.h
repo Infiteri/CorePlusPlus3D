@@ -43,6 +43,7 @@ namespace Core
         ~Vector3();
 
         void Set(float x, float y, float z);
+        void Normalize();
         void Set(Vector3 *v);
 
         void operator+=(const Vector3 &o)
@@ -52,9 +53,19 @@ namespace Core
             z += o.z;
         };
 
+        Vector3 operator+(const Vector3 &o)
+        {
+            return {x + o.x, y + o.y, z + o.z};
+        };
+
         Vector3 operator*(const Vector3 &o) const
         {
             return {x * o.x, y * o.y, z * o.z};
+        }
+
+        Vector3 operator*(float f) const
+        {
+            return {x * f, y * f, z * f};
         }
 
         bool NotZero();

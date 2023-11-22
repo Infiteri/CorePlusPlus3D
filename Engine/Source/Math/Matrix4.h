@@ -15,6 +15,7 @@ namespace Core
         void From(Matrix4 *other);
         void From(Matrix4 other);
         void From(float *data);
+        void Normalized();
 
         static Matrix4 Identity();
         static Matrix4 Empty();

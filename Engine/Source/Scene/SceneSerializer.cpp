@@ -169,6 +169,7 @@ namespace Core
         auto aabb = a->GetComponent<AABBComponent>();
         auto pointLight = a->GetComponent<PointLightComponent>();
         auto spotLight = a->GetComponent<SpotLightComponent>();
+        auto data = a->GetComponent<DataComponent>();
 
         if (mesh)
         {
@@ -270,6 +271,61 @@ namespace Core
             out << YAML::EndMap;
         }
 
+        if (data)
+        {
+            out << YAML::Key << "DataComponent";
+            out << YAML::BeginSeq;
+
+            for (auto d : data->Sets)
+            {
+                out << YAML::BeginMap;
+                out << YAML::Key << "Name" << YAML::Value << d->Name;
+                out << YAML::Key << "Type" << YAML::Value << d->TypeToString();
+
+                switch (d->Type)
+                {
+                case Data::DataVec2:
+                {
+                    Vector2 *v = (Vector2 *)d->Data;
+                    out << YAML::Key << "Value" << v;
+                    break;
+                }
+
+                case Data::DataVec3:
+                {
+                    Vector3 *v = (Vector3 *)d->Data;
+                    out << YAML::Key << "Value" << v;
+                    break;
+                }
+
+                case Data::DataVec4:
+                {
+                    Vector4 *v = (Vector4 *)d->Data;
+                    out << YAML::Key << "Value" << v;
+                    break;
+                }
+
+                case Data::DataColor:
+                {
+                    Color *v = (Color *)d->Data;
+                    out << YAML::Key << "Value" << v;
+                    break;
+                }
+
+                case Data::DataFloat:
+                {
+                    Data::FloatContainer *v = (Data::FloatContainer *)d->Data;
+                    out << YAML::Key << "Value" << v->Value;
+                    break;
+                }
+                }
+
+                out << YAML::EndMap;
+            }
+
+            out << YAML::EndSeq;
+        }
+
         out << YAML::EndMap;
 
         // NOTE: Serialize the children
@@ -358,6 +414,12 @@ namespace Core
                 {
                     Color *v = (Color *)d->Data;
                     out << YAML::Key << "Value" << v;
+                    break;
+                }
+                case Data::DataFloat:
+                {
+                    Data::FloatContainer *v = (Data::FloatContainer *)d->Data;
+                    out << YAML::Key << "Value" << v->Value;
                     break;
                 }
                 }
@@ -477,6 +539,14 @@ namespace Core
                     delete data;
                 }
                 break;
+                
+                case Data::DataFloat:
+                {
+                    Data::FloatContainer *data = new Data::FloatContainer(skyShaderData["Value"].as<float>());
+                    env->sky->AddShaderData(sizeof(data), data, type, name);
+                    delete data;
+                }
+                break;
 
                 case Data::DataNone:
                 default:
@@ -515,6 +585,7 @@ namespace Core
                 auto aabb = actor["AABBComponent"];
                 auto pLight = actor["PointLight"];
                 auto sLight = actor["SpotLight"];
+                auto data = actor["DataComponent"];
 
                 Actor *a = new Actor();
                 a->SetUUID(actor["UUID"].as<CeU64>());
@@ -612,6 +683,65 @@ namespace Core
                     c->light->SetIntensity(sLight["Intensity"].as<float>());
                     c->light->SetCutOff(sLight["CutOff"].as<float>());
                     c->light->SetOuterCutOff(sLight["OuterCutOff"].as<float>());
+                }
+
+                if (data)
+                {
+                    auto c = a->AddComponent<DataComponent>();
+                    for (auto yData : data)
+                    {
+                        std::string name = yData["Name"].as<std::string>();
+                        CE_TRACE(name.c_str());
+                        Data::DataType type = Data::StringToDataType(yData["Type"].as<std::string>());
+                        auto v = yData["Value"];
+
+                        switch (type)
+                        {
+                        case Data::DataVec2:
+                        {
+                            Vector2 *data = new Vector2(v[0].as<float>(), v[1].as<float>());
+                            c->Sets.push_back(new Data::Set(sizeof(Vector2), data, Data::DataVec2, name));
+                            delete data;
+                        }
+                        break;
+
+                        case Data::DataVec3:
+                        {
+                            Vector3 *data = new Vector3(v[0].as<float>(), v[1].as<float>(), v[2].as<float>());
+                            c->Sets.push_back(new Data::Set(sizeof(Vector3), data, Data::DataVec3, name));
+                            delete data;
+                        }
+                        break;
+
+                        case Data::DataVec4:
+                        {
+                            Vector4 *data = new Vector4(v[0].as<float>(), v[1].as<float>(), v[2].as<float>(), v[3].as<float>());
+                            c->Sets.push_back(new Data::Set(sizeof(Vector4), data, Data::DataVec4, name));
+                            delete data;
+                        }
+                        break;
+
+                        case Data::DataFloat:
+                        {
+                            Data::FloatContainer *data = new Data::FloatContainer(v.as<float>());
+                            c->Sets.push_back(new Data::Set(sizeof(Data::FloatContainer), data, Data::DataFloat, name));
+                            delete data;
+                        }
+                        break;
+
+                        case Data::DataColor:
+                        {
+                            Color *data = new Color(v[0].as<float>(), v[1].as<float>(), v[2].as<float>(), v[3].as<float>());
+                            c->Sets.push_back(new Data::Set(sizeof(Color), data, Data::DataColor, name));
+                            delete data;
+                        }
+                        break;
+
+                        case Data::DataNone:
+                        default:
+                            break;
+                        }
+                    }
                 }
 
                 // Deserialize the actor parent

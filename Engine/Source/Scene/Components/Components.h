@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Base.h"
+#include "Core/CeData.h"
 #include "Math/Vectors.h"
+#include <vector>
 
 namespace Core
 {
@@ -27,7 +29,7 @@ namespace Core
         CustomComponentInformation customComponentInformation;
 
         Component(){};
-        ~Component(){};
+        virtual ~Component(){};
 
         virtual void Init(){};
         virtual void Destroy(){};
@@ -131,6 +133,18 @@ namespace Core
 
         void Destroy();
         void Render();
+    };
+
+    class CE_API DataComponent : public Component
+    {
+    public:
+        std::vector<Data::Set *> Sets;
+
+        DataComponent();
+        ~DataComponent();
+        void From(DataComponent *other);
+
+        Data::Set* GetSetWithName(const std::string& name);
     };
 
 }

@@ -122,6 +122,8 @@ namespace Core
         MapGizmoToKey(Keys::T, ImGuizmo::TRANSLATE);
         MapGizmoToKey(Keys::R, ImGuizmo::ROTATE);
         MapGizmoToKey(Keys::E, ImGuizmo::SCALE);
+
+        EditorUtils::SetRenderDataSetIDZero();
     }
 
     // -- EDITOR UPDATING METHODS -----

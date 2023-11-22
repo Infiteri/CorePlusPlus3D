@@ -281,4 +281,40 @@ namespace Core
         light->GetTransform()->From(owner->GetTransform());
         light->Update();
     }
+
+    DataComponent::DataComponent()
+    {
+    }
+
+    DataComponent::~DataComponent()
+    {
+        for (auto Set : Sets)
+        {
+            Set->ClearDataBasedOnCurrentType();
+            delete Set;
+        }
+
+        Sets.clear();
+    }
+
+    void DataComponent::From(DataComponent *other)
+    {
+        for (auto Set : other->Sets)
+        {
+            auto nSet = new Data::Set(sizeof(Vector2), new Vector2(), Data::DataVec2, "Empty Set");
+            nSet->From(Set);
+            Sets.push_back(nSet);
+        }
+    }
+
+    Data::Set *DataComponent::GetSetWithName(const std::string &name)
+    {
+        for (auto s : Sets)
+        {
+            if (s->Name == name)
+                return s;
+        }
+
+        return nullptr;
+    }
 }

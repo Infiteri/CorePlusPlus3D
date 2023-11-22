@@ -16,7 +16,16 @@ namespace Core
             DataVec2,
             DataVec3,
             DataVec4,
-            DataColor
+            DataColor,
+            DataFloat,
+        };
+
+        struct FloatContainer
+        {
+            float Value;
+
+            FloatContainer(){};
+            FloatContainer(float v) { Value = v; };
         };
 
         struct CE_API Set
@@ -25,6 +34,13 @@ namespace Core
             DataType Type;
             void *Data;
             bool ShouldClear = false;
+
+            Set();
+
+            Set(Set *s)
+            {
+                From(s);
+            };
 
             Set(CeU32 dataSize, void *_Data, DataType dataType, const std::string &_name)
             {
@@ -62,6 +78,13 @@ namespace Core
                     break;
                 }
 
+                case DataFloat:
+                {
+                    FloatContainer *other = static_cast<FloatContainer *>(_Data);
+                    Data = new FloatContainer(other->Value);
+                    break;
+                }
+
                 case DataNone:
                 default:
                     break;
@@ -75,8 +98,19 @@ namespace Core
 
             std::string TypeToString();
             void TypeFromString(const std::string &val);
+
+            void From(Set *s);
+
+            /// @brief Make sure that its the right type.
+            /// @tparam T The type to cast to.
+            /// @return The Data casted.
+            template <typename T>
+            T *As()
+            {
+                return (T *)Data;
+            }
         };
 
-        DataType StringToDataType(const std::string& val);
+        DataType StringToDataType(const std::string &val);
     }
 }

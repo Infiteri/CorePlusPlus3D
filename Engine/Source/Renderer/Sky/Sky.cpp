@@ -270,41 +270,8 @@ namespace Core
         //? Copy over the shader data
         for (auto o : other->GetSkyShaderData())
         {
-            switch (o->Type)
-
-            {
-            case Data::DataVec2:
-            {
-                Vector2 *other = (Vector2 *)o->Data;
-                AddShaderData(sizeof(Vector2), new Vector2(other->x, other->y), Data::DataVec2, o->Name.c_str());
-            }
-            break;
-
-            case Data::DataVec3:
-            {
-                Vector3 *other = (Vector3 *)o->Data;
-                AddShaderData(sizeof(Vector3), new Vector3(other->x, other->y, other->z), Data::DataVec3, o->Name.c_str());
-            }
-            break;
-
-            case Data::DataVec4:
-            {
-                Vector4 *other = (Vector4 *)o->Data;
-                AddShaderData(sizeof(Vector4), new Vector4(other->x, other->y, other->z, other->w), Data::DataVec4, o->Name.c_str());
-            }
-            break;
-
-            case Data::DataColor:
-            {
-                Color *other = (Color *)o->Data;
-                AddShaderData(sizeof(Color), new Color(other->r, other->g, other->b, other->a), Data::DataColor, o->Name.c_str());
-            }
-            break;
-
-            case Data::DataNone:
-            default:
-                break;
-            }
+            Data::Set *newSet = new Data::Set(o);
+            shaderData.push_back(newSet);
         }
     }
 }

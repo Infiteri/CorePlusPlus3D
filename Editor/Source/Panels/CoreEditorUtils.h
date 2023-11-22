@@ -62,5 +62,8 @@ namespace Core
 
         void DrawMeshTextureUI(TexType type, Core::Material *material);
         void RenderMatrix4GuiText(float *data);
+
+        bool RenderDataSet(Data::Set *set, Sky* sky);
+        void SetRenderDataSetIDZero();
     }
 }

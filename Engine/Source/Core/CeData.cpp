@@ -5,6 +5,14 @@ namespace Core
 {
     namespace Data
     {
+        Set::Set()
+        {
+            Name = "Data";
+            Type = DataVec2;
+            Data = new Vector2();
+            ShouldClear = true;
+        }
+
         void Set::ClearDataBasedOnCurrentType()
         {
             if (!ShouldClear)
@@ -43,6 +51,12 @@ namespace Core
                 Color *d = (Color *)Data;
                 delete d;
             }
+
+            case DataFloat:
+            {
+                FloatContainer *d = (FloatContainer *)Data;
+                delete d;
+            }
             break;
 
             case DataNone:
@@ -77,6 +91,10 @@ namespace Core
                 Data = new Color(255, 255, 255, 255);
                 break;
 
+            case DataFloat:
+                Data = new FloatContainer(0.0f);
+                break;
+
             case DataNone:
             default:
                 break;
@@ -103,6 +121,10 @@ namespace Core
                 return "Color";
                 break;
 
+            case Data::DataFloat:
+                return "Float";
+                break;
+
             case Data::DataNone:
             default:
                 return "None";
@@ -125,7 +147,61 @@ namespace Core
             else if (val == "Color")
                 Type = Data::DataColor;
 
+            else if (val == "Float")
+                Type = Data::DataFloat;
+
             Type = Data::DataNone;
+        }
+
+        void Set::From(Set *s)
+        {
+            Name = s->Name;
+            Type = s->Type;
+
+            // ? Clear old data.
+            if (ShouldClear)
+                ClearDataBasedOnCurrentType();
+
+            //? Copy the new data.
+            switch (Type)
+            {
+            case Data::DataVec2:
+            {
+                Vector2 *other = (Vector2 *)s->Data;
+                Data = new Vector2(other->x, other->y);
+            }
+            break;
+
+            case Data::DataVec3:
+            {
+                Vector3 *other = (Vector3 *)s->Data;
+                Data = new Vector3(other->x, other->y, other->z);
+            }
+            break;
+
+            case Data::DataVec4:
+            {
+                Vector4 *other = (Vector4 *)s->Data;
+                Data = new Vector4(other->x, other->y, other->z, other->w);
+            }
+            break;
+
+            case Data::DataColor:
+            {
+                Color *other = (Color *)s->Data;
+                Data = new Color(other->r, other->g, other->b, other->a);
+            }
+            case Data::DataFloat:
+            {
+                FloatContainer *other = (FloatContainer *)s->Data;
+                Data = new FloatContainer(other->Value);
+            }
+            break;
+
+            case Data::DataNone:
+            default:
+                break;
+            }
         }
 
         DataType StringToDataType(const std::string &val)
@@ -140,6 +216,9 @@ namespace Core
 
             else if (val == "Color")
                 return Data::DataColor;
+
+            else if (val == "Float")
+                return Data::DataFloat;
 
             return Data::DataNone;
         }

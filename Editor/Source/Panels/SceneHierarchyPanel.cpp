@@ -195,6 +195,7 @@ namespace Core
     void DrawAABBComponent(AABBComponent *comp, Actor *a);
     void DrawPointLightComponent(PointLightComponent *comp, Actor *a);
     void DrawSpotLightComponent(SpotLightComponent *comp, Actor *a);
+    void DrawDataComponent(DataComponent *scr, Actor *a);
     // ----------------------------------------
 
     void SceneHierarchyPanel::DrawActorComponents(Actor *a)
@@ -271,6 +272,9 @@ namespace Core
         EditorUtils::DrawComponentUI<SpotLightComponent>("Spot Light", a, [&](SpotLightComponent *comp)
                                                          { DrawSpotLightComponent(comp, a); });
 
+        EditorUtils::DrawComponentUI<DataComponent>("Data", a, [&](DataComponent *comp)
+                                                    { DrawDataComponent(comp, a); });
+
         int index = 0;
         for (auto comp : selectionContext->GetComponents())
         {
@@ -338,6 +342,9 @@ namespace Core
 
             if (ImGui::MenuItem("Spot Light"))
                 selectionContext->AddComponent<SpotLightComponent>();
+
+            if (ImGui::MenuItem("Data"))
+                selectionContext->AddComponent<DataComponent>();
 
             ImGui::EndPopup();
         }
@@ -727,5 +734,28 @@ namespace Core
             comp->light->SetOuterCutOff(cutoFf);
         }
         // ----------------------------------------
+    }
+
+    void DrawDataComponent(DataComponent *c, Actor *a)
+    {
+        int index = 0;
+        for (auto data : c->Sets)
+        {
+            if (EditorUtils::RenderDataSet(data, World::GetActive()->GetEnvironment()->sky))
+            {
+                c->Sets[index]->ClearDataBasedOnCurrentType();
+                delete c->Sets[index];
+                c->Sets.erase(c->Sets.begin() + index);
+            }
+
+            index++;
+        }
+
+        if (ImGui::Button("Add"))
+        {
+            c->Sets.push_back(new Data::Set());
+        }
+
+        ImGui::SameLine();
     }
 }

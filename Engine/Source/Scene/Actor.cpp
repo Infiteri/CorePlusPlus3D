@@ -38,6 +38,8 @@ namespace Core
         auto camera = other->GetComponent<PerspectiveCameraComponent>();
         auto aabb = other->GetComponent<AABBComponent>();
         auto pLight = other->GetComponent<PointLightComponent>();
+        auto sLight = other->GetComponent<SpotLightComponent>();
+        auto data = other->GetComponent<DataComponent>();
 
         outActor->GetTransform()->From(transform);
 
@@ -55,6 +57,12 @@ namespace Core
 
         if (pLight)
             outActor->AddComponent<PointLightComponent>()->From(pLight);
+
+        if (sLight)
+            outActor->AddComponent<SpotLightComponent>()->From(sLight);
+
+        if (data)
+            outActor->AddComponent<DataComponent>()->From(data);
 
         for (Actor *a : other->GetChildren())
         {
@@ -255,9 +263,20 @@ namespace Core
 
     void Actor::MoveBy(const Vector3 &vector)
     {
-        Vector3 forward = Matrix4::Forward(worldMatrix);
+        Matrix4 m;
+        m.From(worldMatrix);
 
-        transform.position += forward * vector;
+        // Extract the forward and right vectors from the matrix
+        Vector3 forward = Matrix4::Forward(m);
+        forward.Normalize();
+        Vector3 right = Matrix4::Right(m);
+        right.Normalize();
+
+        // Calculate the movement vector based on forward and right vectors
+        Vector3 movement = (forward * vector.z) + (right * vector.x);
+
+        // Update the position
+        transform.position += movement;
     }
 
     void Actor::RemoveComponentAtIndex(int index)
