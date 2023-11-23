@@ -29,35 +29,36 @@ namespace Core
             {
                 Vector2 *d = (Vector2 *)Data;
                 delete d;
+                break;
             }
-            break;
 
             case DataVec3:
             {
                 Vector3 *d = (Vector3 *)Data;
                 delete d;
+                break;
             }
-            break;
 
             case DataVec4:
             {
                 Vector4 *d = (Vector4 *)Data;
                 delete d;
+                break;
             }
-            break;
 
             case DataColor:
             {
                 Color *d = (Color *)Data;
                 delete d;
+                break;
             }
 
             case DataFloat:
             {
                 FloatContainer *d = (FloatContainer *)Data;
                 delete d;
+                break;
             }
-            break;
 
             case DataNone:
             default:
@@ -169,34 +170,36 @@ namespace Core
             {
                 Vector2 *other = (Vector2 *)s->Data;
                 Data = new Vector2(other->x, other->y);
+                break;
             }
-            break;
 
             case Data::DataVec3:
             {
                 Vector3 *other = (Vector3 *)s->Data;
                 Data = new Vector3(other->x, other->y, other->z);
+                break;
             }
-            break;
 
             case Data::DataVec4:
             {
                 Vector4 *other = (Vector4 *)s->Data;
                 Data = new Vector4(other->x, other->y, other->z, other->w);
+                break;
             }
-            break;
 
             case Data::DataColor:
             {
                 Color *other = (Color *)s->Data;
                 Data = new Color(other->r, other->g, other->b, other->a);
+                break;
             }
+
             case Data::DataFloat:
             {
                 FloatContainer *other = (FloatContainer *)s->Data;
                 Data = new FloatContainer(other->Value);
+                break;
             }
-            break;
 
             case Data::DataNone:
             default:
