@@ -215,7 +215,6 @@ namespace Core
 
     PointLightComponent::~PointLightComponent()
     {
-        Destroy();
     }
 
     void PointLightComponent::From(PointLightComponent *other)

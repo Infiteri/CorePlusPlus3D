@@ -144,7 +144,17 @@ namespace Core
         ~DataComponent();
         void From(DataComponent *other);
 
-        Data::Set* GetSetWithName(const std::string& name);
+        Data::Set *GetSetWithName(const std::string &name);
+
+        template <typename T>
+        T *GetSetDataWithName(const std::string &name)
+        {
+            auto a = GetSetWithName(name);
+            if (!a)
+                return nullptr;
+
+            return a->As<T>();
+        };
     };
 
 }

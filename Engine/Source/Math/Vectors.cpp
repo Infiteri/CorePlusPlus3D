@@ -28,7 +28,7 @@ namespace Core
         Set(v->x, v->y);
     }
 
-    bool Vector2::NotZero()
+    bool Vector2::NotZero() const
     {
         return (x != 0.0f || y != 0.0f);
     }
@@ -67,7 +67,7 @@ namespace Core
         Set(v->x, v->y, v->z);
     }
 
-    bool Vector3::NotZero()
+    bool Vector3::NotZero() const
     {
         return (x != 0.0f || y != 0.0f || z != 0.0f);
     }
@@ -99,7 +99,7 @@ namespace Core
         Set(v->x, v->y, v->z, v->w);
     }
 
-    bool Vector4::NotZero()
+    bool Vector4::NotZero() const
     {
         return (x != 0.0f || y != 0.0f || z != 0.0f || w != 0.0f);
     }

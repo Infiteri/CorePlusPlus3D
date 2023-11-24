@@ -21,14 +21,39 @@ namespace Core
         {
             x += o.x;
             y += o.y;
-        };
-
-        Vector2 operator*(const Vector2 &o) const
-        {
-            return {x * o.x, y * o.y};
         }
 
-        bool NotZero();
+        Vector2 operator+(const Vector2 &o) const
+        {
+            return {x + o.x, y + o.y};
+        }
+
+        Vector2 operator-(const Vector2 &o) const
+        {
+            return {x - o.x, y - o.y};
+        }
+
+        Vector2 operator*(float scalar) const
+        {
+            return {x * scalar, y * scalar};
+        }
+
+        Vector2 operator/(float scalar) const
+        {
+            return {x / scalar, y / scalar};
+        }
+
+        bool operator==(const Vector2 &o) const
+        {
+            return x == o.x && y == o.y;
+        }
+
+        bool operator!=(const Vector2 &o) const
+        {
+            return !(*this == o);
+        }
+
+        bool NotZero() const;
     };
 
     class CE_API Vector3
@@ -51,24 +76,46 @@ namespace Core
             x += o.x;
             y += o.y;
             z += o.z;
-        };
+        }
 
-        Vector3 operator+(const Vector3 &o)
+        Vector3 operator+(const Vector3 &o) const
         {
             return {x + o.x, y + o.y, z + o.z};
-        };
-
-        Vector3 operator*(const Vector3 &o) const
-        {
-            return {x * o.x, y * o.y, z * o.z};
         }
 
-        Vector3 operator*(float f) const
+        Vector3 operator-(const Vector3 &o) const
         {
-            return {x * f, y * f, z * f};
+            return {x - o.x, y - o.y, z - o.z};
         }
 
-        bool NotZero();
+        Vector3 operator*(float scalar) const
+        {
+            return {x * scalar, y * scalar, z * scalar};
+        }
+
+        Vector3 operator/(float scalar) const
+        {
+            return {x / scalar, y / scalar, z / scalar};
+        }
+
+        void operator*=(float scalar)
+        {
+            x *= scalar;
+            y *= scalar;
+            z *= scalar;
+        }
+
+        bool operator==(const Vector3 &o) const
+        {
+            return x == o.x && y == o.y && z == o.z;
+        }
+
+        bool operator!=(const Vector3 &o) const
+        {
+            return !(*this == o);
+        }
+
+        bool NotZero() const;
     };
 
     class CE_API Vector4
@@ -92,13 +139,38 @@ namespace Core
             y += o.y;
             z += o.z;
             w += o.w;
-        };
-
-        Vector4 operator*(const Vector4 &o) const
-        {
-            return {x * o.x, y * o.y, z * o.z, w * o.w};
         }
 
-        bool NotZero();
+        Vector4 operator+(const Vector4 &o) const
+        {
+            return {x + o.x, y + o.y, z + o.z, w + o.w};
+        }
+
+        Vector4 operator-(const Vector4 &o) const
+        {
+            return {x - o.x, y - o.y, z - o.z, w - o.w};
+        }
+
+        Vector4 operator*(float scalar) const
+        {
+            return {x * scalar, y * scalar, z * scalar, w * scalar};
+        }
+
+        Vector4 operator/(float scalar) const
+        {
+            return {x / scalar, y / scalar, z / scalar, w / scalar};
+        }
+
+        bool operator==(const Vector4 &o) const
+        {
+            return x == o.x && y == o.y && z == o.z && w == o.w;
+        }
+
+        bool operator!=(const Vector4 &o) const
+        {
+            return !(*this == o);
+        }
+
+        bool NotZero() const;
     };
 }

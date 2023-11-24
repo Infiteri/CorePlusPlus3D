@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/Engine/Source",
                 "${workspaceFolder}/Engine/Vendor/ImGui",
-                "${workspaceFolder}/Engine/Vendor/ImGuizmo"
+                "${workspaceFolder}/Engine/Vendor/ImGuizmo",
+                "${workspaceFolder}/Engine/Vendor/ImNodes"
             ],
             "defines": [
                 "_DEBUG",
