@@ -68,6 +68,8 @@ namespace Core
         void RemoveActorByName(const std::string &name);
         void RemoveActorByUUID(UUID *id);
 
+        void AddRuntimeComponents(Actor* a);
+
         // --- CAMERA ---
         void ActivateSceneCamera();
         PerspectiveCameraComponent *GetActorCameraComponent();

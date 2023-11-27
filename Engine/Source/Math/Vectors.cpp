@@ -1,8 +1,14 @@
 #include "Vectors.h"
 #include <cmath>
+#include <algorithm>
 
 namespace Core
 {
+    static float dot(const Vector3 &v1, const Vector3 &v2)
+    {
+        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+    }
+
     Vector2::Vector2()
     {
         Set(0, 0);
@@ -43,6 +49,11 @@ namespace Core
         Set(x, y, z);
     }
 
+    Vector3::Vector3(const Vector3 &other)
+    {
+        Set(other);
+    }
+
     Vector3::~Vector3()
     {
     }
@@ -65,6 +76,32 @@ namespace Core
     void Vector3::Set(Vector3 *v)
     {
         Set(v->x, v->y, v->z);
+    }
+
+    void Vector3::Set(const Vector3 &v)
+    {
+        Set(v.x, v.y, v.z);
+    }
+
+    Vector3 Vector3::Reflect(const Vector3 &other)
+    {
+        float dotProduct = dot(*this, other);
+        Vector3 ref = *this - 2.0f;
+        Vector3 reflection = ref * other * dotProduct;
+        return reflection;
+    }
+
+    Vector3 Vector3::Max(const Vector3 &other)
+    {
+        return Vector3(
+            std::max(x, other.x),
+            std::max(y, other.y),
+            std::max(z, other.z));
+    }
+
+    float Vector3::Max()
+    {
+        return std::max({x, y, z});
     }
 
     bool Vector3::NotZero() const

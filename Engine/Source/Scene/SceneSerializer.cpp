@@ -170,6 +170,7 @@ namespace Core
         auto pointLight = a->GetComponent<PointLightComponent>();
         auto spotLight = a->GetComponent<SpotLightComponent>();
         auto data = a->GetComponent<DataComponent>();
+        auto physics = a->GetComponent<PhysicsComponent>();
 
         if (mesh)
         {
@@ -324,6 +325,18 @@ namespace Core
             }
 
             out << YAML::EndSeq;
+        }
+
+        if (physics)
+        {
+            out << YAML::Key << "PhysicsComponent";
+            out << YAML::BeginMap;
+            out << YAML::Key << "Velocity" << YAML::Value << &physics->Configuration.Velocity;
+            out << YAML::Key << "Acceleration" << YAML::Value << &physics->Configuration.Acceleration;
+            out << YAML::Key << "Mass" << YAML::Value << physics->Configuration.Mass;
+            out << YAML::Key << "Damping" << YAML::Value << physics->Configuration.Damping;
+            out << YAML::Key << "Gravity" << YAML::Value << physics->Configuration.Gravity;
+            out << YAML::EndMap;
         }
 
         out << YAML::EndMap;
@@ -539,7 +552,7 @@ namespace Core
                     delete data;
                 }
                 break;
-                
+
                 case Data::DataFloat:
                 {
                     Data::FloatContainer *data = new Data::FloatContainer(skyShaderData["Value"].as<float>());
@@ -585,6 +598,7 @@ namespace Core
                 auto aabb = actor["AABBComponent"];
                 auto pLight = actor["PointLight"];
                 auto sLight = actor["SpotLight"];
+                auto physics = actor["PhysicsComponent"];
                 auto data = actor["DataComponent"];
 
                 Actor *a = new Actor();
@@ -742,6 +756,16 @@ namespace Core
                             break;
                         }
                     }
+                }
+
+                if (physics)
+                {
+                    auto c = a->AddComponent<PhysicsComponent>();
+                    YAMLToVcc3(physics["Velocity"], &c->Configuration.Velocity);
+                    YAMLToVcc3(physics["Acceleration"], &c->Configuration.Acceleration);
+                    c->Configuration.Mass = physics["Mass"] ? physics["Mass"].as<float>() : 1.0f;
+                    c->Configuration.Damping = physics["Damping"] ? physics["Damping"].as<float>() : 0.9f;
+                    c->Configuration.Gravity = physics["Gravity"] ? physics["Gravity"].as<float>() : 0.9f;
                 }
 
                 // Deserialize the actor parent

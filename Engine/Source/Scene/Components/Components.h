@@ -3,6 +3,7 @@
 #include "Base.h"
 #include "Core/CeData.h"
 #include "Math/Vectors.h"
+#include "Physics/PhysicsBody.h"
 #include <vector>
 
 namespace Core
@@ -157,4 +158,14 @@ namespace Core
         };
     };
 
+    class CE_API PhysicsComponent : public Component
+    {
+    public:
+        PhysicsBody *Body; // TODO: Figure out if its important to hold a pointer to the body.
+        PhysicsBodyConfiguration Configuration;
+
+        PhysicsComponent();
+        ~PhysicsComponent();
+        void From(PhysicsComponent *other);
+    };
 }

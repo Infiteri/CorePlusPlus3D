@@ -196,6 +196,7 @@ namespace Core
     void DrawPointLightComponent(PointLightComponent *comp, Actor *a);
     void DrawSpotLightComponent(SpotLightComponent *comp, Actor *a);
     void DrawDataComponent(DataComponent *scr, Actor *a);
+    void DrawPhysicsUI(PhysicsComponent *c, Actor *a);
     // ----------------------------------------
 
     void SceneHierarchyPanel::DrawActorComponents(Actor *a)
@@ -275,6 +276,9 @@ namespace Core
         EditorUtils::DrawComponentUI<DataComponent>("Data", a, [&](DataComponent *comp)
                                                     { DrawDataComponent(comp, a); });
 
+        EditorUtils::DrawComponentUI<PhysicsComponent>("Physics", a, [&](PhysicsComponent *comp)
+                                                       { DrawPhysicsUI(comp, a); });
+
         int index = 0;
         for (auto comp : selectionContext->GetComponents())
         {
@@ -345,6 +349,9 @@ namespace Core
 
             if (ImGui::MenuItem("Data"))
                 selectionContext->AddComponent<DataComponent>();
+
+            if (ImGui::MenuItem("Physics"))
+                selectionContext->AddComponent<PhysicsComponent>();
 
             ImGui::EndPopup();
         }
@@ -757,5 +764,20 @@ namespace Core
         }
 
         ImGui::SameLine();
+    }
+
+    void DrawPhysicsUI(PhysicsComponent *c, Actor *a)
+    {
+        PhysicsBodyConfiguration *Config;
+        if (EditorLayer::Get()->currentSceneState == EditorLayer::SceneStateStop)
+            Config = &c->Configuration;
+        else
+            Config = c->Body->GetCurrentConfig();
+
+        EditorUtils::ImGuiVec3Edit("Velocity", &Config->Velocity);
+        EditorUtils::ImGuiVec3Edit("Acceleration", &Config->Acceleration);
+        ImGui::DragFloat("Mass", &Config->Mass, 0.005f, 0.01f);
+        ImGui::DragFloat("Damping", &Config->Damping, 0.005f, 0.0f, 1.0f);
+        ImGui::DragFloat("Gravity", &Config->Gravity, 0.005f, 0.01f);
     }
 }

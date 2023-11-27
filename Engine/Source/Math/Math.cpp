@@ -1,6 +1,7 @@
 #include "Math.h"
 
 #include <cmath>
+#include <math.h>
 #include <random>
 
 namespace Core
@@ -145,6 +146,20 @@ namespace Core
                 return max;
             else
                 return t;
+        }
+        float Pow(float a, float b)
+        {
+            return powf(a, b);
+        }
+
+        float Abs(float a)
+        {
+            return fabs(a);
+        }
+
+        Vector3 Abs(const Vector3 &other)
+        {
+            return Vector3(fabs(other.x), fabs(other.y), fabs(other.z));
         }
     }
 }

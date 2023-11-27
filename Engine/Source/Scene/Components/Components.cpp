@@ -11,6 +11,7 @@
 #include "Renderer/Camera/CameraSystem.h"
 #include "Renderer/Light/PointLight.h"
 #include "Renderer/Light/SpotLight.h"
+#include "Physics/PhysicsBody.h"
 
 namespace Core
 {
@@ -315,5 +316,31 @@ namespace Core
         }
 
         return nullptr;
+    }
+
+    PhysicsComponent::PhysicsComponent()
+    {
+        Configuration.Velocity = Vector3(1, 0, 0);
+        Configuration.Acceleration = Vector3(5, 0, 0);
+        Configuration.Mass = 1.0f;
+        Configuration.Damping = 1.0f;
+        Configuration.Gravity = 9.8f;
+        Configuration.Owner = owner;
+    }
+
+    PhysicsComponent::~PhysicsComponent()
+    {
+    }
+
+#define CE_HELPER_PHYS(C) Configuration.C = other->Configuration.C
+
+    void PhysicsComponent::From(PhysicsComponent *other)
+    {
+        CE_HELPER_PHYS(Velocity);
+        CE_HELPER_PHYS(Acceleration);
+        CE_HELPER_PHYS(Mass);
+        CE_HELPER_PHYS(Damping);
+        CE_HELPER_PHYS(Gravity);
+        CE_HELPER_PHYS(Owner);
     }
 }

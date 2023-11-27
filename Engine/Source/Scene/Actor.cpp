@@ -40,6 +40,7 @@ namespace Core
         auto pLight = other->GetComponent<PointLightComponent>();
         auto sLight = other->GetComponent<SpotLightComponent>();
         auto data = other->GetComponent<DataComponent>();
+        auto physics = other->GetComponent<PhysicsComponent>();
 
         outActor->GetTransform()->From(transform);
 
@@ -63,6 +64,9 @@ namespace Core
 
         if (data)
             outActor->AddComponent<DataComponent>()->From(data);
+
+        if (physics)
+            outActor->AddComponent<PhysicsComponent>()->From(physics);
 
         for (Actor *a : other->GetChildren())
         {

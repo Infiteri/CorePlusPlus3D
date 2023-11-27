@@ -12,6 +12,7 @@ namespace Core
         material = MaterialManager::GetNew();
         init = false;
         isMaterialUnique = true;
+        geometry = new BoxGeometry(1, 1, 1);
     }
 
     Mesh::~Mesh()

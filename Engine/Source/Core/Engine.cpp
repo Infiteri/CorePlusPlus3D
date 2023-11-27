@@ -22,6 +22,8 @@
 
 #include "Script/ScriptEngine.h"
 
+#include "Physics/PhysicsEngine.h"
+
 #include <glfw/glfw3.h>
 
 #define CE_CLEAR_CONTEXT_UTILS(a, b)             \
@@ -72,6 +74,7 @@ namespace Core
         LayerStack::Init();
         World::Init();
         ScriptEngine::Init();
+        PhysicsEngine::Init();
 
         // Create window
         GWindowInstance = new Window(config->windowConfig);
@@ -171,6 +174,7 @@ namespace Core
         LayerStack::Destroy();
         World::Shutdown();
         ScriptEngine::Shutdown();
+        PhysicsEngine::Shutdown();
 
         Renderer::Shutdown();
 

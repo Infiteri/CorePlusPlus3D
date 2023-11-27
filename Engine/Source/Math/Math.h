@@ -34,5 +34,9 @@ namespace Core
         CE_API float RandomFloat(float min, float max);
         CE_API float Lerp(float min, float max, float t);
         CE_API float Clamp(float min, float max, float t);
+
+        CE_API float Pow(float a, float b);
+        CE_API float Abs(float a);
+        CE_API Vector3 Abs(const Vector3& other);
     }
 }

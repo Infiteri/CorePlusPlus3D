@@ -63,5 +63,6 @@
   },
   "editor.cursorBlinking": "blink",
   "editor.cursorSmoothCaretAnimation": "off",
-  "workbench.activityBar.iconClickBehavior": "toggle"
+  "workbench.activityBar.iconClickBehavior": "toggle",
+  "cSpell.words": ["AABB"]
 }

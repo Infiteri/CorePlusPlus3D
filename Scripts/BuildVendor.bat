@@ -18,5 +18,5 @@ cd ../../../
 echo Done Building ImGui
 
 echo Building ImGuizmo
-call Build.bat
+call Engine/Vendor/Build.bat
 echo Done Building ImGuizmo

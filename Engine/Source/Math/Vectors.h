@@ -65,17 +65,28 @@ namespace Core
 
         Vector3();
         Vector3(float x, float y, float z);
+        Vector3(const Vector3& other);
         ~Vector3();
 
         void Set(float x, float y, float z);
         void Normalize();
         void Set(Vector3 *v);
+        void Set(const Vector3 &v);
+
+        Vector3 Reflect(const Vector3& other);
 
         void operator+=(const Vector3 &o)
         {
             x += o.x;
             y += o.y;
             z += o.z;
+        }
+
+        void operator-=(const Vector3 &o)
+        {
+            x -= o.x;
+            y -= o.y;
+            z -= o.z;
         }
 
         Vector3 operator+(const Vector3 &o) const
@@ -88,6 +99,22 @@ namespace Core
             return {x - o.x, y - o.y, z - o.z};
         }
 
+        Vector3 operator-(Vector3 *o) const
+        {
+            return {x - o->x, y - o->y, z - o->z};
+        }
+
+
+        Vector3 operator-() const
+        {
+            return {-x, -y, -z};
+        }
+
+        Vector3 operator*(const Vector3 &o)
+        {
+            return {x * o.x, y * o.y, z * o.z};
+        };
+
         Vector3 operator*(float scalar) const
         {
             return {x * scalar, y * scalar, z * scalar};
@@ -96,6 +123,11 @@ namespace Core
         Vector3 operator/(float scalar) const
         {
             return {x / scalar, y / scalar, z / scalar};
+        }
+
+        Vector3 operator-(float scalar) const
+        {
+            return {x - scalar, y - scalar, z - scalar};
         }
 
         void operator*=(float scalar)
@@ -114,6 +146,9 @@ namespace Core
         {
             return !(*this == o);
         }
+
+        Vector3 Max(const Vector3 &other);
+        float Max();
 
         bool NotZero() const;
     };

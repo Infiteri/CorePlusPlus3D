@@ -11,6 +11,8 @@
 
 #include "Script/ScriptEngine.h"
 
+#include "Physics/PhysicsEngine.h"
+
 #include <algorithm>
 
 namespace Core
@@ -101,6 +103,8 @@ namespace Core
         for (Actor *a : actors)
             a->Update();
 
+        // Runtime updates
+        PhysicsEngine::UpdateRuntime();
         ScriptEngine::UpdateRuntime();
     }
 
@@ -134,16 +138,12 @@ namespace Core
 
         state = SceneState::Running;
 
+        PhysicsEngine::ClearBodies();
+
         for (Actor *a : actors)
         {
             a->Start();
-
-            // Register actor script
-            auto componentScript = a->GetComponent<ActorScriptComponent>();
-            if (componentScript != nullptr)
-            {
-                ScriptEngine::RegisterScript(componentScript->className, componentScript->className, a);
-            }
+            AddRuntimeComponents(a);
         }
 
         ScriptEngine::StartRuntime();
@@ -158,6 +158,7 @@ namespace Core
         for (Actor *a : actors)
             a->Stop();
 
+        PhysicsEngine::StopRuntime();
         ScriptEngine::StopRuntime();
     }
 
@@ -199,6 +200,8 @@ namespace Core
             a->Init();
         }
 
+        AddRuntimeComponents(a); 
+
         actors.push_back(a);
     }
 
@@ -221,7 +224,6 @@ namespace Core
         {
             if (actors[i]->GetUUID()->Get() == id->Get())
             {
-                CE_CORE_DEBUG("Removing %s (%ull), %i.", actors[i]->GetName().c_str(), id->Get(), actors.size());
                 actors[i]->Destroy();
                 delete actors[i];
 
@@ -229,9 +231,28 @@ namespace Core
                 auto it = actors.begin();
                 std::advance(it, i);
                 actors.erase(it);
-
-                CE_CORE_DEBUG("Length %i.", actors.size());
             }
+        }
+    }
+
+    void Scene::AddRuntimeComponents(Actor *a)
+    {
+        if (state != SceneState::Running)
+            return;
+
+        //? Register actor runtime components
+        auto componentScript = a->GetComponent<ActorScriptComponent>();
+        if (componentScript != nullptr)
+        {
+            ScriptEngine::RegisterScript(componentScript->className, componentScript->className, a);
+        }
+
+        auto componentPhysics = a->GetComponent<PhysicsComponent>();
+        if (componentPhysics != nullptr)
+        {
+            componentPhysics->Configuration.Owner = a;
+            componentPhysics->Body =
+                PhysicsEngine::CreatePhysicsBody(componentPhysics->Configuration);
         }
     }
 
