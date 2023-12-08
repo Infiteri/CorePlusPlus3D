@@ -1,23 +1,44 @@
 #include "AABB.h"
+#include "Math/Math.h"
 
 namespace Core
 {
-    bool AABB::Collides(const AABB *other)
+    float TransformToAxis(AABB *aabb, const Vector3 &axis)
     {
-        bool coll = (CollidesX(other) && CollidesY(other) && CollidesZ(other));
+        return aabb->Sizes.x * Math::Abs(axis.Dot(aabb->GetAxis(0))) +
+               aabb->Sizes.y * Math::Abs(axis.Dot(aabb->GetAxis(1))) +
+               aabb->Sizes.z * Math::Abs(axis.Dot(aabb->GetAxis(2)));
+    }
 
-        if (coll)
+    bool CollidesOnAxis(AABB *one, AABB *two, const Vector3 &axis)
+    {
+        // Use the rotation part of the matrix to transform the axis
+        float oneProject = TransformToAxis(one, axis);
+        float twoProject = TransformToAxis(two, axis);
+        Vector3 toCenter = two->GetAxis(3) - one->GetAxis(3);
+        float distance = Math::Abs(toCenter.Dot(axis));
+        return (distance < oneProject + twoProject);
+    }
+
+    bool AABB::Collides(AABB *other)
+    {
+        if (!other)
         {
-            Vector3 dist1 = other->Position - Sizes;
-            Vector3 dist2 = Position - other->Sizes;
-            Vector3 dist = dist1.Max(dist2);
-
-            float distance = dist.Max();
-
-            Direction = Vector3(distance, distance, distance);
+            return false;
         }
 
-        return coll;
+        for (int i = 0; i < 3; ++i)
+        {
+            Vector3 axis = GetAxis(i); // Normalize the axis
+            axis.Normalize();
+
+            if (!CollidesOnAxis(this, other, axis))
+            {
+                return false; // No overlap on this axis, early exit
+            }
+        }
+
+        return true; // Overlap on all axes
     }
 
     bool AABB::CollidesX(const AABB *other)
@@ -53,5 +74,31 @@ namespace Core
         float right2 = other->Position.z + other->Sizes.z;
         bool horizontalOverlap = (left1 <= right2) && (right1 >= left2);
         return horizontalOverlap;
+    }
+
+    Vector3 AABB::GetAxis(int a) const
+    {
+        switch (a)
+        {
+        case 0:
+            return Vector3(1, 0, 0);
+            break;
+
+        case 1:
+            return Vector3(0, 1, 0);
+            break;
+
+        case 2:
+            return Vector3(0, 0, 1);
+            break;
+
+        case 3:
+            return TransformMatrix->TransformVector(Position + (Sizes * 0.5f /** TODO: Should be in half or not*/));
+            break;
+
+        default:
+            return Vector3(0, 0, 0);
+            break;
+        }
     }
 }

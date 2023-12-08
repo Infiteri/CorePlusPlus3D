@@ -65,15 +65,16 @@ namespace Core
 
         Vector3();
         Vector3(float x, float y, float z);
-        Vector3(const Vector3& other);
+        Vector3(const Vector3 &other);
         ~Vector3();
 
         void Set(float x, float y, float z);
         void Normalize();
         void Set(Vector3 *v);
         void Set(const Vector3 &v);
+        float Dot(const Vector3 &a) const;
 
-        Vector3 Reflect(const Vector3& other);
+        Vector3 Reflect(const Vector3 &other);
 
         void operator+=(const Vector3 &o)
         {
@@ -103,7 +104,6 @@ namespace Core
         {
             return {x - o->x, y - o->y, z - o->z};
         }
-
 
         Vector3 operator-() const
         {

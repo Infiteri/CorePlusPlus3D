@@ -27,21 +27,22 @@ namespace Core
 
         tr->position += Config.Velocity * dt;
         Vector3 resultAcceleration = Config.Acceleration;
-        resultAcceleration += (Vector3(0, Config.Gravity, 0) * dt);
+        resultAcceleration += (Vector3(0, -Config.Gravity, 0));
         Config.Velocity += resultAcceleration * dt;
         Config.Velocity *= Math::Pow(Config.Damping, dt);
 
         collider->As<AABBCollider>()->GetAABB()->Position = tr->position;
         collider->As<AABBCollider>()->GetAABB()->Sizes = Vector3(1, 1, 1);
+        collider->As<AABBCollider>()->GetAABB()->TransformMatrix = Owner->GetWorldMatrix();
     }
 
     void PhysicsBody::SetupWithConfiguration(PhysicsBodyConfiguration Config)
     {
         this->Config.Velocity = Config.Velocity;
-        this->Config.Acceleration = Config.Acceleration; // Set the initial acceleration
-        this->Config.Mass = Config.Mass;                 // Set the initial acceleration
-        this->Config.Damping = Config.Damping;           // Set the initial acceleration
-        this->Config.Gravity = Config.Gravity;           // Set the initial acceleration
+        this->Config.Acceleration = Config.Acceleration;
+        this->Config.Mass = Config.Mass;
+        this->Config.Damping = Config.Damping;
+        this->Config.Gravity = Config.Gravity;
         Owner = Config.Owner;
 
         if (collider)

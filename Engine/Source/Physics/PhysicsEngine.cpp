@@ -6,11 +6,6 @@ namespace Core
 {
     static PhysicsEngineState State;
 
-    float Dot(const Vector3 &a, const Vector3 &b)
-    {
-        return a.x * b.x + a.y * b.y + a.z * b.z;
-    }
-
     void PhysicsEngine::Init()
     {
         State.Stage = StageInit;
@@ -48,8 +43,18 @@ namespace Core
                 auto a = State.Bodies[i];
                 auto b = State.Bodies[j];
 
+#if 0
                 if (a->GetCollider()->Intersects(b->GetCollider()))
                     ResolveCollision(a, b);
+#else
+                if (a->GetCollider()->Intersects(b->GetCollider()))
+                {
+                    PhysicsEngineCollisionContact Contact;
+                    Contact.A = a;
+                    Contact.B = b;
+                    ResolveContact(&Contact);
+                }
+#endif
             }
         }
     }
@@ -66,6 +71,20 @@ namespace Core
         a->GetGravityVector()->Set(0, 0, 0);
         b->GetVelocity()->Set(*b->GetVelocity() * -1);
         b->GetGravityVector()->Set(0, 0, 0);
+    }
+
+    void PhysicsEngine::ResolveContact(PhysicsEngineCollisionContact *c)
+    {
+        if (!c->A || !c->B)
+            return;
+
+        // -- Vars --
+        PhysicsBody *a = c->A;
+        PhysicsBody *b = c->B;
+        // ---------
+    
+        a->GetVelocity()->Set(*a->GetVelocity() * -1);
+        b->GetVelocity()->Set(*b->GetVelocity() * -1);
     }
 
     void PhysicsEngine::StopRuntime()

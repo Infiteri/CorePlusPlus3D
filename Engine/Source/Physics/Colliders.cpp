@@ -24,7 +24,7 @@ namespace Core
         }
 
         return false;
-    }
+    } 
 
     AABBCollider::AABBCollider()
     {

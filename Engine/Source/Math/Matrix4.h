@@ -17,6 +17,15 @@ namespace Core
         void From(float *data);
         void Normalized();
 
+        Vector3 TransformVector(const Vector3 &vector) const
+        {
+            float x = data[0] * vector.x + data[1] * vector.y + data[2] * vector.z + data[3];
+            float y = data[4] * vector.x + data[5] * vector.y + data[6] * vector.z + data[7];
+            float z = data[8] * vector.x + data[9] * vector.y + data[10] * vector.z + data[11];
+
+            return Vector3(x, y, z);
+        }
+
         static Matrix4 Identity();
         static Matrix4 Empty();
 
