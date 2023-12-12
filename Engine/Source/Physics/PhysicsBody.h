@@ -12,6 +12,7 @@ namespace Core
     {
         Vector3 Velocity;
         Vector3 Acceleration;
+        Vector3 Size;
         Actor *Owner;
         float Mass;
         float Damping;

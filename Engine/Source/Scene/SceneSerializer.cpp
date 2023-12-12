@@ -103,12 +103,18 @@ namespace Core
 
     void YAMLToVcc3(YAML::Node node, Vector3 *out)
     {
-        out->Set(node[0].as<float>(), node[1].as<float>(), node[2].as<float>());
+        if (!node)
+            out->Set(1, 1, 1);
+        else
+            out->Set(node[0].as<float>(), node[1].as<float>(), node[2].as<float>());
     };
 
     void YAMLToColor(YAML::Node node, Color *out)
     {
-        out->Set(node[0].as<float>(), node[1].as<float>(), node[2].as<float>(), node[3].as<float>());
+        if (!node)
+            out->Set(255, 255, 255, 255);
+        else
+            out->Set(node[0].as<float>(), node[1].as<float>(), node[2].as<float>(), node[3].as<float>());
     };
 
     GeometryType StringToGeometryType(const std::string &value)
@@ -333,6 +339,7 @@ namespace Core
             out << YAML::BeginMap;
             out << YAML::Key << "Velocity" << YAML::Value << &physics->Configuration.Velocity;
             out << YAML::Key << "Acceleration" << YAML::Value << &physics->Configuration.Acceleration;
+            out << YAML::Key << "Size" << YAML::Value << &physics->Configuration.Size;
             out << YAML::Key << "Mass" << YAML::Value << physics->Configuration.Mass;
             out << YAML::Key << "Damping" << YAML::Value << physics->Configuration.Damping;
             out << YAML::Key << "Gravity" << YAML::Value << physics->Configuration.Gravity;
@@ -763,6 +770,7 @@ namespace Core
                     auto c = a->AddComponent<PhysicsComponent>();
                     YAMLToVcc3(physics["Velocity"], &c->Configuration.Velocity);
                     YAMLToVcc3(physics["Acceleration"], &c->Configuration.Acceleration);
+                    YAMLToVcc3(physics["Size"], &c->Configuration.Size);
                     c->Configuration.Mass = physics["Mass"] ? physics["Mass"].as<float>() : 1.0f;
                     c->Configuration.Damping = physics["Damping"] ? physics["Damping"].as<float>() : 0.9f;
                     c->Configuration.Gravity = physics["Gravity"] ? physics["Gravity"].as<float>() : 0.9f;

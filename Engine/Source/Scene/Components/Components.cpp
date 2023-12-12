@@ -342,5 +342,6 @@ namespace Core
         CE_HELPER_PHYS(Damping);
         CE_HELPER_PHYS(Gravity);
         CE_HELPER_PHYS(Owner);
+        CE_HELPER_PHYS(Size);
     }
 }

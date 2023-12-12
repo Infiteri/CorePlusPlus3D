@@ -32,14 +32,15 @@ namespace Core
         Config.Velocity *= Math::Pow(Config.Damping, dt);
 
         collider->As<AABBCollider>()->GetAABB()->Position = tr->position;
-        collider->As<AABBCollider>()->GetAABB()->Sizes = Vector3(1, 1, 1);
+        collider->As<AABBCollider>()->GetAABB()->Sizes = this->Config.Size;
         collider->As<AABBCollider>()->GetAABB()->TransformMatrix = Owner->GetWorldMatrix();
     }
 
     void PhysicsBody::SetupWithConfiguration(PhysicsBodyConfiguration Config)
     {
-        this->Config.Velocity = Config.Velocity;
-        this->Config.Acceleration = Config.Acceleration;
+        this->Config.Velocity = {Config.Velocity};
+        this->Config.Acceleration = {Config.Acceleration};
+        this->Config.Size = {Config.Size};
         this->Config.Mass = Config.Mass;
         this->Config.Damping = Config.Damping;
         this->Config.Gravity = Config.Gravity;

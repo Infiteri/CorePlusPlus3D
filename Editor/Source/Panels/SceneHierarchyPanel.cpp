@@ -776,6 +776,8 @@ namespace Core
 
         EditorUtils::ImGuiVec3Edit("Velocity", &Config->Velocity);
         EditorUtils::ImGuiVec3Edit("Acceleration", &Config->Acceleration);
+        EditorUtils::ImGuiVec3Edit("Size", &Config->Size);
+
         ImGui::DragFloat("Mass", &Config->Mass, 0.005f, 0.01f);
         ImGui::DragFloat("Damping", &Config->Damping, 0.005f, 0.0f, 1.0f);
         ImGui::DragFloat("Gravity", &Config->Gravity, 0.005f, 0.01f);
