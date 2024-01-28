@@ -1,49 +1,57 @@
-#include "PhysicsBody.h"
+#include "RigidBody.h"
 #include "Core/Engine.h"
 #include "Core/Logger.h"
 #include "Scene/Actor.h"
 #include "Math/Math.h"
+#include "Physics/PhysicsEngine.h"
 
 namespace Core
 {
-    PhysicsBody::PhysicsBody()
+    RigidBody::RigidBody()
     {
         collider = new AABBCollider();
         Config.Acceleration = Vector3(0.0f, 0.0f, 0.0f);
-        GravityVector = Vector3(0.0f, 0.0f, 0.0f);
         Config.Velocity = Vector3(0.0f, 0.0f, 0.0f);
         Config.Mass = 1.0f;
-        Config.Gravity = 9.8f;
     }
 
-    PhysicsBody::~PhysicsBody()
+    RigidBody::~RigidBody()
     {
     }
 
-    void PhysicsBody::Update()
+    void RigidBody::Update()
     {
         auto tr = Owner->GetTransform();
         float dt = Engine::GetDeltaTime();
 
         tr->position += Config.Velocity * dt;
-        Vector3 resultAcceleration = Config.Acceleration;
-        resultAcceleration += (Vector3(0, -Config.Gravity, 0));
-        Config.Velocity += resultAcceleration * dt;
+
+        Vector3 resultingAcc = CalculateForcesAccumulated();
+        resultingAcc.y -= PhysicsConstants::GRAVITY * Config.Mass;
+
+        Config.Velocity += resultingAcc * dt;
         Config.Velocity *= Math::Pow(Config.Damping, dt);
 
-        collider->As<AABBCollider>()->GetAABB()->Position = tr->position;
-        collider->As<AABBCollider>()->GetAABB()->Sizes = this->Config.Size;
-        collider->As<AABBCollider>()->GetAABB()->TransformMatrix = Owner->GetWorldMatrix();
+        collider->UpdateFromBody(this);
+        forceAccum.Set(0, 0, 0);
     }
 
-    void PhysicsBody::SetupWithConfiguration(PhysicsBodyConfiguration Config)
+    Vector3 RigidBody::CalculateForcesAccumulated()
+    {
+        Vector3 v;
+        v += forceAccum;
+        v += Config.Acceleration;
+        return v;
+    }
+
+    void RigidBody::SetupWithConfiguration(RigidBodyConfiguration Config)
     {
         this->Config.Velocity = {Config.Velocity};
+
         this->Config.Acceleration = {Config.Acceleration};
         this->Config.Size = {Config.Size};
         this->Config.Mass = Config.Mass;
         this->Config.Damping = Config.Damping;
-        this->Config.Gravity = Config.Gravity;
         Owner = Config.Owner;
 
         if (collider)
@@ -52,9 +60,8 @@ namespace Core
         collider = new AABBCollider();
     }
 
-    void PhysicsBody::ApplyImpulse(const Vector3 &impulse)
+    void RigidBody::ApplyImpulse(const Vector3 &v)
     {
-        // Adjust acceleration based on impulse
-        Config.Acceleration += impulse / Config.Mass;
+        forceAccum += v;
     }
 }

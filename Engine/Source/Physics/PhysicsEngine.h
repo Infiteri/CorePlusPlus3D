@@ -1,13 +1,20 @@
 #pragma once
 
 #include "Base.h"
-#include "PhysicsBody.h"
+#include "Physics/Body/BodyConfigurations.h"
+#include "ForceGenerator.h"
 #include "Math/Vectors.h"
 #include <vector>
 
 namespace Core
 {
     struct PhysicsEngineCollisionContact;
+
+    struct PhysicsConstants
+    {
+        static const float GRAVITY;
+    };
+
     class CE_API PhysicsEngine
     {
     public:
@@ -15,13 +22,11 @@ namespace Core
         ~PhysicsEngine(){};
 
         static void Init();
-        static PhysicsBody *CreatePhysicsBody(PhysicsBodyConfiguration Config);
+        static RigidBody *CreateRigidBody(RigidBodyConfiguration Config);
 
         /// @brief Called when the scene is updating, will do the maths.
         static void UpdateRuntime();
         static void UpdateCollision();
-        static void ResolveCollision(PhysicsBody *a, PhysicsBody *b);
-        static void ResolveContact(PhysicsEngineCollisionContact *c);
         static void StopRuntime();
 
         static void ClearBodies();
@@ -41,15 +46,7 @@ namespace Core
     struct PhysicsEngineState
     {
         PhysicsEngine::PhysicsEngineStage Stage;
-        std::vector<PhysicsBody *> Bodies;
-    };
-
-    struct PhysicsEngineCollisionContact
-    {
-        PhysicsBody *A;
-        PhysicsBody *B;
-        Vector3 ContactPoint;
-        Vector3 ContactNormal;
-        float Penetration;
+        std::vector<RigidBody *> Bodies;
+        ForceRegistry Forces;
     };
 }

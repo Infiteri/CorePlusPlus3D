@@ -11,8 +11,9 @@
 #include "Renderer/Camera/CameraSystem.h"
 #include "Renderer/Light/PointLight.h"
 #include "Renderer/Light/SpotLight.h"
-#include "Physics/PhysicsBody.h"
-
+#include "Physics/Body/PhysicsBody.h"
+#include "Physics/Body/RigidBody.h"
+ 
 namespace Core
 {
     MeshComponent::MeshComponent()

@@ -90,6 +90,20 @@ namespace Core
             z -= o.z;
         }
 
+        void operator*=(const Vector3 &o)
+        {
+            x *= o.x;
+            y *= o.y;
+            z *= o.z;
+        }
+
+        void operator/=(const Vector3 &o)
+        {
+            x /= o.x;
+            y /= o.y;
+            z /= o.z;
+        }
+
         Vector3 operator+(const Vector3 &o) const
         {
             return {x + o.x, y + o.y, z + o.z};
@@ -135,6 +149,27 @@ namespace Core
             x *= scalar;
             y *= scalar;
             z *= scalar;
+        }
+
+        void operator/=(float scalar)
+        {
+            x /= scalar;
+            y /= scalar;
+            z /= scalar;
+        }
+
+        void operator+=(float scalar)
+        {
+            x += scalar;
+            y += scalar;
+            z += scalar;
+        }
+
+        void operator-=(float scalar)
+        {
+            x -= scalar;
+            y -= scalar;
+            z -= scalar;
         }
 
         bool operator==(const Vector3 &o) const

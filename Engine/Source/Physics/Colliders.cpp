@@ -1,4 +1,6 @@
 #include "Colliders.h"
+#include "Physics/Body/RigidBody.h"
+#include "Scene/Actor.h"
 
 namespace Core
 {
@@ -24,7 +26,7 @@ namespace Core
         }
 
         return false;
-    } 
+    }
 
     AABBCollider::AABBCollider()
     {
@@ -33,6 +35,15 @@ namespace Core
 
     AABBCollider::~AABBCollider()
     {
+    }
+
+    void AABBCollider::UpdateFromBody(RigidBody *b)
+    {
+        aabb.Position.x = b->GetOwner()->GetWorldMatrix()->data[12];
+        aabb.Position.y = b->GetOwner()->GetWorldMatrix()->data[13];
+        aabb.Position.z = b->GetOwner()->GetWorldMatrix()->data[14];
+        aabb.Sizes *= b->GetOwner()->GetTransform()->scale;
+        aabb.TransformMatrix = b->GetOwner()->GetWorldMatrix();
     }
 
 }

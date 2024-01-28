@@ -18,6 +18,14 @@
 #include <fstream>
 
 #define CE_NO_PARENT_NAME "__NO_PARENT_NAME_CE__"
+#define CE_SERIALIZE_FIELD(name, value) out << YAML::Key << name << YAML::Value << value
+#define CE_CASE_SHADER_DATA_SERIALIZE(prefix, type) \
+    case Data::prefix:                              \
+    {                                               \
+        type *v = (type *)d->Data;                  \
+        out << YAML::Key << "Value" << v;           \
+        break;                                      \
+    }
 
 namespace Core
 {
@@ -164,9 +172,9 @@ namespace Core
         Transform *transform = a->GetTransform();
         out << YAML::Key << "Transform";
         out << YAML::BeginMap;
-        out << YAML::Key << "Position" << YAML::Value << &transform->position;
-        out << YAML::Key << "Rotation" << YAML::Value << &transform->rotation;
-        out << YAML::Key << "Scale" << YAML::Value << &transform->scale;
+        CE_SERIALIZE_FIELD("Position", &transform->position);
+        CE_SERIALIZE_FIELD("Rotation", &transform->rotation);
+        CE_SERIALIZE_FIELD("Scale", &transform->scale);
         out << YAML::EndMap;
 
         auto mesh = a->GetComponent<MeshComponent>();
@@ -252,14 +260,14 @@ namespace Core
         {
             out << YAML::Key << "PointLight";
             out << YAML::BeginMap;
-            out << YAML::Key << "Position" << YAML::Value << &pointLight->light->GetTransform()->position;
-            out << YAML::Key << "Color" << YAML::Value << pointLight->light->GetColor();
-            out << YAML::Key << "Specular" << YAML::Value << pointLight->light->GetSpecular();
-            out << YAML::Key << "Quadratic" << YAML::Value << pointLight->light->GetQuadratic();
-            out << YAML::Key << "Linear" << YAML::Value << pointLight->light->GetLinear();
-            out << YAML::Key << "Constant" << YAML::Value << pointLight->light->GetConstant();
-            out << YAML::Key << "Intensity" << YAML::Value << pointLight->light->GetIntensity();
-            out << YAML::Key << "Radius" << YAML::Value << pointLight->light->GetRadius();
+            CE_SERIALIZE_FIELD("Position", &pointLight->light->GetTransform()->position);
+            CE_SERIALIZE_FIELD("Color", pointLight->light->GetColor());
+            CE_SERIALIZE_FIELD("Specular", pointLight->light->GetSpecular());
+            CE_SERIALIZE_FIELD("Quadratic", pointLight->light->GetQuadratic());
+            CE_SERIALIZE_FIELD("Linear", pointLight->light->GetLinear());
+            CE_SERIALIZE_FIELD("Constant", pointLight->light->GetConstant());
+            CE_SERIALIZE_FIELD("Intensity", pointLight->light->GetIntensity());
+            CE_SERIALIZE_FIELD("Radius", pointLight->light->GetRadius());
             out << YAML::EndMap;
         }
 
@@ -291,40 +299,11 @@ namespace Core
 
                 switch (d->Type)
                 {
-                case Data::DataVec2:
-                {
-                    Vector2 *v = (Vector2 *)d->Data;
-                    out << YAML::Key << "Value" << v;
-                    break;
-                }
-
-                case Data::DataVec3:
-                {
-                    Vector3 *v = (Vector3 *)d->Data;
-                    out << YAML::Key << "Value" << v;
-                    break;
-                }
-
-                case Data::DataVec4:
-                {
-                    Vector4 *v = (Vector4 *)d->Data;
-                    out << YAML::Key << "Value" << v;
-                    break;
-                }
-
-                case Data::DataColor:
-                {
-                    Color *v = (Color *)d->Data;
-                    out << YAML::Key << "Value" << v;
-                    break;
-                }
-
-                case Data::DataFloat:
-                {
-                    Data::FloatContainer *v = (Data::FloatContainer *)d->Data;
-                    out << YAML::Key << "Value" << v->Value;
-                    break;
-                }
+                    CE_CASE_SHADER_DATA_SERIALIZE(DataVec2, Vector2);
+                    CE_CASE_SHADER_DATA_SERIALIZE(DataVec3, Vector3);
+                    CE_CASE_SHADER_DATA_SERIALIZE(DataVec4, Vector4);
+                    CE_CASE_SHADER_DATA_SERIALIZE(DataColor, Color);
+                    CE_CASE_SHADER_DATA_SERIALIZE(DataFloat, Data::FloatContainer);
                 }
 
                 out << YAML::EndMap;
@@ -342,7 +321,6 @@ namespace Core
             out << YAML::Key << "Size" << YAML::Value << &physics->Configuration.Size;
             out << YAML::Key << "Mass" << YAML::Value << physics->Configuration.Mass;
             out << YAML::Key << "Damping" << YAML::Value << physics->Configuration.Damping;
-            out << YAML::Key << "Gravity" << YAML::Value << physics->Configuration.Gravity;
             out << YAML::EndMap;
         }
 
@@ -773,7 +751,6 @@ namespace Core
                     YAMLToVcc3(physics["Size"], &c->Configuration.Size);
                     c->Configuration.Mass = physics["Mass"] ? physics["Mass"].as<float>() : 1.0f;
                     c->Configuration.Damping = physics["Damping"] ? physics["Damping"].as<float>() : 0.9f;
-                    c->Configuration.Gravity = physics["Gravity"] ? physics["Gravity"].as<float>() : 0.9f;
                 }
 
                 // Deserialize the actor parent

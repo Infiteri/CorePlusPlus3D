@@ -81,15 +81,15 @@ namespace Core
         switch (a)
         {
         case 0:
-            return Vector3(1, 0, 0);
+            return TransformMatrix->TransformVector(Vector3(1, 0, 0));
             break;
 
         case 1:
-            return Vector3(0, 1, 0);
+            return TransformMatrix->TransformVector(Vector3(0, 1, 0));
             break;
 
         case 2:
-            return Vector3(0, 0, 1);
+            return TransformMatrix->TransformVector(Vector3(0, 0, 1));
             break;
 
         case 3:

@@ -18,6 +18,9 @@
 
 #include "Utils/StringUtils.h"
 
+#include "Physics/Body/BodyConfigurations.h"
+#include "Physics/Body/RigidBody.h"
+
 #include <algorithm>
 
 namespace Core
@@ -768,7 +771,7 @@ namespace Core
 
     void DrawPhysicsUI(PhysicsComponent *c, Actor *a)
     {
-        PhysicsBodyConfiguration *Config;
+        RigidBodyConfiguration *Config;
         if (EditorLayer::Get()->currentSceneState == EditorLayer::SceneStateStop)
             Config = &c->Configuration;
         else
@@ -780,6 +783,5 @@ namespace Core
 
         ImGui::DragFloat("Mass", &Config->Mass, 0.005f, 0.01f);
         ImGui::DragFloat("Damping", &Config->Damping, 0.005f, 0.0f, 1.0f);
-        ImGui::DragFloat("Gravity", &Config->Gravity, 0.005f, 0.01f);
     }
 }
