@@ -83,11 +83,6 @@ namespace Core
         Set(v.x, v.y, v.z);
     }
 
-    float Vector3::Dot(const Vector3 &a) const
-    {
-        return x * a.x + y * a.y + z * a.z;
-    }
-
     Vector3 Vector3::Reflect(const Vector3 &other)
     {
         float dotProduct = dot(*this, other);

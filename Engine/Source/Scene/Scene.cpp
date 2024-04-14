@@ -104,8 +104,8 @@ namespace Core
             a->Update();
 
         // Runtime updates
-        ScriptEngine::UpdateRuntime();
         PhysicsEngine::UpdateRuntime();
+        ScriptEngine::UpdateRuntime();
     }
 
     void Scene::Render()
@@ -252,7 +252,7 @@ namespace Core
         {
             componentPhysics->Configuration.Owner = a;
             componentPhysics->Body =
-                PhysicsEngine::CreateRigidBody(componentPhysics->Configuration);
+                PhysicsEngine::CreatePhysicsBody(componentPhysics->Configuration);
         }
     }
 

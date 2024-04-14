@@ -11,9 +11,8 @@
 #include "Renderer/Camera/CameraSystem.h"
 #include "Renderer/Light/PointLight.h"
 #include "Renderer/Light/SpotLight.h"
-#include "Physics/Body/PhysicsBody.h"
-#include "Physics/Body/RigidBody.h"
- 
+#include "Physics/PhysicsBody.h"
+
 namespace Core
 {
     MeshComponent::MeshComponent()
@@ -321,11 +320,9 @@ namespace Core
 
     PhysicsComponent::PhysicsComponent()
     {
-        Configuration.Velocity = Vector3(1, 0, 0);
         Configuration.Acceleration = Vector3(5, 0, 0);
         Configuration.Mass = 1.0f;
         Configuration.Damping = 1.0f;
-        Configuration.Gravity = 9.8f;
         Configuration.Owner = owner;
     }
 
@@ -337,12 +334,10 @@ namespace Core
 
     void PhysicsComponent::From(PhysicsComponent *other)
     {
-        CE_HELPER_PHYS(Velocity);
         CE_HELPER_PHYS(Acceleration);
         CE_HELPER_PHYS(Mass);
         CE_HELPER_PHYS(Damping);
-        CE_HELPER_PHYS(Gravity);
         CE_HELPER_PHYS(Owner);
-        CE_HELPER_PHYS(Size);
+        CE_HELPER_PHYS(Type);
     }
 }

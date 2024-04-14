@@ -5,7 +5,6 @@
 
 namespace Core
 {
-    class RigidBody;
     class CE_API Collider
     {
     public:
@@ -26,8 +25,6 @@ namespace Core
 
         template <typename T>
         T *As() { return (T *)this; };
-
-        virtual void UpdateFromBody(RigidBody *b){};
     };
 
     class AABBCollider : public Collider
@@ -40,7 +37,6 @@ namespace Core
         ~AABBCollider();
 
         inline AABB *GetAABB() { return &aabb; };
-        void UpdateFromBody(RigidBody *b);
     };
 
 }

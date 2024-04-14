@@ -18,9 +18,6 @@
 
 #include "Utils/StringUtils.h"
 
-#include "Physics/Body/BodyConfigurations.h"
-#include "Physics/Body/RigidBody.h"
-
 #include <algorithm>
 
 namespace Core
@@ -771,16 +768,37 @@ namespace Core
 
     void DrawPhysicsUI(PhysicsComponent *c, Actor *a)
     {
-        RigidBodyConfiguration *Config;
+        PhysicsBodyConfiguration *Config;
         if (EditorLayer::Get()->currentSceneState == EditorLayer::SceneStateStop)
             Config = &c->Configuration;
         else
             Config = c->Body->GetCurrentConfig();
 
-        EditorUtils::ImGuiVec3Edit("Velocity", &Config->Velocity);
-        EditorUtils::ImGuiVec3Edit("Acceleration", &Config->Acceleration);
-        EditorUtils::ImGuiVec3Edit("Size", &Config->Size);
+        {
+            const int types = 2;
+            const char *typeList[types] = {"Static", "Rigid"};
+            const char *selection = typeList[Config->Type];
+            if (ImGui::BeginCombo("Type", selection))
+            {
+                for (int i = 0; i < types; i++)
+                {
+                    bool isSelected = (selection == typeList[i]);
 
+                    if (ImGui::Selectable(typeList[i], isSelected))
+                    {
+                        selection = typeList[i];
+                        Config->Type = (PhysicsBodyConfiguration::Types)i;
+                    }
+
+                    if (isSelected)
+                        ImGui::SetItemDefaultFocus();
+                }
+
+                ImGui::EndCombo();
+            }
+        }
+
+        EditorUtils::ImGuiVec3Edit("Acceleration", &Config->Acceleration);
         ImGui::DragFloat("Mass", &Config->Mass, 0.005f, 0.01f);
         ImGui::DragFloat("Damping", &Config->Damping, 0.005f, 0.0f, 1.0f);
     }

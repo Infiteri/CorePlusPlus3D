@@ -1,7 +1,0 @@
-Project:
-  Name: DefaultProject
-  StartScene: Scene/Phys.ce_scene
-  AssetPath: Assets
-  ScriptPath: GameLibrary.dll
-  ScriptFilesPath: ScriptFiles
-  BuildScriptsPath: Scripts/Build.bat

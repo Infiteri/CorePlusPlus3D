@@ -2,7 +2,6 @@
 
 #include "Base.h"
 #include "Math/Vectors.h"
-#include "Math/Matrix4.h"
 
 namespace Core
 {
@@ -18,12 +17,9 @@ namespace Core
         /// @brief Direction
         Vector3 Direction;
 
-        Matrix4 *TransformMatrix;
-
-        bool Collides(AABB *other);
+        bool Collides(const AABB *other);
         bool CollidesX(const AABB *other);
         bool CollidesY(const AABB *other);
         bool CollidesZ(const AABB *other);
-        Vector3 GetAxis(int a) const;
     };
 }

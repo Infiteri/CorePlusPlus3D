@@ -2,14 +2,13 @@
 
 #include "Base.h"
 #include "Core/CeData.h"
-#include "Physics/Body/BodyConfigurations.h"
 #include "Math/Vectors.h"
+#include "Physics/PhysicsBody.h"
 #include <vector>
 
 namespace Core
 {
     class Actor;
-    class RigidBody;
     class ActorScript;
     class Mesh;
     class PerspectiveCamera;
@@ -162,8 +161,8 @@ namespace Core
     class CE_API PhysicsComponent : public Component
     {
     public:
-        RigidBody *Body; // TODO: Figure out if its important to hold a pointer to the body.
-        RigidBodyConfiguration Configuration;
+        PhysicsBody *Body; // TODO: Figure out if its important to hold a pointer to the body.
+        PhysicsBodyConfiguration Configuration;
 
         PhysicsComponent();
         ~PhysicsComponent();
